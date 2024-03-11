@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 function Homepage() {
     return (
         <View style={styles.container}>
-        <Text>Test App!</Text>
+        <Text>Test App, Does it work?!</Text>
         <StatusBar style="auto" />
       </View>
     );
