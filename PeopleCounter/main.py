@@ -3,32 +3,39 @@ import numpy as np
 import argparse
 import cv2
 
+ap = argparse.ArgumentParser()
+ap.add_argument("-v", "--video", help="path to video file/stream")
+ap.add_argument("-t", "--test", help="indicates running program for utility test")
+#ap.add_argument("-b", "--buffer", type=int, default=64, help="max buffer size")
+#ap.add_argument("-s", "--scale", help="scale", type=float)
+#ap.add_argument("-w", "--wStride", help="winStride", type=int)
+#ap.add_argument("-p", "--padding", help="padding")
+#ap.add_argument("-h", "--hTH", help="hitThreshold")
+#ap.add_argument("-f", "finalTH", help="finalThreshold")
+
+args = vars(ap.parse_args())
+
+# Change these two to increase / decrease accuracy
+scale = 1.05
+wStride = 4
+
 
 def img_detection(video, scale, wStride):
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-v", "--video", help="path to video file/stream")
-    #ap.add_argument("-b", "--buffer", type=int, default=64, help="max buffer size")
-    #ap.add_argument("-s", "--scale", help="scale", type=float)
-    #ap.add_argument("-w", "--wStride", help="winStride", type=int)
-    #ap.add_argument("-p", "--padding", help="padding")
-    #ap.add_argument("-h", "--hTH", help="hitThreshold")
-    #ap.add_argument("-f", "finalTH", help="finalThreshold")
 
-
-    args = vars(ap.parse_args())
     cv2.startWindowThread()
     maxBoxes = 0
 
-    #if not args.get("video", True):
-        #cam = cv2.VideoCapture(0)
-    #else:
-        #cam = cv2.VideoCapture(args["video"])
-    cam = cv2.VideoCapture(video)
+    if not args.get("test", True):
+        if not args.get("video", True):
+            cam = cv2.VideoCapture(0)
+        else:
+            cam = cv2.VideoCapture(args["video"])
+        out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc('m','p','4','v'), 15., (960,540))
+    else:
+        cam = cv2.VideoCapture(video)
 
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor.getDefaultPeopleDetector())
-
-    #out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc('m','p','4','v'), 15., (960,540))
 
     while True:
         ret, frame = cam.read()
@@ -61,7 +68,8 @@ def img_detection(video, scale, wStride):
         cv2.imshow('People Detector', frame)
 
         #Writes to out-file
-        #out.write(frame.astype('uint8'))
+        if not args.get("test", True):
+            out.write(frame.astype('uint8'))
 
         #Allows us to exit the program
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -72,6 +80,9 @@ def img_detection(video, scale, wStride):
 
     #Clean up
     cam.release()
-    #out.release()
+    if not args.get("test", True):
+        out.release()
     cv2.destroyAllWindows()
     return maxBoxes
+
+img_detection(args["video"], scale, wStride)
