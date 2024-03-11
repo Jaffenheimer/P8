@@ -8,8 +8,8 @@
 
 
 
-## People Detection
-### RUN WITH VIDEO: `python main.py --video <PATH>`
-### RUN WITH WEBCAM: `python main.py`
-### RUN UTILITY TEST: `python utilityTest.py -v (or --video) <PATH>`
-### EXIT: <kbd>q</kbd>
+### People Detection
+#### Run with pre-recorded video: `python main.py --video <PATH>`
+#### Run with webcam: `python main.py`
+#### Run utility test: `python utilityTest.py -v (or --video) <PATH>`
+#### Exit: <kbd>q</kbd>
