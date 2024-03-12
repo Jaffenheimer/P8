@@ -12,8 +12,15 @@ export default function Page() {
           <Title>Test App</Title>
           <Subtitle>Welcome to this test app</Subtitle>
         </YStack>
+        <YStack >
+          <Link href={'/location'} asChild>
+            <Button style={'padding: 3px'}>
+              <ButtonText>Get Location</ButtonText>
+            </Button>
+          </Link>
+        </YStack>
         <YStack>
-          <Link href={'/layouttest'}>
+          <Link href={'/layouttest'} asChild>
             <Button style={'padding: 3px'}>
               <ButtonText>Go To Layout</ButtonText>
             </Button>
