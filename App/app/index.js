@@ -1,22 +1,23 @@
-import { View, Text, StyleSheet } from "react-native";
-import { StatusBar } from 'expo-status-bar';
+import { Stack, Link } from 'expo-router';
+import { YStack } from 'tamagui';
 
-function Homepage() {
-    return (
-        <View style={styles.container}>
-        <Text>Test App, Does it work?!</Text>
-        <StatusBar style="auto" />
-      </View>
-    );
+import { Container, Main, Title, Subtitle, Button, ButtonText } from '../tamagui.config';
+
+export default function Page() {
+  return (
+    <Container>
+      <Main>
+        <Stack.Screen options={{ title: 'Overview' }} />
+        <YStack>
+          <Title>Hello World</Title>
+          <Subtitle>This is the first page of your app.</Subtitle>
+        </YStack>
+        <Link href={{ pathname: '/details'}} asChild>
+          <Button>
+            <ButtonText>Show Details</ButtonText>
+          </Button>
+        </Link>
+      </Main>
+    </Container>
+  );
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-});
-
-export default Homepage;
