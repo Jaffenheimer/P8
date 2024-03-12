@@ -69,6 +69,19 @@ export const Button = styled(YStack, {
   shadowRadius: 3.84,
 });
 
+export const TopHalf = styled(YStack, {
+  height: '40%', 
+  width: '100%',
+  backgroundColor: 'yellow',
+}); 
+
+export const ButtomHalf = styled(YStack, {
+  height: '60%', 
+  width: '100%',
+  backgroundColor: 'lightblue',
+});
+
+
 export const ButtonText = styled(SizableText, {
   color: '#FFFFFF',
   fontSize: 16,

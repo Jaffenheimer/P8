@@ -28,7 +28,7 @@ export default function Details() {
       <Main>
         <YStack>
           <Title>Details</Title>
-          <Subtitle>Showing details for user {name}.</Subtitle>
+          <Subtitle>Showing more details.</Subtitle>
         </YStack>
       </Main>
     </Container>

@@ -1,7 +1,7 @@
 import { Stack, Link } from 'expo-router';
-import { YStack } from 'tamagui';
+import { YStack, active, ButtonText } from 'tamagui';
 
-import { Container, Main, Title, Subtitle, Button, ButtonText } from '../tamagui.config';
+import { Container, Main, Title, Subtitle, TopHalf, ButtomHalf, Button } from '../tamagui.config';
 
 export default function Page() {
   return (
@@ -9,14 +9,16 @@ export default function Page() {
       <Main>
         <Stack.Screen options={{ title: 'Overview' }} />
         <YStack>
-          <Title>Hello World</Title>
-          <Subtitle>This is the first page of your app.</Subtitle>
+          <Title>Test App</Title>
+          <Subtitle>Welcome to this test app</Subtitle>
         </YStack>
-        <Link href={{ pathname: '/details'}} asChild>
-          <Button>
-            <ButtonText>Show Details</ButtonText>
-          </Button>
-        </Link>
+        <YStack>
+          <Link href={'/layouttest'}>
+            <Button>
+              <ButtonText>Go To Layout</ButtonText>
+            </Button>
+          </Link>
+        </YStack>
       </Main>
     </Container>
   );
