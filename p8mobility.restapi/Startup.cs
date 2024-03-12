@@ -14,8 +14,8 @@ namespace p8_restapi
     {
         public class Startup
         {
-            private const string ServiceName = "P7.RestApi";
-            private const string SwaggerRoute = "recipes";
+            private const string ServiceName = "P8.RestApi";
+            private const string SwaggerRoute = "restApi";
 
             public Startup(IConfiguration configuration)
             {

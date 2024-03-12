@@ -41,5 +41,10 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Requests\" />
+      <Folder Include="Responses\" />
+      <Folder Include="Services\" />
+    </ItemGroup>
 
 </Project>
