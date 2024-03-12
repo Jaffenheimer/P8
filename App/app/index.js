@@ -14,7 +14,7 @@ export default function Page() {
         </YStack>
         <YStack>
           <Link href={'/layouttest'}>
-            <Button>
+            <Button style={'padding: 3px'}>
               <ButtonText>Go To Layout</ButtonText>
             </Button>
           </Link>

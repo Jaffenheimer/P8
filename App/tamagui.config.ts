@@ -73,12 +73,16 @@ export const TopHalf = styled(YStack, {
   height: '40%', 
   width: '100%',
   backgroundColor: 'yellow',
+  justifyContent: 'center',
+  alignItems: 'center',
 }); 
 
 export const ButtomHalf = styled(YStack, {
   height: '60%', 
   width: '100%',
   backgroundColor: 'lightblue',
+  justifyContent: 'center',
+  alignItems: 'center',
 });
 
 

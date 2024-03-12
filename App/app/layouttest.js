@@ -1,6 +1,6 @@
 import { Stack, Link } from 'expo-router';
 
-import { Container, Main, Title, Subtitle, TopHalf, ButtomHalf } from '../tamagui.config';
+import { Container, Main, Subtitle, TopHalf, ButtomHalf } from '../tamagui.config';
 
 export default function Layout() {
   return (
