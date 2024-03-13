@@ -1,0 +1,6 @@
+groups:
+  - name: devs
+    reviewers: 1
+    usernames:
+      - Jaffenheimer
+      - JJTM20
