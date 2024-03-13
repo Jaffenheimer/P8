@@ -1,0 +1,10 @@
+START TRANSACTION;
+
+CREATE TABLE IF NOT EXISTS BusStopCount
+(
+    BusStopID   VARCHAR(40) NOT NULL,
+    PeopleCount INT         NOT NULL,
+    PRIMARY KEY (BusStopID)
+);
+
+COMMIT;
