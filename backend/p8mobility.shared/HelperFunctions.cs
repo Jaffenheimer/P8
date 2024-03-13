@@ -40,20 +40,4 @@ public class HelperFunctions
         string salt = BitConverter.ToString(buffer);
         return salt;
     }
-
-    /// <summary>
-    /// Helper function to get ingredients from a text file
-    /// </summary>
-    /// <returns></returns>
-    public List<string> GetIngredientsFromTextFile()
-    {
-        var ingredients = new List<string>();
-        var lines = File.ReadAllLines("../P7Internet.Persistence/IngredientRepository/Ingredients.txt");
-        foreach (var line in lines)
-        {
-            ingredients.Add(line);
-        }
-
-        return ingredients;
-    }
 }
