@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-03-11 13:42:36 by Eclipse SUMO netedit Version 1.19.0
+<!-- generated on 2024-03-18 11:32:45 by Eclipse SUMO netedit Version 1.19.0
 -->
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
     <!-- VTypes -->
     <vType id="DEFAULT_VEHTYPE" length="7.00" vClass="bus"/>
     <vType id="minibus" length="7.00" maxSpeed="13.90" desiredMaxSpeed="13.90" vClass="bus"/>
+    <vType id="t_0" vClass="pedestrian" color="green"/>
     <!-- Routes -->
-    <route id="r_0" edges="-E3 -E2 -E1 -E0 -E3 -E2 -E1 -E0 -E3 -E2 -E1 -E0 -E3" color="yellow"/>
-    <route id="r_1" edges="E4 E7 E8 E9 E3 E4" color="blue"/>
+    <route id="r_0" edges="-E3 -E2 -E1 -E0 -E3 -E2 -E1 -E0 -E3 -E2 -E1 -E0 -E3" color="yellow" cycleTime="300.00">
+        <stop busStop="bs_3" duration="20.00"/>
+        <stop busStop="bs_2" duration="20.00"/>
+        <stop busStop="bs_1" duration="20.00"/>
+        <stop busStop="bs_0" duration="20.00"/>
+    </route>
+    <route id="r_1" edges="-E4 -E3 -E9 -E8 -E7 -E4" color="blue">
+        <stop busStop="bs_3" duration="20.00"/>
+        <stop busStop="bs_7" duration="20.00"/>
+        <stop busStop="bs_6" duration="20.00"/>
+        <stop busStop="bs_5" duration="20.00"/>
+        <stop busStop="bs_4" duration="20.00"/>
+    </route>
     <!-- Vehicles, persons and containers (sorted by depart) -->
-    <flow id="f_0" type="minibus" begin="0.00" route="r_1" end="3600.00" vehsPerHour="100"/>
-    <flow id="f_1" type="minibus" begin="0.00" route="r_0" end="3600.00" vehsPerHour="100"/>
+    <!-- <person depart="0" id="p12" type="t_0">
+        <walk from="-E3" to="E3" duration="100"/>
+
+    </person> -->
+
+     <personFlow id="person" begin="0.00" number="20" personsPerHour="100" departPos="random">
+       <!-- <personTrip from="-E3" to="-E0" arrivalPos="-20" modes="car"/> -->
+       <walk from="E3" to="-E3"/>
+   </personFlow>
+
+    <flow id="f_0" type="minibus" begin="0.00" route="r_1" end="3600.00" vehsPerHour="50"/>
+    <flow id="f_1" type="minibus" begin="0.00" route="r_0" end="3600.00" vehsPerHour="50"/>
 </routes>
