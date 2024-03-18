@@ -6,33 +6,35 @@
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
     <!-- VTypes -->
     <vType id="DEFAULT_VEHTYPE" length="7.00" vClass="bus"/>
-    <vType id="minibus" length="7.00" maxSpeed="13.90" desiredMaxSpeed="13.90" vClass="bus"/>
+    <vType id="minibus" length="7.00" maxSpeed="13.90" desiredMaxSpeed="13.90" vClass="bus" personCapacity="24"/>
     <vType id="t_0" vClass="pedestrian" color="green"/>
     <!-- Routes -->
-    <route id="r_0" edges="-E3 -E2 -E1 -E0 -E3 -E2 -E1 -E0 -E3 -E2 -E1 -E0 -E3" color="yellow" cycleTime="300.00">
-        <stop busStop="bs_3" duration="20.00"/>
-        <stop busStop="bs_2" duration="20.00"/>
-        <stop busStop="bs_1" duration="20.00"/>
-        <stop busStop="bs_0" duration="20.00"/>
+    <route id="r_0" edges="-overlap -R2 -R1 -R0" color="yellow" cycleTime="300.00" repeat="10">
+        <stop busStop="bs_3" duration="5.00"/>
+        <stop busStop="bs_2" duration="5.00"/>
+        <stop busStop="bs_1" duration="5.00"/>
+        <stop busStop="bs_0" duration="5.00"/>
     </route>
-    <route id="r_1" edges="-E4 -E3 -E9 -E8 -E7 -E4" color="blue">
-        <stop busStop="bs_3" duration="20.00"/>
-        <stop busStop="bs_7" duration="20.00"/>
-        <stop busStop="bs_6" duration="20.00"/>
-        <stop busStop="bs_5" duration="20.00"/>
-        <stop busStop="bs_4" duration="20.00"/>
+    <route id="r_1" edges="-L0 -overlap -L3 -L2 -L1 -L0" color="blue">
+        <stop busStop="bs_3" duration="5.00"/>
+        <stop busStop="bs_7" duration="5.00"/>
+        <stop busStop="bs_6" duration="5.00"/>
+        <stop busStop="bs_5" duration="5.00"/>
+        <stop busStop="bs_4" duration="5.00"/>
     </route>
     <!-- Vehicles, persons and containers (sorted by depart) -->
     <!-- <person depart="0" id="p12" type="t_0">
-        <walk from="-E3" to="E3" duration="100"/>
+        <walk from="-overlap" to="overlap" duration="100"/>
 
     </person> -->
 
-     <personFlow id="person" begin="0.00" number="20" personsPerHour="100" departPos="random">
-       <!-- <personTrip from="-E3" to="-E0" arrivalPos="-20" modes="car"/> -->
-       <walk from="E3" to="-E3"/>
+     <personFlow id="person" begin="0.00" probability="0.1" departPos="123">
+        <!-- <walk from="R0" to="-overlap"/> -->
+        <ride from="-overlap" to="-R0"/>
    </personFlow>
 
-    <flow id="f_0" type="minibus" begin="0.00" route="r_1" end="3600.00" vehsPerHour="50"/>
-    <flow id="f_1" type="minibus" begin="0.00" route="r_0" end="3600.00" vehsPerHour="50"/>
+    <vehicle id="bus1" type="minibus" depart="0" color="1,1,0" route="r_0">
+    </vehicle>
+    <!-- <flow id="f_0" type="minibus" begin="0.00" route="r_1" end="3600.00" vehsPerHour="50"/>
+    <flow id="f_1" type="minibus" begin="0.00" route="r_0" end="3600.00" vehsPerHour="50"/> -->
 </routes>
