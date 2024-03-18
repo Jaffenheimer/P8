@@ -28,10 +28,7 @@
 
     </person> -->
 
-     <personFlow id="person" begin="0.00" probability="0.1" departPos="123">
-        <!-- <walk from="R0" to="-overlap"/> -->
-        <ride from="-overlap" to="-R0"/>
-   </personFlow>
+    
 
     <vehicle id="bus1" type="minibus" depart="0" color="1,1,0" route="r_0">
     </vehicle>

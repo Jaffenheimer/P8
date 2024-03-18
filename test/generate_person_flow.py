@@ -1,25 +1,55 @@
 import lxml.etree
 import lxml.builder 
 import xml.etree.ElementTree as ET
+from random import randrange
 
 # <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
 
 
 # E = lxml.builder.ElementMaker()
-ROUTES = ET.Element('routes')
-ROUTES.attrib = {'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
+routes = ET.Element('routes')
+routes.attrib = {'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
 
-# Create a new child element
-child = ET.SubElement(ROUTES, 'child')
+"""
+ <personFlow id="person" begin="0.00" probability="0.1" departPos="123">
+        <!-- <walk from="R0" to="-overlap"/> -->
+        <ride from="-overlap" to="-R0"/>
+   </personFlow>
+"""
 
-# Set the attributes of the child element
-child.attrib = {'attribute_name': 'attribute_value'}
+leftRoute = ["-overlap", "-R2", "-R1", "-R0"] #len(list)*len(list-1)
+busLocationDict={"-overlap": "123", "-R2": "259", "-R1": "125", "-R0": "267"}
 
-# Set the text of the child element
-child.text = 'child text'
+id = 0
 
 
-tree = ET.ElementTree(ROUTES)
+
+for i in range(len(leftRoute)): 
+    for j in range(len(leftRoute)):
+        if i==j:
+            continue
+        personFlow = ET.SubElement(routes, 'personFlow')
+        # Set the attributes of the child element
+        personFlow.attrib = {'id': f'person{id}', 'begin': '0.00', 'probability': '0.1', 'departPos': busLocationDict[leftRoute[i]]}
+        # walk = ET.SubElement(personFlow, 'walk')
+        # walk.attrib = {'from': leftRoute[i], 'to': leftRoute[i]}
+        ride = ET.SubElement(personFlow, 'ride')
+        ride.attrib = {'from': leftRoute[i], 'to': leftRoute[j]}
+        id += 1
+        
+            
+
+        
+        
+"""
+ <personFlow id="person" begin="0.00" probability="0.1" departPos="123">
+        <!-- <walk from="R0" to="-overlap"/> -->
+        <ride from="-overlap" to="-R0"/>
+   </personFlow>
+   """
+
+
+tree = ET.ElementTree(routes)
 ET.indent(tree, space="    ")
 tree.write('person_flow.xml')
 
