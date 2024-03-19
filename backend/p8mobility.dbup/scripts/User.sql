@@ -1,0 +1,11 @@
+START TRANSACTION;
+
+CREATE TABLE IF NOT EXISTS Users
+(
+    Id           VARCHAR(40)  NOT NULL,
+    Name         VARCHAR(255) NOT NULL,
+    PasswordHash VARCHAR(255) NOT NULL,
+    PRIMARY KEY (Id)
+);
+
+COMMIT;
