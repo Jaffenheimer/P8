@@ -2,7 +2,7 @@ import { Stack, Link } from 'expo-router';
 
 import { Container, Main, Subtitle, TopHalf, ButtomHalf } from '../tamagui.config';
 
-export default function Layout() {
+function Layouttest() {
   return (
     <Container>
       <Main>
@@ -17,3 +17,5 @@ export default function Layout() {
     </Container>
   );
 }
+
+export default Layouttest;
