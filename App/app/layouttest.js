@@ -6,8 +6,8 @@ function Layouttest() {
   return (
     <Container>
       <Main>
-        <Stack.Screen options={{ title: 'Layout' }} />
-        <TopHalf>
+        <Stack.Screen />
+        <TopHalf testID="layout">
           <Subtitle>This is the Top</Subtitle>
         </TopHalf>
         <ButtomHalf>

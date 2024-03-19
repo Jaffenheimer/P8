@@ -38,3 +38,20 @@ it('Does it render the correct view', async () => {
   expect(screen.getByText('This is the Buttom')).toBeTruthy();
 });
 
+it('Does it render the id correct', async () => {
+  const MockComponent = jest.fn(() => <Layouttest />);
+
+  renderRouter(
+    {
+      index: MockComponent,
+      'directory/a': MockComponent,
+      '(group)/b': MockComponent,
+    },
+    {
+      initialUrl: '/directory/a',
+    }
+  );
+
+  expect(screen.getByTestId("layout")).toBeTruthy();
+});
+

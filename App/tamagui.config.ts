@@ -37,6 +37,7 @@ export const Container = styled(YStack, {
 export const Main = styled(YStack, {
   flex: 1,
   justifyContent: 'space-between',
+  alignContent: 'center', 
   maxWidth: 960,
 });
 
