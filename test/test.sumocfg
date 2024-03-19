@@ -8,7 +8,7 @@
     <input>
         <net-file value="test.net.xml"/>
         <route-files value="test.rou.xml,person_flow.xml" />
-        <additional-files value="test.add.xml"/>
+        <additional-files value="test.add.xml,vehicle.xml"/>
     </input>
 
 </configuration>

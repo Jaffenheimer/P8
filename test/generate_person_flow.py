@@ -17,27 +17,31 @@ routes.attrib = {'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
    </personFlow>
 """
 
-leftRoute = ["-overlap", "-R2", "-R1", "-R0"] #len(list)*len(list-1)
-busLocationDict={"-overlap": "123", "-R2": "259", "-R1": "125", "-R0": "267"}
+rightRoute = ["-overlap", "-R2", "-R1", "-R0"] #len(list)*len(list-1)
+busLocationDict={"-overlap": "123", "-R2": "259", "-R1": "125", "-R0": "267", "-L3": "117", "-L2": "110", "-L1": "123", "-L0": "120"}
+
+leftRoute = ["-overlap", "-L3", "-L2", "-L1", "-L0"]
+
+allRoutes = [leftRoute,rightRoute]
 
 id = 0
 
 
-
-for i in range(len(leftRoute)): 
-    for j in range(len(leftRoute)):
-        if i==j:
-            continue
-        personFlow = ET.SubElement(routes, 'personFlow')
-        # Set the attributes of the child element
-        personFlow.attrib = {'id': f'person{id}', 'begin': '0.00', 'probability': '0.1', 'departPos': busLocationDict[leftRoute[i]]}
-        # walk = ET.SubElement(personFlow, 'walk')
-        # walk.attrib = {'from': leftRoute[i], 'to': leftRoute[i]}
-        ride = ET.SubElement(personFlow, 'ride')
-        ride.attrib = {'from': leftRoute[i], 'to': leftRoute[j]}
-        id += 1
-        
-            
+for route in allRoutes:
+    for i in range(len(route)): 
+        for j in range(len(route)):
+            if i==j:
+                continue
+            personFlow = ET.SubElement(routes, 'personFlow')
+            # Set the attributes of the child element
+            personFlow.attrib = {'id': f'person{id}', 'begin': '0.00', 'probability': '0.1', 'departPos': busLocationDict[route[i]]}
+            # walk = ET.SubElement(personFlow, 'walk')
+            # walk.attrib = {'from': leftRoute[i], 'to': leftRoute[i]}
+            ride = ET.SubElement(personFlow, 'ride')
+            ride.attrib = {'from': route[i], 'to': route[j]}
+            id += 1
+     
+     
 
         
         
