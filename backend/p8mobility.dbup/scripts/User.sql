@@ -3,8 +3,10 @@ START TRANSACTION;
 CREATE TABLE IF NOT EXISTS Users
 (
     Id           VARCHAR(40)  NOT NULL,
-    Name         VARCHAR(255) NOT NULL,
+    UserName     VARCHAR(255) NOT NULL,
     PasswordHash VARCHAR(255) NOT NULL,
+    PasswordSalt VARCHAR(255) NOT NULL,
+    UpdatedAt    TIMESTAMP    NOT NULL,
     PRIMARY KEY (Id)
 );
 

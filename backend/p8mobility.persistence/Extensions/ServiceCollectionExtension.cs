@@ -1,8 +1,8 @@
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
+using p8mobility.persistence.BusStopRepository;
 using p8mobility.persistence.Connection;
 using p8mobility.persistence.Dapper;
-using p8mobility.persistence.SampleRepository;
 
 
 namespace p8mobility.persistence.Extensions;
@@ -15,7 +15,7 @@ public static class ServiceCollectionExtension
         services.AddSingleton<IDbConnectionFactory>(new MySqlConnectionFactory(connectionString));
 
         // Add repositories
-        services.AddScoped<ISampleRepository, SampleRepository.SampleRepository>();
+        services.AddScoped<IBusStopRepository, BusStopRepository.BusStopRepository>();
         
 
         // Dapper
