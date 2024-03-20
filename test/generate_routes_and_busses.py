@@ -20,12 +20,21 @@ for i in range(len(all_routes)):
         stop.attrib = {'busStop': f'bs_road_{road}', 'duration': '5.00'}
 
 #generate the vehicles
+all_vehicles = []
 for route in all_routes:
     departTime = 0
     for i in range(5):
-        vehicle = ET.SubElement(routes, 'vehicle')
-        vehicle.attrib = {'id': f'bus_{route}_{i}', 'type': 'minibus', 'depart': f'{departTime}', 'color': '1,1,0', 'route': route}
-        departTime += 5
+        vehicle_dict = {'id': f'bus_{route}_{i}', 'type': 'minibus', 'depart': str(departTime), 'color': 'yellow' if route == "r_0" else 'blue', 'route': route}
+        all_vehicles.append(vehicle_dict)
+        departTime += 30
+
+# Sort all vehicles by 'depart'
+all_vehicles.sort(key=lambda x: int(x['depart']))
+
+# Create XML elements
+for vehicle_dict in all_vehicles:
+    vehicle = ET.SubElement(routes, 'vehicle')
+    vehicle.attrib = vehicle_dict
         
 tree = ET.ElementTree(routes)
 ET.indent(tree, space="    ")
