@@ -17,8 +17,8 @@ for route in allRoutes:
             if i==j:
                 continue
             personFlow = ET.SubElement(routes, 'personFlow')
-            # Set the attributes of the child element
-            personFlow.attrib = {'id': f'person_from_{route[i]}_to_{route[j]}', 'begin': '0.00', 'probability': '0.1', 'departPos': busLocationDict[route[i]]}
+            # 86400 is 24 hours in seconds
+            personFlow.attrib = {'id': f'person_from_{route[i]}_to_{route[j]}', 'begin': '0.00', 'end':'86400', 'probability': '0.05', 'departPos': busLocationDict[route[i]]}
             # walk = ET.SubElement(personFlow, 'walk')
             # walk.attrib = {'from': leftRoute[i], 'to': leftRoute[i]}
             ride = ET.SubElement(personFlow, 'ride')
@@ -26,27 +26,8 @@ for route in allRoutes:
      
      
         
-"""
- <personFlow id="person" begin="0.00" probability="0.1" departPos="123">
-        <!-- <walk from="R0" to="-overlap"/> -->
-        <ride from="-overlap" to="-R0"/>
-   </personFlow>
-   """
 
 
 tree = ET.ElementTree(routes)
 ET.indent(tree, space="    ")
 tree.write('person_flow.xml')
-
-# DOC = E.doc
-# FIELD1 = E.field1
-# FIELD2 = E.field2
-
-# the_doc = ROUTES(
-#         DOC(
-#             FIELD1('some value1', name='blah'),
-#             FIELD2('some value2', name='asdfasd'),
-#             )   
-#         )   
-
-# print(lxml.etree.tostring(the_doc, pretty_print=True))
