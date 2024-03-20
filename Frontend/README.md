@@ -11,13 +11,14 @@ Should be done every time something is added/changed in package.json
 `npx expo start`
 
 If this do not work you will need to run it using a tunnel
-`npx expo start --tunnel`
+Shortcut: `npm run startt`
+Other Way: `npx expo start --tunnel`
 
 You may have install tunnel first
 
 ### Expo Go App
 1. Install Expo Go App
-2. run `npx expo start`
+2. run `npx expo start` or `npm run startt`
 3. Scan QR Code
     - iPhone - Scan QR code 
     - Andriod - Scan QR or insert path in the Expo App
