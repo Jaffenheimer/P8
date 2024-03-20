@@ -111,6 +111,11 @@ ipch/
 *.vspx
 *.sap
 
+# Executables
+*.exe
+*.out
+*.app
+.DS_Store
 # Visual Studio Trace Files
 *.e2e
 
