@@ -1,5 +1,4 @@
 import { renderRouter, screen} from 'expo-router/testing-library';
-import '@testing-library/jest-dom/extend-expect'; // for expect assertions
 import Layouttest from '../app/layouttest';
 
 
