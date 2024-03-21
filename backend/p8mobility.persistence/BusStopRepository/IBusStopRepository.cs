@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using p8_shared;
 
@@ -26,4 +27,6 @@ public interface IBusStopRepository
     /// <param name="longitude"></param>
     /// <returns></returns>
     public Task<bool> UpsertBusStop(Guid id, decimal latitude, decimal longitude);
+
+    public  Task<List<BusStop>> GetAllBusStops();
 }
