@@ -2,7 +2,8 @@ import { createAnimations } from '@tamagui/animations-react-native';
 import { createInterFont } from '@tamagui/font-inter';
 import { createMedia } from '@tamagui/react-native-media-driver';
 import { shorthands } from '@tamagui/shorthands';
-import { themes, tokens } from '@tamagui/themes';
+import { size, themes, tokens } from '@tamagui/themes';
+import { TextInput } from 'react-native';
 import { createTamagui, styled, SizableText, H1, YStack } from 'tamagui';
 
 const animations = createAnimations({
@@ -37,13 +38,38 @@ export const Container = styled(YStack, {
 export const Main = styled(YStack, {
   flex: 1,
   justifyContent: 'space-between',
-  alignContent: 'center', 
+  alignContent: 'center',
   maxWidth: 960,
 });
 
+// .h1 {
+//   color: var(--color2, #1C1C1C);
+
+//   /* Heading/H1 */
+//   font-family: Inter;
+//   font-size: 44px;
+//   font-style: normal;
+//   font-weight: 700;
+//   line-height: 53px;
+//   }
+
+export const Input = styled(TextInput, {
+  backgroundColor: '#F8F8F8',
+  borderRadius: 8,
+  color: '#F8F8F8',
+  fontSize: 16,
+  padding: 16,
+  width: '100%',
+});
+
 export const Title = styled(H1, {
-  color: '#000',
+  color: '#1C1C1C',
   size: '$12',
+  fontSize: 44,
+  fontStyle: 'normal',
+  fontWeight: '700',
+  lineHeight: 53,
+  textAlign: 'center',
 });
 
 export const Subtitle = styled(SizableText, {
@@ -71,21 +97,20 @@ export const Button = styled(YStack, {
 });
 
 export const TopHalf = styled(YStack, {
-  height: '40%', 
+  height: '40%',
   width: '100%',
   backgroundColor: 'yellow',
   justifyContent: 'center',
   alignItems: 'center',
-}); 
+});
 
 export const ButtomHalf = styled(YStack, {
-  height: '60%', 
+  height: '60%',
   width: '100%',
   backgroundColor: 'lightblue',
   justifyContent: 'center',
   alignItems: 'center',
 });
-
 
 export const ButtonText = styled(SizableText, {
   color: '#FFFFFF',
@@ -97,10 +122,11 @@ export const ButtonText = styled(SizableText, {
 const config = createTamagui({
   light: {
     color: {
-      background: 'gray',
+      background: 'white',
       text: 'black',
     },
   },
+  backgroundColor: 'white',
   defaultFont: 'body',
   animations,
   shouldAddPrefersColorThemes: true,
