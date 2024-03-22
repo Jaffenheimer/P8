@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
         return await Connection.QueryFirstOrDefaultAsync<User>(query, new { UserName = name });
     }
     
-    public async Task<bool> Upsert(Guid id, string userName, string password)
+    public async Task<bool> CreateUser(Guid id, string userName, string password)
     {
         //TODO: Check om user eksisterer
         var query =
