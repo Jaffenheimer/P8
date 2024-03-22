@@ -1,16 +1,18 @@
+import { Stack } from 'expo-router';
 import React from 'react';
-import { YStack, ButtonText, SizableText } from 'tamagui';
+import { YStack, SizableText, Text } from 'tamagui';
 
-import { Title, Button, Container, Input} from '~/tamagui.config';
+import {Input, InputLabel } from '~/tamagui.config';
 
 const inputField = ({ label }) => {
   return (
-    <Container>
-      <YStack>
-        <SizableText>{label}</SizableText>
-        <Input type="text" placeholder={label} />
-      </YStack>
-    </Container>
+    <YStack>
+      <Stack.Screen options={{ headerShown: false }} />
+      <InputLabel>
+        {label}
+      </InputLabel>
+      <Input type="text" placeholder={label} />
+    </YStack>
   );
 };
 

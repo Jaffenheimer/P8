@@ -62,6 +62,13 @@ export const Input = styled(TextInput, {
   width: '100%',
 });
 
+export const InputLabel = styled(SizableText, {
+  color: '#1C1C1C',
+  fontSize: 14,
+  marginTop: 14,
+  textAlign: 'left',
+});
+
 export const Title = styled(H1, {
   color: '#1C1C1C',
   size: '$12',
@@ -84,7 +91,6 @@ export const Button = styled(YStack, {
   hoverStyle: {
     backgroundColor: '#5a5fcf',
   },
-  justifyContent: 'center',
   maxWidth: 500,
   padding: 16,
   shadowColor: '#000',
@@ -94,6 +100,7 @@ export const Button = styled(YStack, {
   },
   shadowOpacity: 0.25,
   shadowRadius: 3.84,
+  marginTop: 16,
 });
 
 export const TopHalf = styled(YStack, {
@@ -104,7 +111,7 @@ export const TopHalf = styled(YStack, {
   alignItems: 'center',
 });
 
-export const ButtomHalf = styled(YStack, {
+export const BottomHalf = styled(YStack, {
   height: '60%',
   width: '100%',
   backgroundColor: 'lightblue',
