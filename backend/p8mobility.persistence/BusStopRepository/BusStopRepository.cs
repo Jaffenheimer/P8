@@ -61,13 +61,13 @@ public class BusStopRepository : IBusStopRepository
 
         var query2 = $@"SELECT MAX(OrderNum) FROM {TableName}";
         var orderNum = await Connection.QueryFirstOrDefaultAsync<int>(query2);
-
+        orderNum++;
         var parameters = new
         {
             Id = id,
             Latitude = latitude,
             Longitude = longitude,
-            OrderNum = orderNum + 1,
+            OrderNum = orderNum,
             UpdatedAt = DateTime.UtcNow
         };
         return await Connection.ExecuteAsync(query, parameters) > 0;

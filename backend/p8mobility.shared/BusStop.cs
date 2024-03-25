@@ -14,6 +14,7 @@ public class BusStop
     {
     }
 
+
     public BusStop(Guid id, decimal latitude, decimal longitude, int peopleCount, int orderNum)
     {
         Id = id;

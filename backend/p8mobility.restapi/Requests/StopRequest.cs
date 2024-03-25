@@ -4,7 +4,11 @@ namespace p8_restapi.Requests
 {
     public class StopRequest
     {
-        private DateTime _timestamp = DateTime.UtcNow;
+        public Guid Id { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
         public int PeopleCount { get; set; }
+
+        private DateTime _timestamp = DateTime.UtcNow;
     }
 }
