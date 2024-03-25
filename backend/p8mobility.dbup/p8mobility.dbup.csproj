@@ -9,6 +9,16 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="scripts\BusStop.sql" />
+      <None Remove="scripts\User.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="scripts\BusStop.sql" />
+      <EmbeddedResource Include="scripts\User.sql" />
+    </ItemGroup>
     
 
     <ItemGroup>
