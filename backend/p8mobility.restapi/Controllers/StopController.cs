@@ -16,18 +16,42 @@ public class StopController : ControllerBase
         _busStopRepository = busStopRepository;
     }
 
-    [HttpPost("GetPeopleCount")]
-    public async Task<IActionResult> GetPeopleCount([FromBody] StopRequest req)
-    {
-        await Console.Out.WriteLineAsync(req.PeopleCount.ToString());
-        
+    [HttpPost("FetchPeopleCountFromClient")]
+    public async Task<IActionResult> FetchPeopleCount([FromBody] StopRequest req)
+    {   
         return Ok("PeopleCount: " + req.PeopleCount);
     }
-    [HttpGet("CreateBusStop")]
+
+    [HttpGet("GetPeopleCountFromId")]
+    public async Task<IActionResult> GetPeopleCountFromId([FromQuery] StopRequest req)
+    {
+        var res = await _busStopRepository.GetPeopleCountFromId(req.Id);
+        if (res is null) return BadRequest("Bus stop not found");
+        return Ok(res.PeopleCount);
+    }
+
+    [HttpPut("CreateBusStop")]
     public async Task<IActionResult> CreateBusStop([FromQuery] StopRequest req)
     {
         var res = await _busStopRepository.UpsertBusStop(req.Id, req.Latitude, req.Longitude, req.PeopleCount);
         if (!res) return BadRequest("Could not create bus stop");
         return Ok("Bus stop created succesfully");
     }
+
+    [HttpPatch("UpdatePeopleCount")]
+    public async Task<IActionResult> UpdatePeopleCount([FromBody] StopRequest req)
+    {
+        var res = await _busStopRepository.ChangePeopleCount(req.Id, req.PeopleCount);
+        if (!res) return BadRequest("PeopleCount could not be updated");
+        return Ok($"[{req.Id}] PeopleCount updated");
+    }
+
+    [HttpDelete("DeleteBusStop")]
+    public async Task<IActionResult> DeleteBusStop([FromBody] StopRequest req)
+    {
+        var res = await _busStopRepository.DeleteBusStop(req.Id);
+        if (!res) return BadRequest("Bus stop could not be deleted");
+        return Ok($"Bus stop [{req.Id}] succesfully deleted");
+    }
+
 }

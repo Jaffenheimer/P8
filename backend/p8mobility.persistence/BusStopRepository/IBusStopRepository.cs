@@ -26,4 +26,6 @@ public interface IBusStopRepository
     /// <param name="longitude"></param>
     /// <returns></returns>
     public Task<bool> UpsertBusStop(Guid id, double latitude, double longitude, int peopleCount);
+    public Task<bool> ChangePeopleCount(Guid id, int peopleCount);
+
 }
