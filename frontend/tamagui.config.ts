@@ -7,23 +7,23 @@ import { TextInput } from 'react-native';
 import { createTamagui, styled, SizableText, H1, YStack } from 'tamagui';
 
 const animations = createAnimations({
-  bouncy: {
-    damping: 10,
-    mass: 0.9,
-    stiffness: 100,
-    type: 'spring',
-  },
-  lazy: {
-    damping: 20,
-    type: 'spring',
-    stiffness: 60,
-  },
-  quick: {
-    damping: 20,
-    mass: 1.2,
-    stiffness: 250,
-    type: 'spring',
-  },
+    bouncy: {
+        damping: 10,
+        mass: 0.9,
+        stiffness: 100,
+        type: 'spring',
+    },
+    lazy: {
+        damping: 20,
+        type: 'spring',
+        stiffness: 60,
+    },
+    quick: {
+        damping: 20,
+        mass: 1.2,
+        stiffness: 250,
+        type: 'spring',
+    },
 });
 
 const headingFont = createInterFont();
@@ -31,136 +31,128 @@ const headingFont = createInterFont();
 const bodyFont = createInterFont();
 
 export const Container = styled(YStack, {
-  flex: 1,
-  padding: 24,
+    flex: 1,
+    padding: 24,
+    backgroundColor: '$backgroundColor',
 });
 
 export const Main = styled(YStack, {
-  flex: 1,
-  justifyContent: 'space-between',
-  alignContent: 'center',
-  maxWidth: 960,
+    flex: 1,
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    maxWidth: 960,
 });
 
-// .h1 {
-//   color: var(--color2, #1C1C1C);
-
-//   /* Heading/H1 */
-//   font-family: Inter;
-//   font-size: 44px;
-//   font-style: normal;
-//   font-weight: 700;
-//   line-height: 53px;
-//   }
-
 export const Input = styled(TextInput, {
-  backgroundColor: '#F8F8F8',
-  borderRadius: 8,
-  color: '#F8F8F8',
-  fontSize: 16,
-  padding: 16,
-  width: '100%',
+    backgroundColor: '#F8F8F8',
+    borderRadius: 8,
+    color: '$color',
+    fontSize: 16,
+    padding: 16,
+    width: '100%',
+    marginTop: 10,
+});
+
+export const UserInformationForm = styled(YStack, {
+    marginTop: 20,
+    marginBottom: 20,
 });
 
 export const InputLabel = styled(SizableText, {
-  color: '#1C1C1C',
-  fontSize: 14,
-  marginTop: 14,
-  textAlign: 'left',
+    color: '$color',
+    fontSize: 14,
+    marginTop: 14,
+    textAlign: 'left',
 });
 
 export const Title = styled(H1, {
-  color: '#1C1C1C',
-  size: '$12',
-  fontSize: 44,
-  fontStyle: 'normal',
-  fontWeight: '700',
-  lineHeight: 53,
-  textAlign: 'center',
+    size: '$12',
+    fontSize: 44,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 53,
+    textAlign: 'center',
+    marginTop: 30,
 });
 
 export const Subtitle = styled(SizableText, {
-  color: '#38434D',
-  size: '$9',
+    color: '#38434D',
+    size: '$9',
 });
 
 export const Button = styled(YStack, {
-  alignItems: 'center',
-  backgroundColor: '#6366F1',
-  borderRadius: 28,
-  hoverStyle: {
-    backgroundColor: '#5a5fcf',
-  },
-  maxWidth: 500,
-  padding: 16,
-  shadowColor: '#000',
-  shadowOffset: {
-    height: 2,
-    width: 0,
-  },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-  marginTop: 16,
-});
-
-export const TopHalf = styled(YStack, {
-  height: '40%',
-  width: '100%',
-  backgroundColor: 'yellow',
-  justifyContent: 'center',
-  alignItems: 'center',
-});
-
-export const BottomHalf = styled(YStack, {
-  height: '60%',
-  width: '100%',
-  backgroundColor: 'lightblue',
-  justifyContent: 'center',
-  alignItems: 'center',
+    alignItems: 'center',
+    backgroundColor: '#6366F1',
+    borderRadius: 28,
+    hoverStyle: {
+        backgroundColor: '#5a5fcf',
+    },
+    maxWidth: 500,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+        height: 2,
+        width: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    marginTop: 16,
 });
 
 export const ButtonText = styled(SizableText, {
-  color: '#FFFFFF',
-  fontSize: 16,
-  fontWeight: '600',
-  textAlign: 'center',
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+});
+
+export const LinkText = styled(SizableText, {
+    color: '#6366F1',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+});
+
+export const LinkContainer = styled(YStack, {
+    marginTop: 20,
 });
 
 const config = createTamagui({
-  light: {
-    color: {
-      background: 'white',
-      text: 'black',
+    themes: {
+        light: {
+            color: 'black',
+            background: 'white',
+            backgroundColor: '',
+        },
     },
-  },
-  backgroundColor: 'white',
-  defaultFont: 'body',
-  animations,
-  shouldAddPrefersColorThemes: true,
-  themeClassNameOnRoot: true,
-  shorthands,
-  fonts: {
-    body: bodyFont,
-    heading: headingFont,
-  },
-  themes,
-  tokens,
-  media: createMedia({
-    xs: { maxWidth: 660 },
-    sm: { maxWidth: 800 },
-    md: { maxWidth: 1020 },
-    lg: { maxWidth: 1280 },
-    xl: { maxWidth: 1420 },
-    xxl: { maxWidth: 1600 },
-    gtXs: { minWidth: 660 + 1 },
-    gtSm: { minWidth: 800 + 1 },
-    gtMd: { minWidth: 1020 + 1 },
-    gtLg: { minWidth: 1280 + 1 },
-    short: { maxHeight: 820 },
-    tall: { minHeight: 820 },
-    hoverNone: { hover: 'none' },
-    pointerCoarse: { pointer: 'coarse' },
-  }),
+    backgroundColor: 'white',
+    defaultFont: 'body',
+    animations,
+    shouldAddPrefersColorThemes: true,
+    themeClassNameOnRoot: true,
+    shorthands,
+    fonts: {
+        body: bodyFont,
+        heading: headingFont,
+    },
+    tokens,
+    media: createMedia({
+        xs: { maxWidth: 660 },
+        sm: { maxWidth: 800 },
+        md: { maxWidth: 1020 },
+        lg: { maxWidth: 1280 },
+        xl: { maxWidth: 1420 },
+        xxl: { maxWidth: 1600 },
+        gtXs: { minWidth: 660 + 1 },
+        gtSm: { minWidth: 800 + 1 },
+        gtMd: { minWidth: 1020 + 1 },
+        gtLg: { minWidth: 1280 + 1 },
+        short: { maxHeight: 820 },
+        tall: { minHeight: 820 },
+        hoverNone: { hover: 'none' },
+        pointerCoarse: { pointer: 'coarse' },
+    }),
 });
 
 type AppConfig = typeof config;
@@ -169,7 +161,7 @@ type AppConfig = typeof config;
 // Docs: https://tamagui.dev/docs/core/configuration
 
 declare module 'tamagui' {
-  interface TamaguiCustomConfig extends AppConfig {}
+    interface TamaguiCustomConfig extends AppConfig {}
 }
 
 export default config;

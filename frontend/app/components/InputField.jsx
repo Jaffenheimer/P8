@@ -8,9 +8,9 @@ const inputField = ({ label }) => {
   return (
     <YStack>
       <Stack.Screen options={{ headerShown: false }} />
-      <InputLabel>
+      {/* <InputLabel>
         {label}
-      </InputLabel>
+      </InputLabel> */}
       <Input type="text" placeholder={label} />
     </YStack>
   );
