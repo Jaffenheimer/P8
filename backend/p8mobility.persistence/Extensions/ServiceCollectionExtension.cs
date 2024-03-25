@@ -7,7 +7,6 @@ using p8mobility.persistence.Dapper;
 using p8mobility.persistence.RouteRelationsRepository;
 using p8mobility.persistence.UserRepository;
 
-
 namespace p8mobility.persistence.Extensions;
 
 public static class ServiceCollectionExtension
@@ -22,7 +21,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IUserRepository, UserRepository.UserRepository>();
         services.AddScoped<IBusRepository, BusRepository.BusRepository>();
         services.AddScoped<IRouteRelationsRepository, RouteRelationsRepository.RouteRelationsRepository>();
-        
+
 
         // Dapper
         SqlMapper.AddTypeHandler(new GuidTypeHandler());

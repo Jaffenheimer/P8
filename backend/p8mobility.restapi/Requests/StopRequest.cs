@@ -6,6 +6,5 @@ namespace p8_restapi.Requests
     {
         private DateTime _timestamp = DateTime.UtcNow;
         public int PeopleCount { get; set; }
-
     }
 }

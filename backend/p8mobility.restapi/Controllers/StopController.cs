@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using p8_restapi.Requests;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using p8_restapi.Requests;
 
 namespace p8_restapi.Controllers;
 

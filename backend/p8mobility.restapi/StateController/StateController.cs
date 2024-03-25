@@ -18,7 +18,6 @@ public class StateController
     private State SystemState { get; set; }
     private List<Route> Routes { get; set; }
     private bool Running { get; set; } = true;
-
     private List<BusStop> BusStops { get; set; }
 
     public StateController(IBusStopRepository busStopRepository, IBusRepository busRepository,

@@ -38,7 +38,7 @@ public class BusRepository : IBusRepository
         };
         return await Connection.ExecuteAsync(query, parameters) > 0;
     }
-    
+
     public async Task<List<Bus>> GetAllBuses()
     {
         var query = $@"

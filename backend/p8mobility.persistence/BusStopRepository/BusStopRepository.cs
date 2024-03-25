@@ -35,7 +35,7 @@ public class BusStopRepository : IBusStopRepository
         };
         return await Connection.QueryFirstOrDefaultAsync<BusStop>(query, parameters);
     }
-    
+
     public async Task<BusStop> UpdatePeopleCount(Guid id, int peopleCount)
     {
         var query = $@"
@@ -61,7 +61,7 @@ public class BusStopRepository : IBusStopRepository
 
         var query2 = $@"SELECT MAX(OrderNum) FROM {TableName}";
         var orderNum = await Connection.QueryFirstOrDefaultAsync<int>(query2);
-        
+
         var parameters = new
         {
             Id = id,
@@ -109,7 +109,7 @@ public class BusStopRepository : IBusStopRepository
         var res = await Connection.QueryAsync<BusStop>(query);
         return res.AsList();
     }
-    
+
     public async Task<BusStop> GetBusStopFromId(Guid id)
     {
         var query = $@"
