@@ -2,6 +2,7 @@ from imutils.object_detection import non_max_suppression
 import numpy as np
 import argparse
 import cv2
+import requests
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to video file/stream")
@@ -19,6 +20,16 @@ args = vars(ap.parse_args())
 scale = 1.05
 wStride = 4
 
+id = "c4219aac-b1cd-4c0e-87fe-27be70c99cb6"
+currentBoxes = 0
+baseUrl = "http://localhost:5000"
+
+def PostPeopleCount(request):
+    url = baseUrl+"/stops/GetPeopleCount"
+
+    response = requests.post(url, json=request)
+    print(response.text)
+    return response.text
 
 def img_detection(video, scale, wStride):
 
@@ -63,6 +74,7 @@ def img_detection(video, scale, wStride):
 
         #Set maximum number of boxes
         maxBoxes = len(boxes) if len(boxes) > maxBoxes else maxBoxes
+        currentBoxes = len(boxes)
 
         #Shows video feed with boxes
         cv2.imshow('People Detector', frame)
@@ -77,12 +89,15 @@ def img_detection(video, scale, wStride):
             # out.release()
             cv2.destroyAllWindows()
             break
-
+        #return currentBoxes
     #Clean up
     cam.release()
     if not args.get("test", True):
         out.release()
     cv2.destroyAllWindows()
     return maxBoxes
+while True:
+    boxes = img_detection(args["video"], scale, wStride)
 
-img_detection(args["video"], scale, wStride)
+req = {"id": id, "peopleCount": boxes}
+PostPeopleCount(req)
