@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using p8_restapi.Requests;
+using System;
 using System.Threading.Tasks;
 
 namespace p8_restapi.Controllers;
@@ -12,8 +14,9 @@ public class StopController : ControllerBase
     }
 
     [HttpPost("GetPeopleCount")]
-    public async Task<IActionResult> FetchPeopleCount()
+    public async Task<IActionResult> FetchPeopleCount([FromBody] StopRequest req)
     {
-        return Ok("Okidoki");
+        await Console.Out.WriteLineAsync(req.PeopleCount.ToString());
+        return Ok("PeopleCount: " + req.PeopleCount);
     }
 }
