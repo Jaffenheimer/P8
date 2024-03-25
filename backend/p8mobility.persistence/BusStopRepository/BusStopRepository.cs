@@ -35,17 +35,18 @@ public class BusStopRepository : IBusStopRepository
         return await Connection.QueryFirstOrDefaultAsync<BusStop>(query, parameters);
     }
 
-    public async Task<bool> UpsertBusStop(Guid id, decimal latitude, decimal longitude)
+    public async Task<bool> UpsertBusStop(Guid id, double latitude, double longitude, int peopleCount)
     {
         var query = $@"
-            INSERT INTO {TableName} (Id, Latitude, Longitude, UpdatedAt)
-            VALUES (@Id, @Latitude, @Longitude, @UpdatedAt)";
+            INSERT INTO {TableName} (Id, Latitude, Longitude, PeopleCount, UpdatedAt)
+            VALUES (@Id, @Latitude, @Longitude, @PeopleCount, @UpdatedAt)";
 
         var parameters = new
         {
             Id = id,
             Latitude = latitude,
             Longitude = longitude,
+            PeopleCount = peopleCount,
             UpdatedAt = DateTime.UtcNow
         };
         return await Connection.ExecuteAsync(query, parameters) > 0;
