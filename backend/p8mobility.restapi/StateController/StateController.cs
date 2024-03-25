@@ -59,17 +59,19 @@ public class StateController
         }
     }
 
-    public void UpdateBusLocation(Guid id, decimal latitude, decimal longitude)
+    public async void UpdateBusLocation(Guid id, decimal latitude, decimal longitude)
     {
         var bus = GetBus(id);
         bus.Latitude = latitude;
         bus.Longitude = longitude;
+        await _busRepository.UpdateBusLocation(id, latitude, longitude);
     }
 
-    public void UpdateBusAction(Guid id, Action action)
+    public async void UpdateBusAction(Guid id, Action action)
     {
         var bus = GetBus(id);
         bus.Action = action;
+        await _busRepository.UpdateBusAction(id, action);
     }
 
     public void UpdatePeopleCount(Guid busStopId, int peopleCount)

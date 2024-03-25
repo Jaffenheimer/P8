@@ -38,6 +38,39 @@ public class BusRepository : IBusRepository
         };
         return await Connection.ExecuteAsync(query, parameters) > 0;
     }
+    
+    public async Task<bool> UpdateBusLocation(Guid id, decimal latitude, decimal longitude)
+    {
+        var query = $@"
+            UPDATE {TableName}
+            SET Latitude = @Latitude, Longitude = @Longitude, UpdatedAt = @UpdatedAt
+            WHERE Id = @Id";
+
+        var parameters = new
+        {
+            Id = id,
+            Latitude = latitude,
+            Longitude = longitude,
+            UpdatedAt = DateTime.UtcNow
+        };
+        return await Connection.ExecuteAsync(query, parameters) > 0;
+    }
+    
+    public async Task<bool> UpdateBusAction(Guid id, Action action)
+    {
+        var query = $@"
+            UPDATE {TableName}
+            SET Action = @Action, UpdatedAt = @UpdatedAt
+            WHERE Id = @Id";
+
+        var parameters = new
+        {
+            Id = id,
+            Action = action.ToString(),
+            UpdatedAt = DateTime.UtcNow
+        };
+        return await Connection.ExecuteAsync(query, parameters) > 0;
+    }
 
     public async Task<List<Bus>> GetAllBuses()
     {

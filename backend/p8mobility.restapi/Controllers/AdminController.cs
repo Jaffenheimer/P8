@@ -33,11 +33,18 @@ public class AdminController : ControllerBase
         _stateController.Run();
     }
 
+    /// <summary>
+    /// Create a user
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok if successful with the user object, otherwise bad request</returns>
     [HttpPost("createUser")]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest req)
     {
         await _userRepository.CreateUser(Guid.NewGuid(), req.Username, req.Password);
         var res = await _userRepository.GetUser(req.Username);
+        if(res == null)
+            return BadRequest("User could not be created");
         return Ok(res);
     }
 

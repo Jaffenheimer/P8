@@ -27,7 +27,12 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> CreateUser(Guid id, string userName, string password)
     {
-        //TODO: Check om user eksisterer
+        var checkIfUserExists = await GetUser(userName);
+        if (checkIfUserExists != null)
+        {
+            return false;
+        }
+
         var query =
             $@"INSERT INTO {TableName} (Id, UserName, PasswordHash, PasswordSalt, UpdatedAt)
                             VALUES (@Id, @UserName, @PasswordHash, @PasswordSalt, @UpdatedAt)";
