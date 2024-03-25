@@ -1,8 +1,10 @@
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
+using p8mobility.persistence.BusRepository;
 using p8mobility.persistence.BusStopRepository;
 using p8mobility.persistence.Connection;
 using p8mobility.persistence.Dapper;
+using p8mobility.persistence.RouteRelationsRepository;
 using p8mobility.persistence.UserRepository;
 
 
@@ -18,6 +20,8 @@ public static class ServiceCollectionExtension
         // Add repositories
         services.AddScoped<IBusStopRepository, BusStopRepository.BusStopRepository>();
         services.AddScoped<IUserRepository, UserRepository.UserRepository>();
+        services.AddScoped<IBusRepository, BusRepository.BusRepository>();
+        services.AddScoped<IRouteRelationsRepository, RouteRelationsRepository.RouteRelationsRepository>();
         
 
         // Dapper

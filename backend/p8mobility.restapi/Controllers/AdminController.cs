@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using p8_restapi.Requests;
 using p8_shared;
+using p8mobility.persistence.BusRepository;
 using p8mobility.persistence.BusStopRepository;
+using p8mobility.persistence.RouteRelationsRepository;
 using p8mobility.persistence.UserRepository;
 
 namespace p8_restapi.Controllers;
@@ -14,20 +16,25 @@ namespace p8_restapi.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly IBusStopRepository _busStopRepository;
+    private readonly IBusRepository _busRepository;
+    private readonly IRouteRelationsRepository _routeRelationsRepository;
     private static StateController.StateController _stateController;
     private readonly IUserRepository _userRepository;
 
-    public AdminController(IBusStopRepository busStopRepository, IUserRepository userRepository)
+    public AdminController(IBusStopRepository busStopRepository, IUserRepository userRepository,
+        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository)
     {
         _busStopRepository = busStopRepository;
         _userRepository = userRepository;
+        _busRepository = busRepository;
+        _routeRelationsRepository = routeRelationsRepository;
         _stateController =
-            new StateController.StateController(_busStopRepository, new List<Bus>(), new List<BusStop>());
+            new StateController.StateController(_busStopRepository, _busRepository, _routeRelationsRepository);
         _stateController.Init();
         _stateController.Run();
     }
 
-    [HttpPost("createuser")]
+    [HttpPost("createUser")]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest req)
     {
         await _userRepository.CreateUser(Guid.NewGuid(), req.Username, req.Password);
@@ -47,7 +54,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> UpdateBusLocation(decimal latitude, decimal longitude, Guid busId)
     {
         _stateController.UpdateBusLocation(busId, latitude, longitude);
-        return Ok("Det virkede :D");
+        return Ok($"Bus with id {busId} was updated to location: {latitude}, {longitude}");
     }
 
     [HttpGet("bus/action")]
@@ -61,7 +68,9 @@ public class AdminController : ControllerBase
     [HttpPost("people/amount")]
     public async Task<IActionResult> UpdatePeopleAmount(int amount, Guid busStopId)
     {
-        return Ok("Det virkede :D");
+        await _busStopRepository.UpdatePeopleCount(busStopId, amount);
+        _stateController.UpdatePeopleCount(busStopId, amount);
+        return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
     }
 
     [HttpGet("people/amount")]

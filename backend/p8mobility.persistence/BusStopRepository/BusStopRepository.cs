@@ -35,6 +35,23 @@ public class BusStopRepository : IBusStopRepository
         };
         return await Connection.QueryFirstOrDefaultAsync<BusStop>(query, parameters);
     }
+    
+    public async Task<BusStop> UpdatePeopleCount(Guid id, int peopleCount)
+    {
+        var query = $@"
+            UPDATE {TableName}
+            SET PeopleCount = @PeopleCount, UpdatedAt = @UpdatedAt
+            WHERE Id = @Id
+            RETURNING *";
+
+        var parameters = new
+        {
+            Id = id,
+            PeopleCount = peopleCount,
+            UpdatedAt = DateTime.UtcNow
+        };
+        return await Connection.QueryFirstOrDefaultAsync<BusStop>(query, parameters);
+    }
 
     public async Task<bool> UpsertBusStop(Guid id, decimal latitude, decimal longitude)
     {
@@ -91,5 +108,19 @@ public class BusStopRepository : IBusStopRepository
 
         var res = await Connection.QueryAsync<BusStop>(query);
         return res.AsList();
+    }
+    
+    public async Task<BusStop> GetBusStopFromId(Guid id)
+    {
+        var query = $@"
+            SELECT *
+            FROM {TableName}
+            WHERE Id = @Id";
+
+        var parameters = new
+        {
+            Id = id
+        };
+        return await Connection.QueryFirstOrDefaultAsync<BusStop>(query, parameters);
     }
 }

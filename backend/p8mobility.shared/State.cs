@@ -4,12 +4,12 @@ namespace p8_shared;
 
 public class State
 {
-    public List<BusStop> BusStops { get; set; }
+    public List<Route> Routes { get; set; }
     public List<Bus> Buses { get; set; }
 
-    public State(List<Bus> buses, List<BusStop> busStops)
+    public State(List<Bus> buses, List<Route> routes)
     {
         Buses = buses;
-        BusStops = busStops;
+        Routes = routes;
     }
 }
