@@ -1,8 +1,17 @@
 import { Link, Stack } from 'expo-router';
 import React from 'react';
-import { YStack, SizableText } from 'tamagui';
+import { YStack } from 'tamagui';
 
-import { Title, Button, Container, Input, ButtonText, LinkContainer, LinkText, UserInformationForm } from '~/tamagui.config';
+import {
+    Title,
+    Button,
+    Container,
+    Input,
+    ButtonText,
+    LinkContainer,
+    LinkText,
+    UserInformationForm,
+} from '~/tamagui.config';
 
 const LoginPage = () => {
     return (
@@ -11,8 +20,8 @@ const LoginPage = () => {
             <YStack>
                 <Title>Login</Title>
                 <UserInformationForm>
-                <Input placeholder="Username" />
-                <Input placeholder="Password" />
+                    <Input placeholder="Username" />
+                    <Input placeholder="Password" />
                 </UserInformationForm>
                 <Button>
                     <ButtonText>Login</ButtonText>
