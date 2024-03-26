@@ -52,7 +52,9 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginRequest req)
     {
         var res = await _userRepository.LogIn(req.Username, req.Password);
-        _stateController.AddBus(new Bus(req.Latitude, req.Longitude, res.Id));
+        var bus = new Bus(req.Latitude, req.Longitude, res.Id);
+        bus.Country = req.Country;
+        _stateController.AddBus(bus);
         return Ok(res);
     }
 

@@ -20,25 +20,24 @@ public class BusRepository : IBusRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<bool> Upsert(Guid id, decimal latitude, decimal longitude, Action action)
+    public async Task<bool> Upsert(Guid id, decimal latitude, decimal longitude, string country, Action action)
     {
         var query = $@"
-            INSERT INTO {TableName} (Id, Latitude, Longitude, Action, UpdatedAt)
-            VALUES (@Id, @Latitude, @Longitude, @Action, @UpdatedAt)
-            ON CONFLICT (Id) DO UPDATE
-            SET Latitude = @Latitude, Longitude = @Longitude, Action = @Action, UpdatedAt = @UpdatedAt";
+            INSERT INTO {TableName} (Id, Latitude, Country, Longitude, Action, UpdatedAt)
+            VALUES (@Id, @Latitude, @Longitude,@Country, @Action, @UpdatedAt)";
 
         var parameters = new
         {
             Id = id,
             Latitude = latitude,
             Longitude = longitude,
+            Country = country,
             Action = action.ToString(),
             UpdatedAt = DateTime.UtcNow
         };
         return await Connection.ExecuteAsync(query, parameters) > 0;
     }
-    
+
     public async Task<bool> UpdateBusLocation(Guid id, decimal latitude, decimal longitude)
     {
         var query = $@"
@@ -55,7 +54,7 @@ public class BusRepository : IBusRepository
         };
         return await Connection.ExecuteAsync(query, parameters) > 0;
     }
-    
+
     public async Task<bool> UpdateBusAction(Guid id, Action action)
     {
         var query = $@"
