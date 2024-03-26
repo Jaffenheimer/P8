@@ -16,7 +16,7 @@ import {
 const LoginPage = () => {
     return (
         <Container>
-            <Stack.Screen options={{ headerShown: false }} />
+            <Stack.Screen />
             <YStack>
                 <Title>Login</Title>
                 <UserInformationForm>

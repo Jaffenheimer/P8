@@ -131,6 +131,7 @@ export const LinkText = styled(SizableText, {
 
 export const LinkContainer = styled(YStack, {
     marginTop: 20,
+    
 });
 
 export const PickerContainer = styled(YStack, {

@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { Stack } from 'expo-router';
 import { YStack, Text } from 'tamagui';
 import Select from '../components/Select';
-import { ArrowLeft } from '@tamagui/lucide-icons';
+import { ArrowLeft } from 'lucide-react-native';
 
 const WelcomePage = () => {
     const [country, setCountry] = useState('');
@@ -55,9 +55,9 @@ const WelcomePage = () => {
 
     return (
         <Container>
-            <Stack.Screen options={{ headerShown: false }} />
-            <ArrowLeft />
-            <Title>Welcome</Title>
+            <Stack.Screen options={{title: 'Welcome'}} />
+
+            
             <SelectContainer>
                 <Select items={countries} title={'Select a country'} onChange={setCountry} />
                 {country === '' ? (

@@ -16,18 +16,20 @@ import {
 const SignUpPage = () => {
     return (
         <Container>
-            <Stack.Screen options={{ headerShown: false }} />
+            <Stack.Screen options={{ title: 'Sign Up' }} />
             <YStack>
-                <Title>Sign Up</Title>
                 <UserInformationForm>
                     <Input placeholder="Username" />
                     <Input placeholder="Email" />
                     <Input placeholder="Password" />
                     <Input placeholder="Confirm Password" />
                 </UserInformationForm>
+                <Link href="/pages/WelcomePage" asChild>
                 <Button>
                     <ButtonText>Sign Up</ButtonText>
                 </Button>
+                </Link>
+
                 <LinkContainer>
                     <Link href="/pages/LoginPage">
                         Already have an account? <LinkText>Back to Login</LinkText>

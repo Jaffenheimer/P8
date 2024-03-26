@@ -12,9 +12,9 @@ export default function Page() {
             <Container>
                 <Main>
                     <Stack.Screen options={{ headerShown: false }} />
-                    {/* <LoginPage /> */}
+                    <LoginPage />
                     {/* <SignUpPage /> */}
-                    <WelcomePage />
+                    {/* <WelcomePage /> */}
                 </Main>
             </Container>
         </Theme>

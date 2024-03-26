@@ -15,7 +15,7 @@ const Select = ({ items, title, onChange }) => {
 
     return (
         <Container>
-            <Stack.Screen options={{ headerShown: false }} />
+            <Stack.Screen />
             <Picker selectedValue={value} onValueChange={onChangeFunction}>
                 <Picker.Item
                     value=""
