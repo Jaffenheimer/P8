@@ -35,12 +35,14 @@ public class RouteRelationsRepository : IRouteRelationsRepository
         return await Connection.ExecuteAsync(query, parameters) > 0;
     }
 
-    public async Task<bool> UpsertRouteRelation(Guid routeId, Guid busStopId, int orderNum)
+    public async Task<bool> UpsertRouteRelation(Guid routeId, Guid busStopId)
     {
         var query = $@"
             INSERT INTO {TableName} (RouteId, BusStopId, OrderNum, UpdatedAt)
             VALUES (@RouteId, @BusStopId, @OrderNum, @UpdatedAt)";
-
+        var query2 = $@"SELECT MAX(OrderNum) FROM {TableName}";
+        var orderNum = await Connection.QueryFirstOrDefaultAsync<int>(query2);
+        orderNum++;
         var parameters = new
         {
             RouteId = routeId,

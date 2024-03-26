@@ -47,6 +47,30 @@ public class AdminController : ControllerBase
             return BadRequest("User could not be created");
         return Ok(res);
     }
+    
+    [HttpPost("createBusStop")]
+    public async Task<IActionResult> CreateBusStop([FromBody] CreateBusStopRequest req)
+    {
+        var res = await _busStopRepository.UpsertBusStop(Guid.NewGuid(), req.Latitude, req.Longitude);
+        if (!res) return BadRequest("Could not create bus stop");
+        return Ok("Bus stop created succesfully");
+    }
+    
+    [HttpPost("createRoute")]
+    public async Task<IActionResult> CreateRoute([FromBody] CreateRouteRequest req)
+    {
+        var res = await _routeRelationsRepository.UpsertRoute(Guid.NewGuid(), req.Name);
+        if (!res) return BadRequest("Could not create route");
+        return Ok("Route created succesfully");
+    }
+    
+    [HttpPost("createRouteRelation")]
+    public async Task<IActionResult> CreateRouteRelation([FromBody] CreateRouteRelationRequest req)
+    {
+        var res = await _routeRelationsRepository.UpsertRouteRelation(req.RouteId, req.BusStopId);
+        if (!res) return BadRequest("Could not create route relation");
+        return Ok("Route relation created succesfully");
+    }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest req)
