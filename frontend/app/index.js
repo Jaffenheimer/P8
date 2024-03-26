@@ -1,7 +1,6 @@
 import { Stack } from 'expo-router';
 import { Theme } from 'tamagui';
 
-
 import { Container, Main } from '../tamagui.config';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';

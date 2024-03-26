@@ -99,6 +99,21 @@ export const Button = styled(YStack, {
     marginTop: 16,
 });
 
+export const BottomOfWelcomePage = styled(YStack, {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '$backgroundColor',
+    padding: 24,
+});
+
+export const NextButton = styled(Button, {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    zIndex: 10000,
+});
+
 export const ButtonText = styled(SizableText, {
     color: 'white',
     fontSize: 16,
@@ -116,6 +131,15 @@ export const LinkText = styled(SizableText, {
 
 export const LinkContainer = styled(YStack, {
     marginTop: 20,
+});
+
+export const PickerContainer = styled(YStack, {
+    borderColor: '#E2E8F0',
+});
+
+export const SelectContainer = styled(YStack, {
+    marginTop: 20,
+    marginBottom: 50,
 });
 
 const config = createTamagui({
