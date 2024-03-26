@@ -20,7 +20,7 @@ public interface IUserRepository
     /// <param name="userName"></param>
     /// <param name="password"></param>
     /// <returns>Returns true if successful E.g the number of rows affected is more than 0, otherwise false</returns>
-    public Task<bool> Upsert(Guid id, string userName, string password);
+    public Task<bool> CreateUser(Guid id, string userName, string password);
 
     /// <summary>
     /// Login a user by username and password

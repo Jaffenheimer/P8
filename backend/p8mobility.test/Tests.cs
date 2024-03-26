@@ -1,8 +1,6 @@
-﻿using System;
-using NUnit.Framework;
-using NUnit.Framework.Internal;
+﻿using NUnit.Framework;
 
-namespace p8_test
+namespace p8mobility.test
 {
     [TestFixture]
     public class Tests

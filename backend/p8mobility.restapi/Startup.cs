@@ -1,4 +1,3 @@
-using System.Net.Http;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +33,7 @@ namespace p8_restapi
                 });
                 services.AddSwaggerGen(s =>
                 {
-                    s.SwaggerDoc("v1", new OpenApiInfo { Title = ServiceName, Version = "v1" });
+                    s.SwaggerDoc("v1", new OpenApiInfo {Title = ServiceName, Version = "v1"});
                 });
 
                 services.ConfigurePersistenceMySqlConnection(Configuration.GetConnectionString("MySqlDatabase"));

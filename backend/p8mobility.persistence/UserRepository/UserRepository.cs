@@ -5,7 +5,6 @@ using Dapper;
 using p8_shared;
 using p8mobility.persistence.Connection;
 
-
 namespace p8mobility.persistence.UserRepository;
 
 public class UserRepository : IUserRepository
@@ -19,15 +18,21 @@ public class UserRepository : IUserRepository
     {
         _connectionFactory = connectionFactory;
     }
+
     public async Task<User> GetUser(string name)
     {
         var query = $@"SELECT * FROM {TableName} WHERE UserName = @UserName";
-        return await Connection.QueryFirstOrDefaultAsync<User>(query, new { UserName = name });
+        return await Connection.QueryFirstOrDefaultAsync<User>(query, new {UserName = name});
     }
-    
-    public async Task<bool> Upsert(Guid id, string userName, string password)
+
+    public async Task<bool> CreateUser(Guid id, string userName, string password)
     {
-        //TODO: Check om user eksisterer
+        var checkIfUserExists = await GetUser(userName);
+        if (checkIfUserExists != null)
+        {
+            return false;
+        }
+
         var query =
             $@"INSERT INTO {TableName} (Id, UserName, PasswordHash, PasswordSalt, UpdatedAt)
                             VALUES (@Id, @UserName, @PasswordHash, @PasswordSalt, @UpdatedAt)";
@@ -43,13 +48,13 @@ public class UserRepository : IUserRepository
         return await Connection.ExecuteAsync(query, parameters) > 0;
     }
 
-    
+
     public async Task<User> LogIn(string userName, string password)
     {
         var query = $@"SELECT * FROM {TableName} WHERE UserName = @userName";
 
 
-        var result = await Connection.QueryFirstOrDefaultAsync(query, new { userName });
+        var result = await Connection.QueryFirstOrDefaultAsync(query, new {userName});
 
         if (result != null)
         {
@@ -63,11 +68,11 @@ public class UserRepository : IUserRepository
 
         return null;
     }
-    
+
     public async Task<bool> DeleteUser(User user)
     {
         var query = $@"DELETE FROM {TableName} WHERE UserName = @Name";
-        var result = await Connection.ExecuteAsync(query, new { Name = user.Name });
+        var result = await Connection.ExecuteAsync(query, new {Name = user.Name});
         return result > 0;
     }
 }
