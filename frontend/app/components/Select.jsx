@@ -5,7 +5,7 @@ import { Container } from '~/tamagui.config';
 import { Stack } from 'expo-router';
 import { YStack } from 'tamagui';
 
-const Select = ({ items }) => {
+const Select = ({ items, title }) => {
     const [Enable, setEnable] = useState('courses');
 
     return (
@@ -19,8 +19,9 @@ const Select = ({ items }) => {
                         mode={'dialog'}
                         onValueChange={(itemValue) => setEnable(itemValue)}
                     >
+                        <Picker.Item value="" label={`--- ${title} ---`} enabled={false} />
                         {items.map((item) => (
-                            <Picker.Item label={item} value={item} />
+                            <Picker.Item label={item} value={item} key={item} />
                         ))}
                     </Picker>
                 </View>
