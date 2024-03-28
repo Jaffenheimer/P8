@@ -1,0 +1,2 @@
+Step,Id,Route,NextBusStop,DistanceToNextBus,PedestrianCount,AverageWaitTime
+1,bus_r_0_0,r_0,115.9,,2,1.0

@@ -18,7 +18,7 @@ for route in allRoutes:
                 continue
             personFlow = ET.SubElement(routes, 'personFlow')
             # 86400 is 24 hours in seconds
-            personFlow.attrib = {'id': f'person_from_{route[i]}_to_{route[j]}', 'begin': '0.00', 'end':'86400', 'probability': '0.05', 'departPos': busLocationDict[route[i]]}
+            personFlow.attrib = {'id': f'person_from_{route[i]}_to_{route[j]}', 'begin': '0.00', 'end':'86400', 'probability': '0.1', 'departPos': busLocationDict[route[i]]}
             # walk = ET.SubElement(personFlow, 'walk')
             # walk.attrib = {'from': leftRoute[i], 'to': leftRoute[i]}
             ride = ET.SubElement(personFlow, 'ride')
