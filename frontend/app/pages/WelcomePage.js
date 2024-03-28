@@ -1,18 +1,15 @@
 import React from 'react';
 import {
-    Title,
     Container,
     SelectContainer,
-    Button,
     ButtonText,
     NextButton,
     BottomOfWelcomePage,
 } from '~/tamagui.config';
 import { useState } from 'react';
 import { Stack } from 'expo-router';
-import { YStack, Text } from 'tamagui';
+import { Text } from 'tamagui';
 import Select from '../components/Select';
-import { ArrowLeft } from 'lucide-react-native';
 
 const WelcomePage = () => {
     const [country, setCountry] = useState('');
