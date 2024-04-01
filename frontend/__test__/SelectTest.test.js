@@ -28,7 +28,7 @@ it('renders the correct title', async () => {
 });
 
 
-it ('renders the correct items', async () => {
+test('onChange function is called when onchange is triggered', async () => {
     const items = [
         { label: 'Chile', value: 'Chile' },
         { label: 'Peru', value: 'Peru' },

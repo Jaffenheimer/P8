@@ -28,7 +28,7 @@ const Select = ({ items, title, onChange }) => {
                         color: 'white',
                     },
                 }}
-                placeholder={{ label: `--- ${title} ---`, value: null }}
+                placeholder={{ label: `--- ${title} ---`, value: '' }}
                 value={value}
             />
         </Container>
