@@ -38,6 +38,7 @@ public class AdminController : ControllerBase
     /// </summary>
     /// <param name="req"></param>
     /// <returns>Ok if successful with the user object, otherwise bad request</returns>
+    //maybe create user and login should be in a user controller
     [HttpPost("createUser")]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest req)
     {
@@ -45,6 +46,21 @@ public class AdminController : ControllerBase
         var res = await _userRepository.GetUser(req.Username);
         if(res == null)
             return BadRequest("User could not be created");
+        return Ok(res);
+    }
+    
+    /// <summary>
+    /// Logs the user in
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok if user is logged in otherwise bad request</returns>
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest req)
+    {
+        var res = await _userRepository.LogIn(req.Username, req.Password);
+        var bus = new Bus(req.Latitude, req.Longitude, res.Id);
+        bus.Country = req.Country;
+        _stateController.AddBus(bus);
         return Ok(res);
     }
     
@@ -72,49 +88,5 @@ public class AdminController : ControllerBase
         return Ok("Route relation created succesfully");
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest req)
-    {
-        var res = await _userRepository.LogIn(req.Username, req.Password);
-        var bus = new Bus(req.Latitude, req.Longitude, res.Id);
-        bus.Country = req.Country;
-        _stateController.AddBus(bus);
-        return Ok(res);
-    }
-
-    [HttpPost("bus/location")]
-    public async Task<IActionResult> UpdateBusLocation(decimal latitude, decimal longitude, Guid busId)
-    {
-        _stateController.UpdateBusLocation(busId, latitude, longitude);
-        return Ok($"Bus with id {busId} was updated to location: {latitude}, {longitude}");
-    }
-
-    [HttpGet("bus/action")]
-    public Task<IActionResult> BusAction(Guid id)
-    {
-        var res = _stateController.GetBus(id);
-        return Task.FromResult<IActionResult>(Ok(res));
-    }
-
-    //Maybe create a service to retrieve this.
-    [HttpPost("people/amount")]
-    public async Task<IActionResult> UpdatePeopleAmount(int amount, Guid busStopId)
-    {
-        await _busStopRepository.UpdatePeopleCount(busStopId, amount);
-        _stateController.UpdatePeopleCount(busStopId, amount);
-        return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
-    }
-
-    [HttpGet("people/amount")]
-    public async Task<IActionResult> GetPeopleAmount(Guid busStopId)
-    {
-        return Ok("Det virkede :D");
-    }
-
-    [HttpDelete("shutdown/bus")]
-    public Task<IActionResult> DeleteBus(Guid id)
-    {
-        _stateController.DeleteBus(id);
-        return Task.FromResult<IActionResult>(Ok($"Bus with id {id} was shut down"));
-    }
+    
 }

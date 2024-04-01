@@ -28,11 +28,4 @@ public class StopController : ControllerBase
         return Ok("PeopleCount: " + req.PeopleCount);
     }
 
-    [HttpGet("CreateBusStop")]
-    public async Task<IActionResult> CreateBusStop([FromQuery] StopRequest req)
-    {
-        var res = await _busStopRepository.UpsertBusStop(req.Id, req.Latitude, req.Longitude);
-        if (!res) return BadRequest("Could not create bus stop");
-        return Ok("Bus stop created succesfully");
-    }
 }
