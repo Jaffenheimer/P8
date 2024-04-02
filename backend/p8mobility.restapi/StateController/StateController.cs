@@ -48,14 +48,12 @@ public class StateController
         while (Running)
         {
             //Maybe look into making a better solution
-            Task.Delay(2000);
+            //Task.Delay(2000);
 
 
             //Mutex might be necessary
-            var mutex = new Mutex();
             var currentState = SystemState;
             SystemState = UpdateState(currentState);
-            mutex.ReleaseMutex();
         }
     }
 
