@@ -105,4 +105,68 @@ public class AdminController : ControllerBase
         if (!res) return BadRequest("Could not create route relation");
         return Ok("Route relation created succesfully");
     }
+    
+    /// <summary>
+    /// Updates bus to be at a new location
+    /// </summary>
+    /// <param name="latitude"></param>
+    /// <param name="longitude"></param>
+    /// <param name="busId"></param>
+    /// <returns>Ok with confirmation of where bus is</returns>
+    [HttpPost("bus/location")]
+    public async Task<IActionResult> UpdateBusLocation(decimal latitude, decimal longitude, Guid busId)
+    {
+        _stateController.UpdateBusLocation(busId, latitude, longitude);
+        return Ok($"Bus with id {busId} was updated to location: {latitude}, {longitude}");
+    }
+
+    /// <summary>
+    /// Retrieves the calculated action for a specific bus
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Action</returns>
+    [HttpGet("bus/action")]
+    public Task<IActionResult> BusAction(Guid id)
+    {
+        var res = _stateController.GetBus(id);
+        return Task.FromResult<IActionResult>(Ok(res));
+    }
+    
+    /// <summary>
+    /// Shutdown/Deletes bus
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Ok with confirmation of where id of bus</returns>
+    [HttpDelete("bus/shutdown")]
+    public Task<IActionResult> DeleteBus(Guid id)
+    {
+        _stateController.DeleteBus(id);
+        return Task.FromResult<IActionResult>(Ok($"Bus with id {id} was shut down"));
+    }
+    
+    /// <summary>
+    /// Updates the amount of people at a bus stop
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <param name="busStopId"></param>
+    /// <returns>Ok with confirmation of what bus stop is updated with how many people</returns>
+    [HttpPost("people/amount")]
+    public async Task<IActionResult> UpdatePeopleAmount(int amount, Guid busStopId)
+    {
+        await _busStopRepository.UpdatePeopleCount(busStopId, amount);
+        _stateController.UpdatePeopleCount(busStopId, amount);
+        return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
+    }
+
+    /// <summary>
+    /// Gets the amount of people at a bus stop
+    /// </summary>
+    /// <param name="busStopId"></param>
+    /// <returns>Ok</returns>
+    [HttpGet("people/amount")]
+    public async Task<IActionResult> GetPeopleAmount(Guid busStopId)
+    {
+        return Ok("Det virkede :D");
+    }
+    
 }
