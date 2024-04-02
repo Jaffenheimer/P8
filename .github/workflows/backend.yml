@@ -15,8 +15,8 @@ jobs:
         runs-on: windows-latest
 
         env:
-            Solution_Name: p8mobility.sln
-            Test_Project_Path: p8mobility.test/p8mobility.test.csproj
+            Solution_Name: backend/p8mobility.sln
+            Test_Project_Path: backend/p8mobility.test/p8mobility.test.csproj
 
         steps:
             - name: Checkout
