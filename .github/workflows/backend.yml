@@ -15,7 +15,8 @@ jobs:
         runs-on: windows-latest
 
         env:
-            working-directory: ./backend
+            Solution_Name: p8mobility.sln
+            Test_Project_Path: p8mobility.test/p8mobility.test.csproj
 
         steps:
             - name: Checkout
@@ -36,3 +37,4 @@ jobs:
             # Execute all unit tests in the solution
             - name: Execute unit tests
               run: dotnet test
+              working-directory: ./backend
