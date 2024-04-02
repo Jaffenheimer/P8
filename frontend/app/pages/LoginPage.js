@@ -16,12 +16,11 @@ import {
 const LoginPage = () => {
     return (
         <Container>
-            <Stack.Screen options={{ headerShown: false }} />
+            <Stack.Screen options={{ title: 'Login' }} />
             <YStack>
-                <Title>Login</Title>
                 <UserInformationForm>
-                    <Input placeholder="Username" />
-                    <Input placeholder="Password" />
+                    <Input placeholder="Username" testID="input-field" />
+                    <Input placeholder="Password" testID="input-field" secureTextEntry={true} />
                 </UserInformationForm>
                 <Button>
                     <ButtonText>Login</ButtonText>

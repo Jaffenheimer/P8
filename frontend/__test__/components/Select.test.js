@@ -1,19 +1,16 @@
-import { renderRouter, screen, fireEvent } from 'expo-router/testing-library';
+import { screen, fireEvent } from 'expo-router/testing-library';
 import Select from '../../app/components/Select';
 import { render } from '../testSetup/helper';
 
 describe('Select', () => {
-    const items = [
-        { label: 'Chile', value: 'Chile' },
-        { label: 'Peru', value: 'Peru' },
-    ];
+    const items = ['Chile', 'Peru'];
     const title = 'this is title';
     const onChange = jest.fn();
 
     beforeEach(() => {
-        render(<Select items={items} title={title} onChange={onChange} />)
+        render(<Select items={items} title={title} onChange={onChange} />);
     });
-    
+
     it('renders the correct title', async () => {
         expect(screen.getByDisplayValue('--- this is title ---')).toBeTruthy();
     });
