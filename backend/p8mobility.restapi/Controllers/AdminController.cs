@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using p8_restapi.Requests;
@@ -27,10 +28,12 @@ public class AdminController : ControllerBase
         _userRepository = userRepository;
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
-        //_stateController =
-            //new StateController.StateController(_busStopRepository, _busRepository, _routeRelationsRepository);
-        //_stateController.Init();
-        //_stateController.Run();
+        _stateController =
+            new StateController.StateController(_busStopRepository, _busRepository, _routeRelationsRepository);
+        _stateController.Init();
+        var ts = new ThreadStart(_stateController.Run);
+        var backgroundThread = new Thread(ts);
+        backgroundThread.Start();
     }
 
     /// <summary>
