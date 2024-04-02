@@ -16,5 +16,11 @@ namespace p8mobility.test
         {
             Assert.True(true);
         }
+        
+        [Test]
+        public void Test3()
+        {
+            Assert.True(true);
+        }
     }
 }
