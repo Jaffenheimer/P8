@@ -1,32 +1,22 @@
-import { Stack, Link } from 'expo-router';
-import { YStack, ButtonText } from 'tamagui';
+import { Stack } from 'expo-router';
+import { Theme } from 'tamagui';
 
-import { Container, Main, Title, Subtitle, Button } from '../tamagui.config';
+import { Container, Main } from '../tamagui.config';
+import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
+import WelcomePage from './pages/WelcomePage';
 
 export default function Page() {
-  return (
-    <Container>
-      <Main>
-        <Stack.Screen />
-        <YStack>
-          <Title>Test App</Title>
-          <Subtitle>Welcome to this test app</Subtitle>
-        </YStack>
-        <YStack>
-          <Link href={'/location'} asChild>
-            <Button style={'padding: 3px'}>
-              <ButtonText>Get Location</ButtonText>
-            </Button>
-          </Link>
-        </YStack>
-        <YStack>
-          <Link href={'/layouttest'} asChild>
-            <Button style={'padding: 3px'}>
-              <ButtonText>Go To Layout</ButtonText>
-            </Button>
-          </Link>
-        </YStack>
-      </Main>
-    </Container>
-  );
+    return (
+        <Theme name="light">
+            <Container>
+                <Main>
+                    <Stack.Screen options={{ headerShown: false }} />
+                    <LoginPage />
+                    {/* <SignUpPage /> */}
+                    {/* <WelcomePage /> */}
+                </Main>
+            </Container>
+        </Theme>
+    );
 }
