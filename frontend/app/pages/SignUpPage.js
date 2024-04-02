@@ -19,15 +19,19 @@ const SignUpPage = () => {
             <Stack.Screen options={{ title: 'Sign Up' }} />
             <YStack>
                 <UserInformationForm>
-                    <Input placeholder="Username" />
-                    <Input placeholder="Email" />
-                    <Input placeholder="Password" />
-                    <Input placeholder="Confirm Password" />
+                    <Input testID="input-field" placeholder="Username" />
+                    <Input testID="input-field" placeholder="Email" />
+                    <Input testID="input-field" secureTextEntry={true} placeholder="Password" />
+                    <Input
+                        testID="input-field"
+                        secureTextEntry={true}
+                        placeholder="Confirm Password"
+                    />
                 </UserInformationForm>
                 <Link href="/pages/WelcomePage" asChild>
-                <Button>
-                    <ButtonText>Sign Up</ButtonText>
-                </Button>
+                    <Button>
+                        <ButtonText>Sign Up</ButtonText>
+                    </Button>
                 </Link>
 
                 <LinkContainer>

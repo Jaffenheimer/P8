@@ -11,7 +11,7 @@ export default function Page() {
         <Theme name="light">
             <Container>
                 <Main>
-                    <Stack.Screen options={{ headerShown: false }} />
+                    <Stack.Screen />
                     <LoginPage />
                     {/* <SignUpPage /> */}
                     {/* <WelcomePage /> */}
