@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Container,
     SelectContainer,
@@ -16,24 +16,41 @@ const WelcomePage = () => {
     const [city, setCity] = useState('');
     const [route, setRoute] = useState('');
 
-    const countries = {
+    const countriesAndCities = {
         Chile: ['Santiago', 'Valparaiso'],
         Peru: ['Lima', 'Arequipa'],
     };
 
-    const cities = {
+    const citiesAndRoutes = {
         Santiago: ['Santiago 1', 'Santiago 2'],
         Valparaiso: ['Valparaiso 1', 'Valparaiso 2'],
         Lima: ['Lima 1', 'Lima 2'],
         Arequipa: ['Arequipa 1', 'Arequipa 2'],
     };
 
+    //when resetting country, city and route should be reset as well
+    useEffect(() => {
+        if (country === '') {
+            setCity('');
+            setRoute('');
+        }
+    }, [country]);
+
+    //when resetting city, route should be reset as well
+    useEffect(() => {
+        if (city === '') {
+            setRoute('');
+        }
+    }, [city]);
+
+    // dynamically set the options for the city select based on the selected country
     function setCitySelect() {
-        return countries[country] || [];
+        return countriesAndCities[country] || [];
     }
 
+    // dynamically set the options for the route select based on the selected city
     function setRoutesSelect() {
-        return cities[city] || [];
+        return citiesAndRoutes[city] || [];
     }
 
     return (
@@ -42,7 +59,7 @@ const WelcomePage = () => {
 
             <SelectContainer>
                 <Select
-                    items={Object.keys(countries)}
+                    items={Object.keys(countriesAndCities)}
                     title={'Select a country'}
                     onChange={setCountry}
                 />

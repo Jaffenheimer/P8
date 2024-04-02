@@ -15,8 +15,6 @@ const Select = ({ items, title, onChange }) => {
     return (
         <Container>
             <Stack.Screen />
-            <View>
-                <Text>{title}</Text>
                 <RNPickerSelect
                     onValueChange={onChangeFunction}
                     items={items.map((item) => ({ label: item, value: item }))}
@@ -43,7 +41,6 @@ const Select = ({ items, title, onChange }) => {
                     placeholder={{ label: `--- ${title} ---`, value: null }}
                     value={value}
                 />
-            </View>
         </Container>
     );
 };
