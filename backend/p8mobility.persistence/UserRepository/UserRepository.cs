@@ -21,7 +21,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetUser(string name)
     {
-        var query = $@"SELECT * FROM {TableName} WHERE UserName = @UserName";
+        var query = $@"SELECT UserName, ID FROM {TableName} WHERE UserName = @UserName";
         return await Connection.QueryFirstOrDefaultAsync<User>(query, new {UserName = name});
     }
 
@@ -72,7 +72,7 @@ public class UserRepository : IUserRepository
     public async Task<bool> DeleteUser(User user)
     {
         var query = $@"DELETE FROM {TableName} WHERE UserName = @Name";
-        var result = await Connection.ExecuteAsync(query, new {Name = user.Name});
+        var result = await Connection.ExecuteAsync(query, new {Name = user.UserName});
         return result > 0;
     }
 }
