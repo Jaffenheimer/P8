@@ -64,6 +64,11 @@ public class AdminController : ControllerBase
         return Ok(res);
     }
     
+    /// <summary>
+    /// Creates a bus stop
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok if bus stop is created otherwise bad request</returns>
     [HttpPost("createBusStop")]
     public async Task<IActionResult> CreateBusStop([FromBody] CreateBusStopRequest req)
     {
@@ -72,6 +77,11 @@ public class AdminController : ControllerBase
         return Ok("Bus stop created succesfully");
     }
     
+    /// <summary>
+    /// Creates a bus route
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok if bus route is created otherwise bad request</returns>
     [HttpPost("createRoute")]
     public async Task<IActionResult> CreateRoute([FromBody] CreateRouteRequest req)
     {
@@ -80,6 +90,11 @@ public class AdminController : ControllerBase
         return Ok("Route created succesfully");
     }
     
+    /// <summary>
+    /// Creates a route relation, that is connecting a bus stop to a route
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok if route relation is created otherwise bad request</returns>
     [HttpPost("createRouteRelation")]
     public async Task<IActionResult> CreateRouteRelation([FromBody] CreateRouteRelationRequest req)
     {
@@ -87,6 +102,4 @@ public class AdminController : ControllerBase
         if (!res) return BadRequest("Could not create route relation");
         return Ok("Route relation created succesfully");
     }
-
-    
 }

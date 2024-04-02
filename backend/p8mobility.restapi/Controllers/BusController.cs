@@ -32,7 +32,11 @@ public class BusController : ControllerBase
         _stateController.Run();
     }
     
-    
+    /// <summary>
+    /// Updates bus to be at a new location
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok with confirmation of where bus is</returns>
     [HttpPost("location")]
     public async Task<IActionResult> UpdateBusLocation(decimal latitude, decimal longitude, Guid busId)
     {
@@ -46,6 +50,12 @@ public class BusController : ControllerBase
         var res = _stateController.GetBus(id);
         return Task.FromResult<IActionResult>(Ok(res));
     }
+    
+    /// <summary>
+    /// Shutdown/Deletes bus
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok with confirmation of where id of bus</returns>
     [HttpDelete("shutdown")]
     public Task<IActionResult> DeleteBus(Guid id)
     {

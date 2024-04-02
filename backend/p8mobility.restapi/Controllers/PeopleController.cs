@@ -32,7 +32,11 @@ public class PeopleController : ControllerBase
         _stateController.Run();
     }
 
-
+    /// <summary>
+    /// Updates the amount of people at a bus stop
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok with confirmation of what bus stop is updated with how many people</returns>
     [HttpPost("amount")]
     public async Task<IActionResult> UpdatePeopleAmount(int amount, Guid busStopId)
     {
@@ -41,6 +45,11 @@ public class PeopleController : ControllerBase
         return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
     }
 
+    /// <summary>
+    /// Gets the amount of people at a bus stop
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns>Ok</returns>
     [HttpGet("amount")]
     public async Task<IActionResult> GetPeopleAmount(Guid busStopId)
     {
