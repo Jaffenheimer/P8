@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <RootNamespace>p8_dbup</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="scripts\BusStop.sql" />
+      <None Remove="scripts\User.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="scripts\BusStop.sql" />
+      <EmbeddedResource Include="scripts\User.sql" />
+      <None Remove="scripts\Route.sql" />
+      <EmbeddedResource Include="scripts\Route.sql" />
+      <None Remove="scripts\RouteRelations.sql" />
+      <EmbeddedResource Include="scripts\RouteRelations.sql" />
+      <None Remove="scripts\Bus.sql" />
+      <EmbeddedResource Include="scripts\Bus.sql" />
+    </ItemGroup>
+    
+
+    <ItemGroup>
+        <PackageReference Include="dbup-core" Version="5.0.76" />
+        <PackageReference Include="dbup-mysql" Version="5.0.40" />
+    </ItemGroup>
+</Project>
