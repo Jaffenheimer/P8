@@ -7,7 +7,6 @@ using p8_shared;
 using p8mobility.persistence.BusRepository;
 using p8mobility.persistence.BusStopRepository;
 using p8mobility.persistence.RouteRelationsRepository;
-using p8mobility.persistence.UserRepository;
 
 namespace p8_restapi.Controllers;
 
@@ -19,13 +18,11 @@ public class AdminController : ControllerBase
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
     private static StateController.StateController _stateController;
-    private readonly IUserRepository _userRepository;
 
-    public AdminController(IBusStopRepository busStopRepository, IUserRepository userRepository,
+    public AdminController(IBusStopRepository busStopRepository,
         IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository)
     {
         _busStopRepository = busStopRepository;
-        _userRepository = userRepository;
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
         _stateController =
@@ -35,22 +32,7 @@ public class AdminController : ControllerBase
         var backgroundThread = new Thread(ts);
         backgroundThread.Start();
     }
-
-    /// <summary>
-    /// Create a user
-    /// </summary>
-    /// <param name="req"></param>
-    /// <returns>Ok if successful with the user object, otherwise bad request</returns>
-    //maybe create user and login should be in a user controller
-    [HttpPost("createUser")]
-    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest req)
-    {
-        await _userRepository.CreateUser(Guid.NewGuid(), req.Username, req.Password);
-        var res = await _userRepository.GetUser(req.Username);
-        if(res == null)
-            return BadRequest("User could not be created");
-        return Ok(res);
-    }
+    
     
     /// <summary>
     /// Logs the user in
@@ -60,11 +42,7 @@ public class AdminController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest req)
     {
-        var res = await _userRepository.LogIn(req.Username, req.Password);
-        var bus = new Bus(req.Latitude, req.Longitude, res.Id);
-        bus.Country = req.Country;
-        _stateController.AddBus(bus);
-        return Ok(res);
+        return Ok("good shit");
     }
     
     /// <summary>
