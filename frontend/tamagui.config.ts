@@ -75,10 +75,12 @@ export const Title = styled(H1, {
     marginTop: 30,
 });
 
-export const Subtitle = styled(SizableText, {
-    color: '#38434D',
-    size: '$9',
+export const MainPageTitle = styled(Title, {
+    marginTop: '100%',
+    position: 'absolute',
+    marginLeft: '10%',
 });
+
 
 export const Button = styled(YStack, {
     alignItems: 'center',
@@ -99,21 +101,6 @@ export const Button = styled(YStack, {
     marginTop: 16,
 });
 
-export const BottomOfWelcomePage = styled(YStack, {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '$backgroundColor',
-    padding: 24,
-});
-
-export const NextButton = styled(Button, {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    zIndex: 10000,
-});
-
 export const ButtonText = styled(SizableText, {
     color: 'white',
     fontSize: 16,
@@ -121,26 +108,15 @@ export const ButtonText = styled(SizableText, {
     textAlign: 'center',
 });
 
-export const LinkText = styled(SizableText, {
-    color: '#6366F1',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-    textDecorationLine: 'underline',
+export const LogOutButton = styled(Button, {
+    width: '30%',
+    marginTop: '10%',
+    marginLeft: '70%',
 });
 
-export const LinkContainer = styled(YStack, {
-    marginTop: 20,
-    
-});
-
-export const PickerContainer = styled(YStack, {
-    borderColor: '#E2E8F0',
-});
-
-export const SelectContainer = styled(YStack, {
-    marginTop: 20,
-    marginBottom: 50,
+export const LogOutButtonContainer = styled(YStack, {
+    width: '100%',
+    height: '50%',
 });
 
 const config = createTamagui({
