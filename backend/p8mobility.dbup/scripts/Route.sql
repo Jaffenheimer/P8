@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS Route
 (
     Id        VARCHAR(40) PRIMARY KEY,
     Name      VARCHAR(255) NOT NULL,
-    UpdatedAt TIMESTAMP NOT NULL
+    UpdatedAt TIMESTAMP    NOT NULL
 );
 
 COMMIT;
