@@ -16,3 +16,12 @@
 
 ### Frontend Testing
 * Run `npm test` or `npm run test` 
+
+## SUMO
+install make if you do not have
+cd into Simulation\SUMO\makefile
+generate the appropriate xml files with `make run`
+    if you do not have all the packages install them with pip
+    
+Alternatively just run both python files in the SUMO folder (The generated xml files must be in the SUMO folder)
+
