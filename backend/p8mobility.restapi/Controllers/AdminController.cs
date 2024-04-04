@@ -7,7 +7,7 @@ using p8_shared;
 using p8mobility.persistence.BusRepository;
 using p8mobility.persistence.BusStopRepository;
 using p8mobility.persistence.RouteRelationsRepository;
-using p8mobility.persistence.UserRepository;
+using Action = p8_shared.Action;
 
 namespace p8_restapi.Controllers;
 
@@ -19,13 +19,11 @@ public class AdminController : ControllerBase
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
     private static StateController.StateController _stateController;
-    private readonly IUserRepository _userRepository;
 
-    public AdminController(IBusStopRepository busStopRepository, IUserRepository userRepository,
+    public AdminController(IBusStopRepository busStopRepository,
         IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository)
     {
         _busStopRepository = busStopRepository;
-        _userRepository = userRepository;
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
         _stateController =
@@ -35,36 +33,27 @@ public class AdminController : ControllerBase
         var backgroundThread = new Thread(ts);
         backgroundThread.Start();
     }
-
-    /// <summary>
-    /// Create a user
-    /// </summary>
-    /// <param name="req"></param>
-    /// <returns>Ok if successful with the user object, otherwise bad request</returns>
-    //maybe create user and login should be in a user controller
-    [HttpPost("createUser")]
-    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest req)
-    {
-        await _userRepository.CreateUser(Guid.NewGuid(), req.Username, req.Password);
-        var res = await _userRepository.GetUser(req.Username);
-        if(res == null)
-            return BadRequest("User could not be created");
-        return Ok(res);
-    }
+    
     
     /// <summary>
-    /// Logs the user in
+    /// Creates an Instance of a bus in the system
     /// </summary>
     /// <param name="req"></param>
-    /// <returns>Ok if user is logged in otherwise bad request</returns>
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest req)
+    /// <returns>Ok if successful otherwise bad request</returns>
+    [HttpPost("bus")]
+    public async Task<IActionResult> CreateBus([FromBody] CreateBusRequest req)
     {
-        var res = await _userRepository.LogIn(req.Username, req.Password);
-        var bus = new Bus(req.Latitude, req.Longitude, res.Id);
-        bus.Country = req.Country;
+        var routeId = await _routeRelationsRepository.GetRouteFromPassword(req.Password);
+        if (routeId == Guid.Empty || routeId == null) 
+            return BadRequest("Could not log in");
+        
+        var bus = new Bus(req.Latitude, req.Longitude, Guid.NewGuid(), routeId.Value);
+        var res = await _busRepository.Upsert(bus.Id, bus.Latitude, bus.Longitude, Action.Default);
+        if (!res)
+            return BadRequest("Could not log in");
         _stateController.AddBus(bus);
-        return Ok(res);
+        
+        return Ok(bus.Id);
     }
     
     /// <summary>
@@ -72,11 +61,13 @@ public class AdminController : ControllerBase
     /// </summary>
     /// <param name="req"></param>
     /// <returns>Ok if bus stop is created otherwise bad request</returns>
-    [HttpPost("createBusStop")]
+    [HttpPost("busStop")]
     public async Task<IActionResult> CreateBusStop([FromBody] CreateBusStopRequest req)
     {
         var res = await _busStopRepository.UpsertBusStop(Guid.NewGuid(), req.Latitude, req.Longitude);
-        if (!res) return BadRequest("Could not create bus stop");
+        if (!res) 
+            return BadRequest("Could not create bus stop");
+        
         return Ok("Bus stop created succesfully");
     }
     
@@ -85,25 +76,14 @@ public class AdminController : ControllerBase
     /// </summary>
     /// <param name="req"></param>
     /// <returns>Ok if bus route is created otherwise bad request</returns>
-    [HttpPost("createRoute")]
+    [HttpPost("route")]
     public async Task<IActionResult> CreateRoute([FromBody] CreateRouteRequest req)
     {
-        var res = await _routeRelationsRepository.UpsertRoute(Guid.NewGuid(), req.Name);
-        if (!res) return BadRequest("Could not create route");
+        var res = await _routeRelationsRepository.UpsertRoute(Guid.NewGuid(), req.Password, req.BusStopIds);
+        if (!res) 
+            return BadRequest("Could not create route");
+        
         return Ok("Route created succesfully");
-    }
-    
-    /// <summary>
-    /// Creates a route relation, that is connecting a bus stop to a route
-    /// </summary>
-    /// <param name="req"></param>
-    /// <returns>Ok if route relation is created otherwise bad request</returns>
-    [HttpPost("createRouteRelation")]
-    public async Task<IActionResult> CreateRouteRelation([FromBody] CreateRouteRelationRequest req)
-    {
-        var res = await _routeRelationsRepository.UpsertRouteRelation(req.RouteId, req.BusStopId);
-        if (!res) return BadRequest("Could not create route relation");
-        return Ok("Route relation created succesfully");
     }
     
     /// <summary>
@@ -131,19 +111,23 @@ public class AdminController : ControllerBase
         var res = _stateController.GetBus(id);
         return Task.FromResult<IActionResult>(Ok(res));
     }
-    
+
     /// <summary>
     /// Shutdown/Deletes bus
     /// </summary>
     /// <param name="id"></param>
     /// <returns>Ok with confirmation of where id of bus</returns>
-    [HttpDelete("bus/shutdown")]
-    public Task<IActionResult> DeleteBus(Guid id)
+    [HttpDelete("bus")]
+    public async Task<IActionResult> DeleteBus(Guid id)
     {
         _stateController.DeleteBus(id);
-        return Task.FromResult<IActionResult>(Ok($"Bus with id {id} was shut down"));
+
+        if (await _busRepository.DeleteBus(id))
+            return Ok($"Bus with id {id} was deleted");
+        
+        return BadRequest("Could not delete bus");
     }
-    
+
     /// <summary>
     /// Updates the amount of people at a bus stop
     /// </summary>
@@ -156,17 +140,6 @@ public class AdminController : ControllerBase
         await _busStopRepository.UpdatePeopleCount(busStopId, amount);
         _stateController.UpdatePeopleCount(busStopId, amount);
         return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
-    }
-
-    /// <summary>
-    /// Gets the amount of people at a bus stop
-    /// </summary>
-    /// <param name="busStopId"></param>
-    /// <returns>Ok</returns>
-    [HttpGet("people/amount")]
-    public async Task<IActionResult> GetPeopleAmount(Guid busStopId)
-    {
-        return Ok("Det virkede :D");
     }
     
 }

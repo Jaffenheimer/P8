@@ -20,22 +20,34 @@ public class RouteRelationsRepository : IRouteRelationsRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<bool> UpsertRoute(Guid id, string name)
+    public async Task<bool> UpsertRoute(Guid id, string password, List<Guid> busStopIds)
     {
         var query = $@"
-            INSERT INTO {RouteTableName} (Id, Name, UpdatedAt)
-            VALUES (@Id, @Name, @UpdatedAt)";
+            INSERT INTO {RouteTableName} (Id, Password, UpdatedAt)
+            VALUES (@Id, @Password, @UpdatedAt)";
 
         var parameters = new
         {
             Id = id,
-            Name = name,
+            Password = password,
             UpdatedAt = DateTime.UtcNow
         };
-        return await Connection.ExecuteAsync(query, parameters) > 0;
+        
+        if (await Connection.ExecuteAsync(query, parameters) > 0)
+        {
+            foreach (var busStopId in busStopIds)
+            {
+               var res = await UpsertRouteRelation(id, busStopId);
+
+               if (!res)
+                   return false;
+            }
+            return true;
+        }
+        return false;
     }
 
-    public async Task<bool> UpsertRouteRelation(Guid routeId, Guid busStopId)
+    private async Task<bool> UpsertRouteRelation(Guid routeId, Guid busStopId)
     {
         var query = $@"
             INSERT INTO {TableName} (RouteId, BusStopId, OrderNum, UpdatedAt)
@@ -72,5 +84,15 @@ public class RouteRelationsRepository : IRouteRelationsRepository
             SELECT Id FROM {RouteTableName}";
 
         return (await Connection.QueryAsync<Guid>(query)).AsList();
+    }
+
+    public async Task<Guid?> GetRouteFromPassword(string password)
+    {
+        var query = $@"
+            SELECT Id FROM {RouteTableName}
+            WHERE Password = @Password";
+        
+        var result = await Connection.QueryFirstOrDefaultAsync<Guid>(query, new { Password = password });
+        return result;
     }
 }

@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <EmbeddedResource Include="scripts\BusStop.sql" />
-      <EmbeddedResource Include="scripts\User.sql" />
       <None Remove="scripts\Route.sql" />
       <EmbeddedResource Include="scripts\Route.sql" />
       <None Remove="scripts\RouteRelations.sql" />
