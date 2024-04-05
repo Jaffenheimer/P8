@@ -7,10 +7,7 @@ beforeEach(() => {
 });
 
 test('renders all components on load', () => {
-    expect(screen.getAllByTestId('input-field')).toHaveLength(2);
-    expect(screen.getByPlaceholderText('Username')).toBeTruthy();
-    expect(screen.getByPlaceholderText('Password')).toBeTruthy();
+    expect(screen.getByTestId('input-field')).toBeTruthy();
     expect(screen.getByText('Login')).toBeTruthy();
-    expect(screen.getByText(/Don't have an account?/)).toBeTruthy();
-    expect(screen.getByText(/Sign Up/)).toBeTruthy();
+    expect(screen.getByText(/Start Driving/)).toBeTruthy();
 });
