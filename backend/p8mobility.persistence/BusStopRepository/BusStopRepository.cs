@@ -56,18 +56,18 @@ public class BusStopRepository : IBusStopRepository
     public async Task<bool> UpsertBusStop(Guid id, decimal latitude, decimal longitude)
     {
         var query = $@"
-            INSERT INTO {TableName} (Id, Latitude, Longitude, OrderNum UpdatedAt)
-            VALUES (@Id, @Latitude, @Longitude,@OrderNum, @UpdatedAt)";
+            INSERT INTO {TableName} (Id, Latitude, Longitude, UpdatedAt)
+            VALUES (@Id, @Latitude, @Longitude, @UpdatedAt)";
 
         var query2 = $@"SELECT MAX(OrderNum) FROM {TableName}";
-        var orderNum = await Connection.QueryFirstOrDefaultAsync<int>(query2);
-        orderNum++;
+        //var orderNum = await Connection.QueryFirstOrDefaultAsync<int>(query2);
+        //orderNum++;
         var parameters = new
         {
             Id = id,
             Latitude = latitude,
             Longitude = longitude,
-            OrderNum = orderNum,
+            //OrderNum = orderNum,
             UpdatedAt = DateTime.UtcNow
         };
         return await Connection.ExecuteAsync(query, parameters) > 0;

@@ -16,7 +16,7 @@ public class StateController
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
     private State SystemState { get; set; }
-    private List<Route> Routes { get; set; }
+    private List<Route> Routes { get; set; } = new List<Route>();
     private bool Running { get; set; } = true;
     private List<BusStop> BusStops { get; set; }
 
