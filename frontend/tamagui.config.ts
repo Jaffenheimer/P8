@@ -46,7 +46,6 @@ export const Main = styled(YStack, {
 export const Input = styled(TextInput, {
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
-    color: '$color',
     fontSize: 16,
     padding: 16,
     width: '100%',
@@ -56,13 +55,6 @@ export const Input = styled(TextInput, {
 export const UserInformationForm = styled(YStack, {
     marginTop: 20,
     marginBottom: 20,
-});
-
-export const InputLabel = styled(SizableText, {
-    color: '$color',
-    fontSize: 14,
-    marginTop: 14,
-    textAlign: 'left',
 });
 
 export const Title = styled(H1, {
@@ -80,7 +72,6 @@ export const MainPageTitle = styled(Title, {
     position: 'absolute',
     marginLeft: '10%',
 });
-
 
 export const Button = styled(YStack, {
     alignItems: 'center',

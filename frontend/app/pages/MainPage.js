@@ -10,7 +10,7 @@ import {
     MainPageTitle,
 } from '~/tamagui.config';
 
-const LoginPage = () => {
+const MainPage = () => {
     const [action, setAction] = useState('Keep Driving'); //speed up, slow down, keep driving
     return (
         <Container>
@@ -29,4 +29,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default MainPage;
