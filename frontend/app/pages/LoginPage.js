@@ -8,28 +8,23 @@ import {
     Container,
     Input,
     ButtonText,
-    LinkContainer,
-    LinkText,
     UserInformationForm,
 } from '~/tamagui.config';
 
 const LoginPage = () => {
     return (
         <Container>
-            <Stack.Screen options={{ title: 'Login' }} />
+            <Stack.Screen options={{ headerShown: false }} />
             <YStack>
+                <Title>Login</Title>
                 <UserInformationForm>
-                    <Input placeholder="Username" testID="input-field" />
                     <Input placeholder="Password" testID="input-field" secureTextEntry={true} />
                 </UserInformationForm>
-                <Button>
-                    <ButtonText>Login</ButtonText>
-                </Button>
-                <LinkContainer>
-                    <Link href="/pages/SignUpPage">
-                        Don't have an account? <LinkText>Sign Up</LinkText>
-                    </Link>
-                </LinkContainer>
+                <Link href="/pages/MainPage" asChild>
+                    <Button href="/pages/MainPage">
+                        <ButtonText>Start Driving</ButtonText>
+                    </Button>
+                </Link>
             </YStack>
         </Container>
     );
