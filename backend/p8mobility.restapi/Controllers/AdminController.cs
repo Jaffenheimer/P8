@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using p8_restapi.PusherService;
 using p8_restapi.Requests;
 using p8_shared;
 using p8mobility.persistence.BusRepository;
@@ -19,15 +20,17 @@ public class AdminController : ControllerBase
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
     private static StateController.StateController _stateController;
+    private readonly IPusherService _pusherService;
 
     public AdminController(IBusStopRepository busStopRepository,
-        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository)
+        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository, IPusherService pusherService)
     {
         _busStopRepository = busStopRepository;
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
+        _pusherService = pusherService;
         _stateController =
-            new StateController.StateController(_busStopRepository, _busRepository, _routeRelationsRepository);
+            new StateController.StateController(_busStopRepository, _busRepository, _routeRelationsRepository,_pusherService);
         _stateController.Init();
         var ts = new ThreadStart(_stateController.Run);
         var backgroundThread = new Thread(ts);

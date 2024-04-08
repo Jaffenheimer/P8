@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using p8_restapi.PusherService;
 using p8_shared;
 using p8mobility.persistence.BusRepository;
 using p8mobility.persistence.BusStopRepository;
@@ -15,17 +16,19 @@ public class StateController
     private readonly IBusStopRepository _busStopRepository;
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
+    private readonly IPusherService _pusherService;
     private State SystemState { get; set; }
     private List<Route> Routes { get; set; }
     private bool Running { get; set; } = true;
     private List<BusStop> BusStops { get; set; }
 
     public StateController(IBusStopRepository busStopRepository, IBusRepository busRepository,
-        IRouteRelationsRepository routeRelationsRepository)
+        IRouteRelationsRepository routeRelationsRepository, IPusherService pusherService)
     {
         _busStopRepository = busStopRepository;
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
+        _pusherService = pusherService;
     }
 
     public async void Init()
@@ -54,6 +57,12 @@ public class StateController
             //Mutex might be necessary
             var currentState = SystemState;
             SystemState = UpdateState(currentState);
+            var pusherMessage = new PusherMessage(new Dictionary<Guid, Action>());
+            foreach (var state in SystemState.Buses)
+            {
+                pusherMessage.Actions.Add(state.Id, state.Action);
+            }
+            _pusherService.PublishAction("state", "update", pusherMessage);
         }
     }
 
