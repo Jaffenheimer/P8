@@ -28,7 +28,6 @@ public class StateController
             var route = new Route(routeId, BusStops.FindAll(busStop => busStopIds.Contains(busStop.Id)));
             Routes.Add(route);
         }
-
         var buses = await busRepository.GetAllBuses();
         SystemState = new State(buses, Routes);
     }

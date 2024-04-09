@@ -40,7 +40,6 @@ public class AdminController : ControllerBase
         var routeId = await _routeRelationsRepository.GetRouteFromPassword(req.Password);
         if (routeId == Guid.Empty || routeId == null) 
             return BadRequest("Could not log in");
-        Console.WriteLine("RouteId:" + routeId.Value);
         var bus = new Bus(req.Latitude, req.Longitude, Guid.NewGuid(), routeId.Value);
         var res = await _busRepository.Upsert(bus.Id, routeId.Value, bus.Latitude, bus.Longitude, Action.Default);
         if (!res)
