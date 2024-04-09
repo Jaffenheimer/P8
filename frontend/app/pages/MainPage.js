@@ -1,7 +1,6 @@
 import { Link, Stack } from 'expo-router';
 import React, { useState } from 'react';
 import { YStack } from 'tamagui';
-
 import {
     Container,
     ButtonText,
@@ -9,8 +8,33 @@ import {
     LogOutButtonContainer,
     MainPageTitle,
 } from '~/tamagui.config';
+import {
+    Pusher,
+    PusherMember,
+    PusherChannel,
+    PusherEvent,
+} from '@pusher/pusher-websocket-react-native';
+const appConfig = require('../app.json');
 
-const MainPage = () => {
+const MainPage = async () => {
+    const pusher = Pusher.getInstance();
+
+    await pusher.init({
+        appId: appConfig.pusher.appId,
+        key: appConfig.pusher.key,
+        secret: appConfig.pusher.secret,
+        cluster: appConfig.pusher.cluster,
+    });
+
+    await pusher.connect();
+    await pusher.subscribe({
+        channelName: 'action',
+        onEvent: (event) => {
+            console.log('Event received:, ${event}');
+            setAction(event.message);
+        },
+    });
+    
     const [action, setAction] = useState('Keep Driving'); //speed up, slow down, keep driving
     return (
         <Container>
