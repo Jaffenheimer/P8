@@ -50,17 +50,16 @@ public class RouteRelationsRepository : IRouteRelationsRepository
     private async Task<bool> UpsertRouteRelation(Guid routeId, Guid busStopId)
     {
         var query = $@"
-            INSERT INTO {TableName} (RouteId, BusStopId, UpdatedAt)
-            VALUES (@RouteId, @BusStopId, @UpdatedAt)";
-        //var query2 = $@"SELECT MAX(OrderNum) FROM {TableName}";
-        //var orderNum = await Connection.QueryFirstOrDefaultAsync<int>(query2);
-        //orderNum++;
+            INSERT INTO {TableName} (RouteId, BusStopId, OrderNum)
+            VALUES (@RouteId, @BusStopId, @OrderNum)";
+        var query2 = $@"SELECT COALESCE(MAX(OrderNum), -1) FROM {TableName} WHERE RouteId = @RouteId";
+        var orderNum = await Connection.QueryFirstOrDefaultAsync<int>(query2, new{RouteId = routeId});
+        orderNum++;
         var parameters = new
         {
             RouteId = routeId,
             BusStopId = busStopId,
-           // OrderNum = orderNum,
-            UpdatedAt = DateTime.UtcNow
+            OrderNum = orderNum
         };
         return await Connection.ExecuteAsync(query, parameters) > 0;
     }

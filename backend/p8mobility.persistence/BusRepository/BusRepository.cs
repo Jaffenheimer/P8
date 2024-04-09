@@ -77,7 +77,7 @@ public class BusRepository : IBusRepository
             SELECT * FROM {TableName}";
         return (await Connection.QueryAsync<Bus>(query)).AsList();
     }
-    
+
     public async Task<bool> DeleteBus(Guid id)
     {
         var query = $@"
