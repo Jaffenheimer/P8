@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using p8_restapi.PusherService;
 using p8_restapi.Requests;
 using p8_shared;
 using p8mobility.persistence.BusRepository;
@@ -18,22 +20,25 @@ public class AdminController : ControllerBase
     private readonly IBusStopRepository _busStopRepository;
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
-    private static StateController.StateController _stateController;
-
+    private readonly IPusherService _pusherService;
+    
     public AdminController(IBusStopRepository busStopRepository,
-        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository)
+        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository, IPusherService pusherService)
     {
         _busStopRepository = busStopRepository;
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
-        _stateController =
-            new StateController.StateController(_busStopRepository, _busRepository, _routeRelationsRepository);
-        _stateController.Init();
-        var ts = new ThreadStart(_stateController.Run);
-        var backgroundThread = new Thread(ts);
-        backgroundThread.Start();
+        _pusherService = pusherService;
     }
     
+    [HttpPost("initProgram")]
+    public async Task<IActionResult> InitProgram()
+    {
+        await Program._stateController.Init(_busStopRepository, _routeRelationsRepository);
+        // create a new thread to run the pusher service
+        new Thread(() => Program._stateController.Run(_pusherService)).Start();
+        return Ok("Program initialized");
+    }
     
     /// <summary>
     /// Creates an Instance of a bus in the system
@@ -48,11 +53,10 @@ public class AdminController : ControllerBase
             return BadRequest("Could not log in");
         
         var bus = new Bus(req.Latitude, req.Longitude, Guid.NewGuid(), routeId.Value);
-        var res = await _busRepository.Upsert(bus.Id, bus.Latitude, bus.Longitude, Action.Default);
+        var res = await _busRepository.Upsert(bus.Id, routeId.Value, bus.Latitude, bus.Longitude, Action.Default);
         if (!res)
             return BadRequest("Could not log in");
-        _stateController.AddBus(bus);
-        
+        Program._stateController.AddBus(bus);
         return Ok(bus.Id);
     }
     
@@ -96,7 +100,7 @@ public class AdminController : ControllerBase
     [HttpPost("bus/location")]
     public async Task<IActionResult> UpdateBusLocation(decimal latitude, decimal longitude, Guid busId)
     {
-        _stateController.UpdateBusLocation(busId, latitude, longitude);
+        Program._stateController.UpdateBusLocation(busId, latitude, longitude,_busRepository);
         return Ok($"Bus with id {busId} was updated to location: {latitude}, {longitude}");
     }
 
@@ -108,7 +112,7 @@ public class AdminController : ControllerBase
     [HttpGet("bus/action")]
     public Task<IActionResult> BusAction(Guid id)
     {
-        var res = _stateController.GetBus(id);
+        var res = Program._stateController.GetBus(id);
         return Task.FromResult<IActionResult>(Ok(res));
     }
 
@@ -120,7 +124,7 @@ public class AdminController : ControllerBase
     [HttpDelete("bus")]
     public async Task<IActionResult> DeleteBus(Guid id)
     {
-        _stateController.DeleteBus(id);
+        Program._stateController.DeleteBus(id);
 
         if (await _busRepository.DeleteBus(id))
             return Ok($"Bus with id {id} was deleted");
@@ -138,7 +142,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> UpdatePeopleAmount(int amount, Guid busStopId)
     {
         await _busStopRepository.UpdatePeopleCount(busStopId, amount);
-        _stateController.UpdatePeopleCount(busStopId, amount);
+        Program._stateController.UpdatePeopleCount(busStopId, amount);
         return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
     }
     

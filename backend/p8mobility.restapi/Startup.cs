@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using p8_restapi.PusherService;
 using p8mobility.persistence.Extensions;
 
 namespace p8_restapi
@@ -35,7 +37,10 @@ namespace p8_restapi
                 {
                     s.SwaggerDoc("v1", new OpenApiInfo {Title = ServiceName, Version = "v1"});
                 });
-
+           
+                services.Configure<PusherConfiguration>(Configuration.GetSection("Pusher"));
+                services.AddOptions();
+                services.AddSingleton<IPusherService, PusherService.PusherService>();
                 services.ConfigurePersistenceMySqlConnection(Configuration.GetConnectionString("MySqlDatabase"));
             }
 
@@ -46,7 +51,7 @@ namespace p8_restapi
                 {
                     program.UseDeveloperExceptionPage();
                 }
-
+                
                 program.UseSwagger(s => { s.RouteTemplate = $"/{SwaggerRoute}" + "/{documentName}/swagger.json"; });
                 program.UseSwaggerUI(s =>
                 {
