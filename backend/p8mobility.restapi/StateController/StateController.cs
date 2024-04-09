@@ -13,7 +13,7 @@ namespace p8_restapi.StateController;
 
 public class StateController
 {
-    private State SystemState { get; set; }
+    private State SystemState { get; set; } = new State(new List<Bus>(), new List<Route>());
     private List<Route> Routes { get; set; }
     private bool Running { get; set; } = true;
     private List<BusStop> BusStops { get; set; }
@@ -88,6 +88,7 @@ public class StateController
     public void AddBus(Bus bus)
     {
         SystemState.Buses.Add(bus);
+        Console.WriteLine("Bus added");
     }
 
     public void DeleteBus(Guid id)

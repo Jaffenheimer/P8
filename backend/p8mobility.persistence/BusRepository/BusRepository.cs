@@ -20,15 +20,16 @@ public class BusRepository : IBusRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<bool> Upsert(Guid id, decimal latitude, decimal longitude, Action action)
+    public async Task<bool> Upsert(Guid id, Guid routeId, decimal latitude, decimal longitude, Action action)
     {
         var query = $@"
-            INSERT INTO {TableName} (Id, Latitude, Longitude, Action, UpdatedAt)
-            VALUES (@Id, @Latitude, @Longitude, @Action, @UpdatedAt)";
+            INSERT INTO {TableName} (Id, RouteId, Latitude, Longitude, Action, UpdatedAt)
+            VALUES (@Id, @RouteId, @Latitude, @Longitude, @Action, @UpdatedAt)";
 
         var parameters = new
         {
             Id = id,
+            RouteId = routeId,
             Latitude = latitude,
             Longitude = longitude,
             Action = action.ToString(),
@@ -76,7 +77,7 @@ public class BusRepository : IBusRepository
             SELECT * FROM {TableName}";
         return (await Connection.QueryAsync<Bus>(query)).AsList();
     }
-    
+
     public async Task<bool> DeleteBus(Guid id)
     {
         var query = $@"

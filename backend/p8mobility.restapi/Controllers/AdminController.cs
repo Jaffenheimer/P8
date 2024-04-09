@@ -19,15 +19,13 @@ public class AdminController : ControllerBase
     private readonly IBusStopRepository _busStopRepository;
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
-    private readonly IPusherService _pusherService;
 
     public AdminController(IBusStopRepository busStopRepository,
-        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository, IPusherService pusherService)
+        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository)
     {
         _busStopRepository = busStopRepository;
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
-        _pusherService = pusherService;
     }
     
     
@@ -44,7 +42,7 @@ public class AdminController : ControllerBase
             return BadRequest("Could not log in");
         
         var bus = new Bus(req.Latitude, req.Longitude, Guid.NewGuid(), routeId.Value);
-        var res = await _busRepository.Upsert(bus.Id, bus.Latitude, bus.Longitude, Action.Default);
+        var res = await _busRepository.Upsert(bus.Id, routeId.Value, bus.Latitude, bus.Longitude, Action.Default);
         if (!res)
             return BadRequest("Could not log in");
         Program._stateController.AddBus(bus);
