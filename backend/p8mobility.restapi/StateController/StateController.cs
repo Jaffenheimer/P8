@@ -13,28 +13,28 @@ namespace p8_restapi.StateController;
 
 public class StateController
 {
-    private State SystemState { get; set; } = new State(new List<Bus>(), new List<Route>());
-    private List<Route> Routes { get; set; }
-    private bool Running { get; set; } = true;
-    private List<BusStop> BusStops { get; set; }
+    private static State SystemState { get; set; }
+    private static List<Route> Routes { get; set; } = new List<Route>();
+    private static bool Running { get; set; } = true;
+    private static List<BusStop> BusStops { get; set; } = new List<BusStop>();
 
-    public async void Init(IBusStopRepository busStopRepository, IRouteRelationsRepository routeRelationsRepository, IBusRepository busRepository)
+    public async Task Init(IBusStopRepository busStopRepository, IRouteRelationsRepository routeRelationsRepository)
     {
         BusStops = await busStopRepository.GetAllBusStops();
         var routeIds = await routeRelationsRepository.GetRouteIds();
-        foreach (var routeId in routeIds)
+        foreach (var routeId  in routeIds)
         {
             var busStopIds = await routeRelationsRepository.GetBusStopIdsFromRouteId(routeId);
             var route = new Route(routeId, BusStops.FindAll(busStop => busStopIds.Contains(busStop.Id)));
             Routes.Add(route);
         }
-
-        var buses = await busRepository.GetAllBuses();
-        SystemState = new State(buses, Routes);
+        SystemState = new State(new List<Bus>(), Routes);
+        Console.WriteLine("StateController initialized");
     }
 
     public void Run(IPusherService pusherService)
     {
+        Console.WriteLine("Running");
         while (Running)
         {
             //Maybe look into making a better solution
@@ -43,13 +43,23 @@ public class StateController
 
             //Mutex might be necessary
             var currentState = SystemState;
-            SystemState = UpdateState(currentState);
+            //SystemState = UpdateState(currentState);
             var pusherMessage = new PusherMessage(new Dictionary<Guid, Action>());
-            foreach (var state in SystemState.Buses)
+            if (SystemState.Buses.Count > 0)
             {
-                pusherMessage.Actions.Add(state.Id, state.Action);
+                foreach (var state in SystemState.Buses)
+                {
+                    if (state.Action != currentState.Buses.Find(bus => bus.Id == state.Id)!.Action)
+                    {
+                        pusherMessage.Actions.Add(state.Id, state.Action);
+                    }
+                }
             }
-            pusherService.PublishAction("state", "update", pusherMessage);
+            //Currently we dont want to publish anything
+            if (pusherMessage.Actions.Count > 0)
+            {
+                //pusherService.PublishAction("action", "update", pusherMessage);
+            }
         }
     }
 
@@ -59,6 +69,7 @@ public class StateController
         bus.Latitude = latitude;
         bus.Longitude = longitude;
         await busRepository.UpdateBusLocation(id, latitude, longitude);
+        Console.WriteLine("Bus location updated");
     }
 
     public async void UpdateBusAction(Guid id, Action action, IBusRepository busRepository)
@@ -103,10 +114,10 @@ public class StateController
         return new State(new List<Bus>(), new List<Route>());
     }
 
-    public void Restart(IBusStopRepository busStopRepository, IBusRepository busRepository,IRouteRelationsRepository routeRelationsRepository,PusherService.PusherService pusherService)
+    public async void Restart(IBusStopRepository busStopRepository, IBusRepository busRepository,IRouteRelationsRepository routeRelationsRepository,PusherService.PusherService pusherService)
     {
         Running = true;
-        Init(busStopRepository, routeRelationsRepository, busRepository);
+        await Init(busStopRepository, routeRelationsRepository);
         Run(pusherService);
     }
 

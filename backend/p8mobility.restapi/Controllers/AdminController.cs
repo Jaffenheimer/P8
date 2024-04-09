@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using p8_restapi.PusherService;
 using p8_restapi.Requests;
 using p8_shared;
@@ -19,15 +20,25 @@ public class AdminController : ControllerBase
     private readonly IBusStopRepository _busStopRepository;
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
-
+    private readonly IPusherService _pusherService;
+    
     public AdminController(IBusStopRepository busStopRepository,
-        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository)
+        IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository, IPusherService pusherService)
     {
         _busStopRepository = busStopRepository;
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
+        _pusherService = pusherService;
     }
     
+    [HttpPost("initProgram")]
+    public async Task<IActionResult> InitProgram()
+    {
+        await Program._stateController.Init(_busStopRepository, _routeRelationsRepository);
+        // create a new thread to run the pusher service
+        new Thread(() => Program._stateController.Run(_pusherService)).Start();
+        return Ok("Program initialized");
+    }
     
     /// <summary>
     /// Creates an Instance of a bus in the system
@@ -46,7 +57,6 @@ public class AdminController : ControllerBase
         if (!res)
             return BadRequest("Could not log in");
         Program._stateController.AddBus(bus);
-        
         return Ok(bus.Id);
     }
     

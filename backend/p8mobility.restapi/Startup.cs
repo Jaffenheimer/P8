@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using p8_restapi.PusherService;
 using p8mobility.persistence.Extensions;
 
 namespace p8_restapi
@@ -39,6 +40,7 @@ namespace p8_restapi
            
                 services.Configure<PusherConfiguration>(Configuration.GetSection("Pusher"));
                 services.AddOptions();
+                services.AddSingleton<IPusherService, PusherService.PusherService>();
                 services.ConfigurePersistenceMySqlConnection(Configuration.GetConnectionString("MySqlDatabase"));
             }
 
