@@ -13,40 +13,27 @@ namespace p8_restapi.StateController;
 
 public class StateController
 {
-    private readonly IBusStopRepository _busStopRepository;
-    private readonly IBusRepository _busRepository;
-    private readonly IRouteRelationsRepository _routeRelationsRepository;
-    private readonly IPusherService _pusherService;
     private State SystemState { get; set; }
     private List<Route> Routes { get; set; }
     private bool Running { get; set; } = true;
     private List<BusStop> BusStops { get; set; }
 
-    public StateController(IBusStopRepository busStopRepository, IBusRepository busRepository,
-        IRouteRelationsRepository routeRelationsRepository, IPusherService pusherService)
+    public async void Init(IBusStopRepository busStopRepository, IRouteRelationsRepository routeRelationsRepository, IBusRepository busRepository)
     {
-        _busStopRepository = busStopRepository;
-        _busRepository = busRepository;
-        _routeRelationsRepository = routeRelationsRepository;
-        _pusherService = pusherService;
-    }
-
-    public async void Init()
-    {
-        BusStops = await _busStopRepository.GetAllBusStops();
-        var routeIds = await _routeRelationsRepository.GetRouteIds();
+        BusStops = await busStopRepository.GetAllBusStops();
+        var routeIds = await routeRelationsRepository.GetRouteIds();
         foreach (var routeId in routeIds)
         {
-            var busStopIds = await _routeRelationsRepository.GetBusStopIdsFromRouteId(routeId);
+            var busStopIds = await routeRelationsRepository.GetBusStopIdsFromRouteId(routeId);
             var route = new Route(routeId, BusStops.FindAll(busStop => busStopIds.Contains(busStop.Id)));
             Routes.Add(route);
         }
 
-        var buses = await _busRepository.GetAllBuses();
+        var buses = await busRepository.GetAllBuses();
         SystemState = new State(buses, Routes);
     }
 
-    public void Run()
+    public void Run(IPusherService pusherService)
     {
         while (Running)
         {
@@ -62,23 +49,23 @@ public class StateController
             {
                 pusherMessage.Actions.Add(state.Id, state.Action);
             }
-            _pusherService.PublishAction("state", "update", pusherMessage);
+            pusherService.PublishAction("state", "update", pusherMessage);
         }
     }
 
-    public async void UpdateBusLocation(Guid id, decimal latitude, decimal longitude)
+    public async void UpdateBusLocation(Guid id, decimal latitude, decimal longitude, IBusRepository busRepository)
     {
         var bus = GetBus(id);
         bus.Latitude = latitude;
         bus.Longitude = longitude;
-        await _busRepository.UpdateBusLocation(id, latitude, longitude);
+        await busRepository.UpdateBusLocation(id, latitude, longitude);
     }
 
-    public async void UpdateBusAction(Guid id, Action action)
+    public async void UpdateBusAction(Guid id, Action action, IBusRepository busRepository)
     {
         var bus = GetBus(id);
         bus.Action = action;
-        await _busRepository.UpdateBusAction(id, action);
+        await busRepository.UpdateBusAction(id, action);
     }
 
     public void UpdatePeopleCount(Guid busStopId, int peopleCount)
@@ -115,11 +102,11 @@ public class StateController
         return new State(new List<Bus>(), new List<Route>());
     }
 
-    public void Restart()
+    public void Restart(IBusStopRepository busStopRepository, IBusRepository busRepository,IRouteRelationsRepository routeRelationsRepository,PusherService.PusherService pusherService)
     {
         Running = true;
-        Init();
-        Run();
+        Init(busStopRepository, routeRelationsRepository, busRepository);
+        Run(pusherService);
     }
 
     public void Stop()

@@ -8,19 +8,16 @@ public class BusStop
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
     public int PeopleCount { get; set; }
-    public int OrderNum { get; set; }
 
     public BusStop()
     {
     }
 
-
-    public BusStop(Guid id, decimal latitude, decimal longitude, int peopleCount, int orderNum)
+    public BusStop(Guid id, decimal latitude, decimal longitude, int peopleCount)
     {
         Id = id;
         Latitude = latitude;
         Longitude = longitude;
         PeopleCount = peopleCount;
-        OrderNum = orderNum;
     }
 }

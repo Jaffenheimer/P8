@@ -19,7 +19,6 @@ public class AdminController : ControllerBase
     private readonly IBusStopRepository _busStopRepository;
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
-    private static StateController.StateController _stateController;
     private readonly IPusherService _pusherService;
 
     public AdminController(IBusStopRepository busStopRepository,
@@ -29,12 +28,6 @@ public class AdminController : ControllerBase
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
         _pusherService = pusherService;
-        _stateController =
-            new StateController.StateController(_busStopRepository, _busRepository, _routeRelationsRepository,_pusherService);
-        _stateController.Init();
-        var ts = new ThreadStart(_stateController.Run);
-        var backgroundThread = new Thread(ts);
-        backgroundThread.Start();
     }
     
     
@@ -54,7 +47,7 @@ public class AdminController : ControllerBase
         var res = await _busRepository.Upsert(bus.Id, bus.Latitude, bus.Longitude, Action.Default);
         if (!res)
             return BadRequest("Could not log in");
-        _stateController.AddBus(bus);
+        Program._stateController.AddBus(bus);
         
         return Ok(bus.Id);
     }
@@ -99,7 +92,7 @@ public class AdminController : ControllerBase
     [HttpPost("bus/location")]
     public async Task<IActionResult> UpdateBusLocation(decimal latitude, decimal longitude, Guid busId)
     {
-        _stateController.UpdateBusLocation(busId, latitude, longitude);
+        Program._stateController.UpdateBusLocation(busId, latitude, longitude,_busRepository);
         return Ok($"Bus with id {busId} was updated to location: {latitude}, {longitude}");
     }
 
@@ -111,7 +104,7 @@ public class AdminController : ControllerBase
     [HttpGet("bus/action")]
     public Task<IActionResult> BusAction(Guid id)
     {
-        var res = _stateController.GetBus(id);
+        var res = Program._stateController.GetBus(id);
         return Task.FromResult<IActionResult>(Ok(res));
     }
 
@@ -123,7 +116,7 @@ public class AdminController : ControllerBase
     [HttpDelete("bus")]
     public async Task<IActionResult> DeleteBus(Guid id)
     {
-        _stateController.DeleteBus(id);
+        Program._stateController.DeleteBus(id);
 
         if (await _busRepository.DeleteBus(id))
             return Ok($"Bus with id {id} was deleted");
@@ -141,7 +134,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> UpdatePeopleAmount(int amount, Guid busStopId)
     {
         await _busStopRepository.UpdatePeopleCount(busStopId, amount);
-        _stateController.UpdatePeopleCount(busStopId, amount);
+        Program._stateController.UpdatePeopleCount(busStopId, amount);
         return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
     }
     
