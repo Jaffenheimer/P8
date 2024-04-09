@@ -82,7 +82,6 @@ public class StateController
     public void UpdatePeopleCount(Guid busStopId, int peopleCount)
     {
         BusStops.Find(busStop => busStop.Id == busStopId)!.PeopleCount = peopleCount;
-        Console.WriteLine();
     }
 
     public State GetState()
