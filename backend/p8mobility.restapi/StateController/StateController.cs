@@ -56,7 +56,10 @@ public class StateController
                 }
             }
             //Currently we dont want to publish anything
-            //pusherService.PublishAction("action", "update", pusherMessage);
+            if (pusherMessage.Actions.Count > 0)
+            {
+                //pusherService.PublishAction("action", "update", pusherMessage);
+            }
         }
     }
 
