@@ -58,7 +58,7 @@ namespace p8_restapi
                 });
 
                 program.UseRouting();
-                program.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
+                program.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
                 program.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             }
         }
