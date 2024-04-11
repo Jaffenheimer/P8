@@ -1,6 +1,7 @@
 import { Link, Stack } from 'expo-router';
 import React, { useState } from 'react';
 import { YStack } from 'tamagui';
+
 import {
     Container,
     ButtonText,
@@ -8,34 +9,29 @@ import {
     LogOutButtonContainer,
     MainPageTitle,
 } from '~/tamagui.config';
-import {
-    Pusher,
-    PusherMember,
-    PusherChannel,
-    PusherEvent,
-} from '@pusher/pusher-websocket-react-native';
-const appConfig = require('../app.json');
 
-const MainPage = async () => {
-    const pusher = Pusher.getInstance();
+// importScripts('https://js.pusher.com/7.0/pusher.worker.min.js');
+import Pusher from 'pusher-js';
+// import Pusher from '@pusher/pusher-websocket-react-native'
+// const pusher = window.Pusher;
 
-    await pusher.init({
-        appId: appConfig.pusher.appId,
-        key: appConfig.pusher.key,
-        secret: appConfig.pusher.secret,
-        cluster: appConfig.pusher.cluster,
-    });
+let secrets = require('../secrets.json');
 
-    await pusher.connect();
-    await pusher.subscribe({
-        channelName: 'action',
-        onEvent: (event) => {
-            console.log('Event received:, ${event}');
-            setAction(event.message);
-        },
-    });
-    
+const MainPage = () => {
     const [action, setAction] = useState('Keep Driving'); //speed up, slow down, keep driving
+    let pusher = new Pusher(secrets.Pusher.AppKey, {
+        cluster: 'eu',
+        forceTLS: true,
+    });
+    pusherFunction = async () => {
+        await pusher.connect();
+        const channel = await pusher.subscribe('action');
+        channel.bind('test_event', function (data) {
+            console.log('Event received:', data);
+            setAction(data.message);
+        });
+    };
+    pusherFunction();
     return (
         <Container>
             <Stack.Screen options={{ headerShown: false }} />
