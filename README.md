@@ -29,6 +29,8 @@
 ### Frontend Testing
 * Run `npm test` or `npm run test`
 
+## Github
+
 ### Frontend comitting
 * NEVER commit the secrets.json file
 
