@@ -1,5 +1,17 @@
 # P8 Mobility
 
+## Pusher
+* Create an account on pusher.com
+* Add a section in the appsettings.json file called "Pusher" and add the values to the section in the following format:
+"Pusher": {
+    "AppId": "",
+    "AppKey": "",
+    "AppSecret": "",
+    "Cluster": ""
+  }
+* Create a secrets.json file in the "App" folder in the frontend and add the values in the same manner.
+
+
 ## Docker
 * Download and install docker locally
 * Navigate to `db-docker`
