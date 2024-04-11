@@ -18,10 +18,4 @@
 * Run `npm test` or `npm run test` 
 
 ## SUMO
-install make if you do not have
-cd into Simulation\SUMO\makefile
-generate the appropriate xml files with `make run`
-    if you do not have all the packages install them with pip
-    
-Alternatively just run both python files in the SUMO folder (The generated xml files must be in the SUMO folder)
-
+If you want a different person flow run the `generate_person_flow.py` (since the amount of persons is random and change when you run this file) - the output file must be in the SUMO folder, so remember to run that file in the SUMO folder 
