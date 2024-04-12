@@ -24,13 +24,13 @@ const LoginPage = () => {
                     longitude: 0,
                 }),
             };
-            await fetch('http://192.168.1.125:5000/admin/bus', options).then((response) => {
+            await fetch('http://10.0.0.10:5000/admin/bus', options).then((response) => {
                 if (response.status === 400) {
                     setShowWrongPasswordText(true);
                 } else {
                     response.json().then(async (data) => {
-                        await AsyncStorage.setItem('bus-id', data.id);
                         router.replace('/pages/MainPage');
+                        await AsyncStorage.setItem('bus-id', JSON.stringify(data));
                     });
                 }
             });

@@ -19,7 +19,7 @@ namespace p8_restapi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://192.168.1.125:5000");
+                    webBuilder.UseUrls("http://10.0.0.10:5000");
                 }).ConfigureServices(services =>
                 {
                     _stateController = new StateController.StateController();

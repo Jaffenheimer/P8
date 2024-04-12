@@ -1,6 +1,6 @@
-import { Link, Stack } from 'expo-router';
-import React, { useState } from 'react';
-import { YStack } from 'tamagui';
+import {Link, router, Stack} from 'expo-router';
+import React, {useState} from 'react';
+import {YStack} from 'tamagui';
 
 import {
     Container,
@@ -9,19 +9,46 @@ import {
     LogOutButtonContainer,
     MainPageTitle,
 } from '~/tamagui.config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainPage = () => {
     const [action, setAction] = useState('Keep Driving'); //speed up, slow down, keep driving
+    async function logOut() {
+        const BusId = await AsyncStorage.getItem('bus-id');
+        try {
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'access-control-allow-origin': '*',
+                },
+                body: {
+                    busId: JSON.parse(BusId),
+                },
+            };
+            console.log(options);
+            await fetch('http://10.0.0.10:5000/admin/bus/delete', options).then((response) => {
+                if (response.status === 400) {
+                    console.log(response.status);
+                } else {
+                        router.replace('/pages/LoginPage');
+                }
+            });
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+    }
+
     return (
         <Container>
-            <Stack.Screen options={{ headerShown: false }} />
+            <Stack.Screen options={{headerShown: false}}/>
             <YStack>
                 <LogOutButtonContainer>
-                    <Link href="/pages/LoginPage" asChild>
-                        <LogOutButton>
+                        <LogOutButton onPress={logOut}>
                             <ButtonText>Log out</ButtonText>
                         </LogOutButton>
-                    </Link>
                 </LogOutButtonContainer>
                 <MainPageTitle>{action}</MainPageTitle>
             </YStack>

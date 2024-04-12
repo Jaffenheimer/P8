@@ -5,9 +5,9 @@ namespace p8_shared;
 public class State
 {
     public List<Route> Routes { get; set; }
-    public List<Bus> Buses { get; set; }
+    public IEnumerable<Bus> Buses { get; set; }
 
-    public State(List<Bus> buses, List<Route> routes)
+    public State(IEnumerable<Bus> buses, List<Route> routes)
     {
         Buses = buses;
         Routes = routes;

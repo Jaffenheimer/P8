@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
 using p8_restapi.PusherService;
 using p8_shared;
 using p8mobility.persistence.BusRepository;
@@ -29,6 +31,7 @@ public class StateController
             var route = new Route(routeId, BusStops.FindAll(busStop => busStopIds.Contains(busStop.Id)));
             Routes.Add(route);
         }
+
         SystemState = new State(new List<Bus>(), Routes);
         Console.WriteLine("StateController initialized");
     }
@@ -47,22 +50,26 @@ public class StateController
             var currentState = SystemState;
             //SystemState = UpdateState(currentState);
             var pusherMessage = new PusherMessage(new Dictionary<Guid, Action>());
-            if (SystemState.Buses.Count > 0)
+            if (SystemState.Buses.Any() && currentState.Buses.Any())
             {
-                foreach (var state in SystemState.Buses)
+                foreach (var bus in SystemState.Buses.ToList())
                 {
-                    if (state.Action != currentState.Buses.Find(bus => bus.Id == state.Id)!.Action)
+                    if (bus.Action != currentState.Buses.ToList().Find(bus2 => bus2.Id == bus.Id)!.Action)
                     {
-                        pusherMessage.Actions.Add(state.Id, state.Action);
+                        pusherMessage.Actions.Add(bus.Id, bus.Action);
                     }
                 }
             }
+
+
             //Currently we dont want to publish anything
             if (pusherMessage.Actions.Count > 0)
             {
                 //pusherService.PublishAction("action", "update", pusherMessage);
             }
+            pusherMessage.Actions.Clear();
         }
+
         IsRunning = false;
     }
 
@@ -94,21 +101,31 @@ public class StateController
 
     public Bus GetBus(Guid id)
     {
-        var res = SystemState.Buses.Find(bus => bus.Id == id);
+        var res = SystemState.Buses.ToList().Find(bus => bus.Id == id);
 
         return res ?? throw new Exception("Bus not found");
     }
 
     public void AddBus(Bus bus)
     {
-        SystemState.Buses.Add(bus);
+        lock (SystemState.Buses)
+        {
+            SystemState.Buses = SystemState.Buses.Append(bus);
+        }
+
         Console.WriteLine("Bus added");
     }
 
     public void DeleteBus(Guid id)
     {
         var bus = GetBus(id);
-        SystemState.Buses.Remove(bus);
+        SystemState.Buses.ToList().Remove(bus);
+        if (!SystemState.Buses.Any())
+        {
+            SystemState.Buses = new List<Bus>();
+        }
+
+        Console.WriteLine("Bus deleted");
     }
 
     private State UpdateState(State currentState)
@@ -117,7 +134,8 @@ public class StateController
         return new State(new List<Bus>(), new List<Route>());
     }
 
-    public async void Restart(IBusStopRepository busStopRepository, IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository, PusherService.PusherService pusherService)
+    public async void Restart(IBusStopRepository busStopRepository, IBusRepository busRepository,
+        IRouteRelationsRepository routeRelationsRepository, PusherService.PusherService pusherService)
     {
         Running = true;
         await Init(busStopRepository, routeRelationsRepository);
