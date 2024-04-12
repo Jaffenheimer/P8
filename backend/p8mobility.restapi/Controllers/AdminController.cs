@@ -34,6 +34,9 @@ public class AdminController : ControllerBase
     [HttpPost("initProgram")]
     public async Task<IActionResult> InitProgram()
     {
+        if(Program._stateController.IsRunning){
+            return BadRequest("Program already initialized");
+        }
         await Program._stateController.Init(_busStopRepository, _routeRelationsRepository);
         // create a new thread to run the pusher service
         new Thread(() => Program._stateController.Run(_pusherService)).Start();

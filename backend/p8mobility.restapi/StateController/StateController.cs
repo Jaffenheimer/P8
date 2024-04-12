@@ -15,14 +15,15 @@ public class StateController
 {
     private static State SystemState { get; set; }
     private static List<Route> Routes { get; set; } = new List<Route>();
-    private static bool Running { get; set; } = true;
+    public static bool Running { get; set; } = true;
+    public bool IsRunning { get; set; } = false;
     private static List<BusStop> BusStops { get; set; } = new List<BusStop>();
 
     public async Task Init(IBusStopRepository busStopRepository, IRouteRelationsRepository routeRelationsRepository)
     {
         BusStops = await busStopRepository.GetAllBusStops();
         var routeIds = await routeRelationsRepository.GetRouteIds();
-        foreach (var routeId  in routeIds)
+        foreach (var routeId in routeIds)
         {
             var busStopIds = await routeRelationsRepository.GetBusStopIdsFromRouteId(routeId);
             var route = new Route(routeId, BusStops.FindAll(busStop => busStopIds.Contains(busStop.Id)));
@@ -34,6 +35,7 @@ public class StateController
 
     public void Run(IPusherService pusherService)
     {
+        IsRunning = true;
         Console.WriteLine("Running");
         while (Running)
         {
@@ -61,6 +63,7 @@ public class StateController
                 //pusherService.PublishAction("action", "update", pusherMessage);
             }
         }
+        IsRunning = false;
     }
 
     public async void UpdateBusLocation(Guid id, decimal latitude, decimal longitude, IBusRepository busRepository)
@@ -114,7 +117,7 @@ public class StateController
         return new State(new List<Bus>(), new List<Route>());
     }
 
-    public async void Restart(IBusStopRepository busStopRepository, IBusRepository busRepository,IRouteRelationsRepository routeRelationsRepository,PusherService.PusherService pusherService)
+    public async void Restart(IBusStopRepository busStopRepository, IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository, PusherService.PusherService pusherService)
     {
         Running = true;
         await Init(busStopRepository, routeRelationsRepository);
