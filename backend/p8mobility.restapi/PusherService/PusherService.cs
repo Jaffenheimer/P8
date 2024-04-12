@@ -15,7 +15,7 @@ namespace p8_restapi.PusherService
         
         public async void PublishAction(string channel, string eventName, PusherMessage data)
         {
-            var pusher = new Pusher(_pusherConfiguration.Value.AppId, _pusherConfiguration.Value.Key, _pusherConfiguration.Value.Secret, new PusherOptions
+            var pusher = new Pusher(_pusherConfiguration.Value.AppId, _pusherConfiguration.Value.AppKey, _pusherConfiguration.Value.AppSecret, new PusherOptions
             {
                 Cluster = _pusherConfiguration.Value.Cluster
             });
