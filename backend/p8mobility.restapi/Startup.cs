@@ -35,9 +35,9 @@ namespace p8_restapi
                 });
                 services.AddSwaggerGen(s =>
                 {
-                    s.SwaggerDoc("v1", new OpenApiInfo {Title = ServiceName, Version = "v1"});
+                    s.SwaggerDoc("v1", new OpenApiInfo { Title = ServiceName, Version = "v1" });
                 });
-           
+
                 services.Configure<PusherConfiguration>(Configuration.GetSection("Pusher"));
                 services.AddOptions();
                 services.AddSingleton<IPusherService, PusherService.PusherService>();
@@ -51,7 +51,7 @@ namespace p8_restapi
                 {
                     program.UseDeveloperExceptionPage();
                 }
-                
+
                 program.UseSwagger(s => { s.RouteTemplate = $"/{SwaggerRoute}" + "/{documentName}/swagger.json"; });
                 program.UseSwaggerUI(s =>
                 {
