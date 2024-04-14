@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using p8_restapi.Translation.RestApi;
@@ -9,6 +8,7 @@ namespace p8_restapi
     public class Program
     {
         public static StateController.StateController _stateController;
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -25,6 +25,5 @@ namespace p8_restapi
                     _stateController = new StateController.StateController();
                     services.AddSingleton(_stateController);
                 });
-
     }
 }

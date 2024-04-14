@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using p8_restapi.PusherService;
 using p8_restapi.Requests;
 using p8_shared;
@@ -21,7 +21,7 @@ public class AdminController : ControllerBase
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
     private readonly IPusherService _pusherService;
-    
+
     public AdminController(IBusStopRepository busStopRepository,
         IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository, IPusherService pusherService)
     {
@@ -30,19 +30,21 @@ public class AdminController : ControllerBase
         _routeRelationsRepository = routeRelationsRepository;
         _pusherService = pusherService;
     }
-    
+
     [HttpPost("initProgram")]
     public async Task<IActionResult> InitProgram()
     {
-        if(Program._stateController.IsRunning){
+        if (Program._stateController.IsRunning)
+        {
             return BadRequest("Program already initialized");
         }
+
         await Program._stateController.Init(_busStopRepository, _routeRelationsRepository);
         // create a new thread to run the pusher service
         new Thread(() => Program._stateController.Run(_pusherService)).Start();
         return Ok("Program initialized");
     }
-    
+
     /// <summary>
     /// Creates an Instance of a bus in the system
     /// </summary>
@@ -52,8 +54,9 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> CreateBus([FromBody] CreateBusRequest req)
     {
         var routeId = await _routeRelationsRepository.GetRouteFromPassword(req.Password);
-        if (routeId == Guid.Empty || routeId == null) 
+        if (routeId == Guid.Empty || routeId == null)
             return BadRequest("Could not log in");
+
         var bus = new Bus(req.Latitude, req.Longitude, Guid.NewGuid(), routeId.Value);
         var res = await _busRepository.Upsert(bus.Id, routeId.Value, bus.Latitude, bus.Longitude, Action.Default);
         if (!res)
@@ -61,7 +64,7 @@ public class AdminController : ControllerBase
         Program._stateController.AddBus(bus);
         return Ok(bus.Id);
     }
-    
+
     /// <summary>
     /// Creates a bus stop
     /// </summary>
@@ -71,12 +74,12 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> CreateBusStop([FromBody] CreateBusStopRequest req)
     {
         var res = await _busStopRepository.UpsertBusStop(Guid.NewGuid(), req.Latitude, req.Longitude);
-        if (!res) 
+        if (!res)
             return BadRequest("Could not create bus stop");
-        
+
         return Ok("Bus stop created succesfully");
     }
-    
+
     /// <summary>
     /// Creates a bus route
     /// </summary>
@@ -86,12 +89,12 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> CreateRoute([FromBody] CreateRouteRequest req)
     {
         var res = await _routeRelationsRepository.UpsertRoute(Guid.NewGuid(), req.Password, req.BusStopIds);
-        if (!res) 
+        if (!res)
             return BadRequest("Could not create route");
-        
+
         return Ok("Route created succesfully");
     }
-    
+
     /// <summary>
     /// Updates bus to be at a new location
     /// </summary>
@@ -102,7 +105,7 @@ public class AdminController : ControllerBase
     [HttpPost("bus/location")]
     public async Task<IActionResult> UpdateBusLocation(decimal latitude, decimal longitude, Guid busId)
     {
-        Program._stateController.UpdateBusLocation(busId, latitude, longitude,_busRepository);
+        Program._stateController.UpdateBusLocation(busId, latitude, longitude, _busRepository);
         return Ok($"Bus with id {busId} was updated to location: {latitude}, {longitude}");
     }
 
@@ -130,7 +133,7 @@ public class AdminController : ControllerBase
 
         if (await _busRepository.DeleteBus(req.BusId))
             return Ok($"Bus with id {req.BusId} was deleted");
-        
+
         return BadRequest("Could not delete bus");
     }
 
@@ -147,5 +150,14 @@ public class AdminController : ControllerBase
         Program._stateController.UpdatePeopleCount(busStopId, amount);
         return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
     }
-    
+
+    [HttpPost("Pusher/Test")]
+    public async Task<IActionResult> TestPusher(Guid id, Action action)
+    {
+        var dic = new Dictionary<Guid, Action>();
+        dic.Add(id, action);
+        var msg = new PusherMessage(dic);
+        _pusherService.PublishAction("action", "test_event", msg);
+        return Ok("Pusher test sent");
+    }
 }

@@ -7,4 +7,3 @@ namespace p8_restapi.PusherService
         void PublishAction(string channel, string eventName, PusherMessage data);
     }
 }
-
