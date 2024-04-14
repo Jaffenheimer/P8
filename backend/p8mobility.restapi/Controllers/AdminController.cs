@@ -123,10 +123,9 @@ public class AdminController : ControllerBase
     /// </summary>
     /// <param name="req"></param>
     /// <returns>Ok with confirmation of where id of bus</returns>
-    [HttpPost("bus/delete")]
+    [HttpDelete("bus/delete")]
     public async Task<IActionResult> DeleteBus([FromBody] DeleteBusRequest req)
     {
-        Console.WriteLine("Deleting bus");
         Program._stateController.DeleteBus(req.BusId);
 
         if (await _busRepository.DeleteBus(req.BusId))

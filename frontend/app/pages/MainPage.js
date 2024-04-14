@@ -17,17 +17,16 @@ const MainPage = () => {
         const BusId = await AsyncStorage.getItem('bus-id');
         try {
             const options = {
-                method: 'POST',
+                method: 'Delete',
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                     'access-control-allow-origin': '*',
                 },
-                body: {
+                body: JSON.stringify({
                     busId: JSON.parse(BusId),
-                },
+                }),
             };
-            console.log(options);
             await fetch('http://10.0.0.10:5000/admin/bus/delete', options).then((response) => {
                 if (response.status === 400) {
                     console.log(response.status);
