@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using p8_restapi.PusherService;
 using p8_restapi.Requests;
 using p8_shared;
@@ -35,6 +34,11 @@ public class AdminController : ControllerBase
     [HttpPost("initProgram")]
     public async Task<IActionResult> InitProgram()
     {
+        if (Program._stateController.IsRunning)
+        {
+            return BadRequest("Program already initialized");
+        }
+
         await Program._stateController.Init(_busStopRepository, _routeRelationsRepository);
         // create a new thread to run the pusher service
         new Thread(() => Program._stateController.Run(_pusherService)).Start();
@@ -120,15 +124,15 @@ public class AdminController : ControllerBase
     /// <summary>
     /// Shutdown/Deletes bus
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="req"></param>
     /// <returns>Ok with confirmation of where id of bus</returns>
-    [HttpDelete("bus")]
-    public async Task<IActionResult> DeleteBus(Guid id)
+    [HttpDelete("bus/delete")]
+    public async Task<IActionResult> DeleteBus([FromBody] DeleteBusRequest req)
     {
-        Program._stateController.DeleteBus(id);
+        Program._stateController.DeleteBus(req.BusId);
 
-        if (await _busRepository.DeleteBus(id))
-            return Ok($"Bus with id {id} was deleted");
+        if (await _busRepository.DeleteBus(req.BusId))
+            return Ok($"Bus with id {req.BusId} was deleted");
 
         return BadRequest("Could not delete bus");
     }
@@ -148,13 +152,12 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("Pusher/Test")]
-    public async Task<IActionResult> TestPusher()
+    public async Task<IActionResult> TestPusher(Guid id, Action action)
     {
         var dic = new Dictionary<Guid, Action>();
-        dic.Add(Guid.NewGuid(), Action.Default);
+        dic.Add(id, action);
         var msg = new PusherMessage(dic);
         _pusherService.PublishAction("action", "test_event", msg);
         return Ok("Pusher test sent");
     }
-
 }

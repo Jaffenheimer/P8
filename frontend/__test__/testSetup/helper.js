@@ -14,4 +14,10 @@ function render(component) {
     );
 }
 
-export { render };
+function asyncStorageMock() {
+    jest.mock('@react-native-async-storage/async-storage', () =>
+        require('@react-native-async-storage/async-storage/jest/async-storage-mock')
+    );
+}
+
+export { asyncStorageMock, render };

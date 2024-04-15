@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,7 +36,7 @@ namespace p8_restapi
                 {
                     s.SwaggerDoc("v1", new OpenApiInfo {Title = ServiceName, Version = "v1"});
                 });
-           
+
                 services.Configure<PusherConfiguration>(Configuration.GetSection("Pusher"));
                 services.AddOptions();
                 services.AddSingleton<IPusherService, PusherService.PusherService>();
@@ -51,7 +50,7 @@ namespace p8_restapi
                 {
                     program.UseDeveloperExceptionPage();
                 }
-                
+
                 program.UseSwagger(s => { s.RouteTemplate = $"/{SwaggerRoute}" + "/{documentName}/swagger.json"; });
                 program.UseSwaggerUI(s =>
                 {
@@ -60,7 +59,7 @@ namespace p8_restapi
                 });
 
                 program.UseRouting();
-                program.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
+                program.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
                 program.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             }
         }
