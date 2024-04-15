@@ -77,7 +77,7 @@ public class AdminController : ControllerBase
         if (!res)
             return BadRequest("Could not create bus stop");
 
-        return Ok("Bus stop created succesfully");
+        return Ok("Bus stop created successfully");
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public class AdminController : ControllerBase
         if (!res)
             return BadRequest("Could not create route");
 
-        return Ok("Route created succesfully");
+        return Ok("Route created successfully");
     }
 
     /// <summary>
@@ -103,10 +103,14 @@ public class AdminController : ControllerBase
     /// <param name="busId"></param>
     /// <returns>Ok with confirmation of where bus is</returns>
     [HttpPost("bus/location")]
-    public async Task<IActionResult> UpdateBusLocation(decimal latitude, decimal longitude, Guid busId)
+    public async Task<IActionResult> UpdateBusLocation([FromBody] UpdateBusLocationRequest req)
     {
-        Program._stateController.UpdateBusLocation(busId, latitude, longitude, _busRepository);
-        return Ok($"Bus with id {busId} was updated to location: {latitude}, {longitude}");
+        var res = await Program._stateController.UpdateBusLocation(req.BusId, req.Latitude, req.Longitude, _busRepository);
+
+        if (res)
+            return Ok($"Bus with id {req.BusId} was updated to location: {req.Latitude}, {req.Longitude}");
+
+        return BadRequest("Could not update bus location");
     }
 
     /// <summary>
