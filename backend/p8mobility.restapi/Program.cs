@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Net;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using p8_restapi.Translation.RestApi;
@@ -8,6 +9,8 @@ namespace p8_restapi
     public class Program
     {
         public static StateController.StateController _stateController;
+        public static string hostName = Dns.GetHostName();
+        public static IPHostEntry ip = Dns.GetHostEntry(hostName); 
 
         public static void Main(string[] args)
         {
@@ -19,7 +22,7 @@ namespace p8_restapi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://10.0.0.10:5000");
+                    webBuilder.UseUrls("http://" + ip.AddressList[0] + ":5000");
                 }).ConfigureServices(services =>
                 {
                     _stateController = new StateController.StateController();
