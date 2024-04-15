@@ -4,12 +4,21 @@ import React, { useState } from 'react';
 import { YStack, Text } from 'tamagui';
 import { Title, Button, Container, Input, ButtonText } from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
 
 const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [showWrongPasswordText, setShowWrongPasswordText] = useState(false);
 
+    async function requestLocation() {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            setError('Adgang til placering er nægtet');
+            return;
+        }
+    }
     async function login() {
+        requestLocation();
         try {
             const options = {
                 method: 'POST',
@@ -24,7 +33,7 @@ const LoginPage = () => {
                     longitude: 0,
                 }),
             };
-            await fetch('http://10.0.0.10:5000/admin/bus', options).then((response) => {
+            await fetch('http://192.168.1.125:5000/admin/bus', options).then((response) => {
                 if (response.status === 400) {
                     setShowWrongPasswordText(true);
                 } else {

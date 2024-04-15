@@ -72,13 +72,16 @@ public class StateController
         IsRunning = false;
     }
 
-    public async void UpdateBusLocation(Guid id, decimal latitude, decimal longitude, IBusRepository busRepository)
+    public async Task<bool> UpdateBusLocation(Guid id, decimal latitude, decimal longitude, IBusRepository busRepository)
     {
         var bus = GetBus(id);
+        if (bus == null)
+            return false;
         bus.Latitude = latitude;
         bus.Longitude = longitude;
         await busRepository.UpdateBusLocation(id, latitude, longitude);
         Console.WriteLine("Bus location updated");
+        return true;
     }
 
     public async void UpdateBusAction(Guid id, Action action, IBusRepository busRepository)
@@ -98,11 +101,14 @@ public class StateController
         return SystemState;
     }
 
-    public Bus GetBus(Guid id)
+    public Bus? GetBus(Guid id)
     {
         var res = SystemState.Buses.ToList().Find(bus => bus.Id == id);
 
-        return res ?? throw new Exception("Bus not found");
+        if (res == null)
+            return null;
+
+        return res;
     }
 
     public void AddBus(Bus bus)

@@ -1,6 +1,7 @@
 import { Link, router, Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { YStack } from 'tamagui';
+import * as Location from 'expo-location';
 
 import {
     Container,
@@ -17,6 +18,45 @@ import Pusher from 'pusher-js';
 // const pusher = window.Pusher;
 
 let secrets = require('../secrets.json');
+
+const pusher = new Pusher(secrets.Pusher.AppKey, {
+    cluster: 'eu',
+    forceTLS: true,
+});
+
+async function getLocation() {
+    let currentLocation = await Location.getCurrentPositionAsync();
+    return currentLocation;
+}
+
+setInterval(sendLocation, 10000);
+async function sendLocation() {
+    const location = await getLocation();
+    const BusId = await AsyncStorage.getItem('bus-id');
+    try {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'access-control-allow-origin': '*',
+            },
+            body: JSON.stringify({
+                busId: JSON.parse(BusId),
+                latitude: JSON.parse(location.coords.latitude),
+                longitude: JSON.parse(location.coords.longitude),
+            }),
+        };
+        await fetch('http://192.168.1.125:5000/admin/bus/location', options).then((response) => {
+            if (response.status === 400) {
+                console.log(response.status);
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+}
 
 const MainPage = () => {
     const [action, setAction] = useState('Keep Driving'); //speed up, slow down, keep driving
@@ -45,7 +85,7 @@ const MainPage = () => {
                     busId: JSON.parse(BusId),
                 }),
             };
-            await fetch('http://10.0.0.10:5000/admin/bus/delete', options).then((response) => {
+            await fetch('http://192.168.1.125:5000/admin/bus/delete', options).then((response) => {
                 if (response.status === 400) {
                     console.log(response.status);
                 } else {
@@ -58,10 +98,6 @@ const MainPage = () => {
         }
     }
 
-    let pusher = new Pusher(secrets.Pusher.AppKey, {
-        cluster: 'eu',
-        forceTLS: true,
-    });
     let pusherFunction = async () => {
         await pusher.connect();
         const channel = await pusher.subscribe('action');
