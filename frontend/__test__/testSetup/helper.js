@@ -1,5 +1,4 @@
 import { renderRouter } from 'expo-router/testing-library';
-import AsyncStorageMock from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
 function render(component) {
     const MockComponent = jest.fn(() => component);
@@ -15,4 +14,10 @@ function render(component) {
     );
 }
 
-export { render };
+function asyncStorageMock() {
+    jest.mock('@react-native-async-storage/async-storage', () =>
+        require('@react-native-async-storage/async-storage/jest/async-storage-mock')
+    );
+}
+
+export { asyncStorageMock, render };
