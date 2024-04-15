@@ -19,6 +19,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\p8mobility.persistence\p8mobility.persistence.csproj" />
+      <ProjectReference Include="..\p8mobility.restapi\p8mobility.restapi.csproj" />
+      <ProjectReference Include="..\p8mobility.shared\p8mobility.shared.csproj" />
     </ItemGroup>
 
 

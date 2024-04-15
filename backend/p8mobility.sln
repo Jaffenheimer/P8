@@ -10,6 +10,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p8mobility.dbup", "p8mobility.dbup\p8mobility.dbup.csproj", "{18C0B7EC-C3F3-4F24-BA37-8637E6484859}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p8mobility.test", "p8mobility.test\p8mobility.test.csproj", "{B0B668CE-DEAA-43CC-9BD8-7588FCF16E50}"
+	ProjectSection(ProjectDependencies) = postProject
+		{399CE9D5-F085-4328-99BD-17639BE1C1EA} = {399CE9D5-F085-4328-99BD-17639BE1C1EA}
+		{A1D108B5-7599-473B-8390-B9F39F88DFC5} = {A1D108B5-7599-473B-8390-B9F39F88DFC5}
+		{C70C88CE-2254-4343-B0D4-5F2EC7CD4CD0} = {C70C88CE-2254-4343-B0D4-5F2EC7CD4CD0}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p8mobility.shared", "p8mobility.shared\p8mobility.shared.csproj", "{A1D108B5-7599-473B-8390-B9F39F88DFC5}"
 EndProject
