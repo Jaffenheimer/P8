@@ -1,9 +1,13 @@
-import {Link, router, Stack} from 'expo-router';
-import React, {useEffect, useState} from 'react';
-import {YStack} from 'tamagui';
+import { Link, router, Stack } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { YStack } from 'tamagui';
 
 import {
-    Container, ButtonText, LogOutButton, LogOutButtonContainer, MainPageTitle,
+    Container,
+    ButtonText,
+    LogOutButton,
+    LogOutButtonContainer,
+    MainPageTitle,
 } from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -13,7 +17,6 @@ import Pusher from 'pusher-js';
 // const pusher = window.Pusher;
 
 let secrets = require('../secrets.json');
-
 
 const MainPage = () => {
     const [action, setAction] = useState('Keep Driving'); //speed up, slow down, keep driving
@@ -32,9 +35,13 @@ const MainPage = () => {
         const BusId = await AsyncStorage.getItem('bus-id');
         try {
             const options = {
-                method: 'Delete', headers: {
-                    'Content-Type': 'application/json', Accept: 'application/json', 'access-control-allow-origin': '*',
-                }, body: JSON.stringify({
+                method: 'Delete',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'access-control-allow-origin': '*',
+                },
+                body: JSON.stringify({
                     busId: JSON.parse(BusId),
                 }),
             };
@@ -52,7 +59,8 @@ const MainPage = () => {
     }
 
     let pusher = new Pusher(secrets.Pusher.AppKey, {
-        cluster: 'eu', forceTLS: true,
+        cluster: 'eu',
+        forceTLS: true,
     });
     let pusherFunction = async () => {
         await pusher.connect();
@@ -78,17 +86,19 @@ const MainPage = () => {
         });
     };
     pusherFunction();
-    return (<Container>
-        <Stack.Screen options={{headerShown: false}}/>
-        <YStack>
-            <LogOutButtonContainer>
-                <LogOutButton onPress={logOut}>
-                    <ButtonText>Log out</ButtonText>
-                </LogOutButton>
-            </LogOutButtonContainer>
-            <MainPageTitle>{action}</MainPageTitle>
-        </YStack>
-    </Container>);
+    return (
+        <Container>
+            <Stack.Screen options={{ headerShown: false }} />
+            <YStack>
+                <LogOutButtonContainer>
+                    <LogOutButton onPress={logOut}>
+                        <ButtonText>Log out</ButtonText>
+                    </LogOutButton>
+                </LogOutButtonContainer>
+                <MainPageTitle>{action}</MainPageTitle>
+            </YStack>
+        </Container>
+    );
 };
 
 export default MainPage;
