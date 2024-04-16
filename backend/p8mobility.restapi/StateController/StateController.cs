@@ -15,7 +15,7 @@ public class StateController
 {
     private static State SystemState { get; set; }
     private static List<Route> Routes { get; set; } = new List<Route>();
-    public static bool Running { get; set; } = true;
+    public bool Running { get; set; } = true;
     public bool IsRunning { get; set; } = false;
     private static List<BusStop> BusStops { get; set; } = new List<BusStop>();
 
@@ -88,9 +88,10 @@ public class StateController
         await busRepository.UpdateBusAction(id, action);
     }
 
-    public void UpdatePeopleCount(Guid busStopId, int peopleCount)
+    public BusStop? UpdatePeopleCount(Guid busStopId, int peopleCount)
     {
         BusStops.Find(busStop => busStop.Id == busStopId)!.PeopleCount = peopleCount;
+        return BusStops.Find(stop => stop.Id == busStopId);
     }
 
     public State GetState()
