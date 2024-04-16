@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,7 +24,12 @@ namespace p8_restapi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://" + ip.AddressList[0] + ":5000");
+                    if(OperatingSystem.IsMacOS())
+                        webBuilder.UseUrls("http://" + ip.AddressList[0] + ":5000");
+                    if(OperatingSystem.IsWindows())
+                        webBuilder.UseUrls("http://" + ip.AddressList[^1] + ":5000");
+                    if (OperatingSystem.IsLinux())
+                        webBuilder.UseUrls("http://" + ip.AddressList[1] + ":5000");
                 }).ConfigureServices(services =>
                 {
                     _stateController = new StateController.StateController();
