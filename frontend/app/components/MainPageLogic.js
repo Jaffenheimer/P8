@@ -9,21 +9,10 @@ import {
     ButtonText,
     LogOutButton,
     LogOutButtonContainer,
-    MainPageTitle,
 } from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// importScripts('https://js.pusher.com/7.0/pusher.worker.min.js');
-import Pusher from 'pusher-js';
-// import Pusher from '@pusher/pusher-websocket-react-native'
-// const pusher = window.Pusher;
-
-let secrets = require('../secrets.json');
-
-const pusher = new Pusher(secrets.Pusher.AppKey, {
-    cluster: 'eu',
-    forceTLS: true,
-});
+const url = 'http://10.0.0.10:5000';
 
 async function getLocation() {
     let currentLocation = await Location.getCurrentPositionAsync();
@@ -49,7 +38,7 @@ async function sendLocation() {
                 longitude: JSON.parse(location.coords.longitude),
             }),
         };
-        await fetch('http://192.168.1.186:5000/admin/bus/location', options).then((response) => {
+        await fetch(url + '/admin/bus/location', options).then((response) => {
             if (response.status === 400) {
                 console.log(response.status);
             }
@@ -59,8 +48,8 @@ async function sendLocation() {
         return;
     }
 }
+
 const MainPageLogic = () => {
-    const [action, setAction] = useState('Keep Driving'); //speed up, slow down, keep driving
     const [busId, setBusId] = useState(null);
 
     useEffect(() => {
@@ -86,7 +75,7 @@ const MainPageLogic = () => {
                     busId: JSON.parse(BusId),
                 }),
             };
-            await fetch('http://192.168.1.186:5000/admin/bus/delete', options).then((response) => {
+            await fetch(url + '/admin/bus/delete', options).then((response) => {
                 if (response.status === 400) {
                     console.log(response.status);
                 } else {
@@ -98,31 +87,6 @@ const MainPageLogic = () => {
             return;
         }
     }
-
-    let pusherFunction = async () => {
-        await pusher.connect();
-        const channel = await pusher.subscribe('action');
-        channel.bind('test_event', function (data) {
-            if (typeof data === 'string') {
-                data = JSON.parse(data);
-            }
-            Object.keys(data.Actions).forEach((key) => {
-                if (JSON.parse(busId) === key) {
-                    const actionValue = Object.values(data.Actions)[0];
-                    if (actionValue === 0) {
-                        setAction('Default');
-                    } else if (actionValue === 1) {
-                        setAction('Maintain Speed');
-                    } else if (actionValue === 2) {
-                        setAction('Speed Up');
-                    } else if (actionValue === 3) {
-                        setAction('Slow Down');
-                    }
-                }
-            });
-        });
-    };
-    pusherFunction();
     console.log(busId);
     return (
         <Container>
@@ -133,11 +97,9 @@ const MainPageLogic = () => {
                         <ButtonText>Log out</ButtonText>
                     </LogOutButton>
                 </LogOutButtonContainer>
-                <MainPageTitle>{action}</MainPageTitle>
             </YStack>
         </Container>
-        
+
     );
 };
-
 export default MainPageLogic;

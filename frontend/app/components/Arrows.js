@@ -1,12 +1,33 @@
-import React from 'react';
-import { StyleSheet, Text, View, Animated, Easing } from 'react-native';
-import { Entypo } from 'react-native-vector-icons';
+import React, {useEffect, useState} from 'react';
+import {Animated, StyleSheet, Text, View} from 'react-native';
+import {Entypo} from 'react-native-vector-icons';
+import Pusher from 'pusher-js';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
+let secrets = require('../secrets.json');
+
+const pusher = new Pusher(secrets.Pusher.AppKey, {
+    cluster: 'eu',
+    forceTLS: true,
+});
 
 const Arrows = () => {
+    const [currentAction, setAction] = useState(null);
+    const [busId, setBusId] = useState(null);
     const animatedValue = new Animated.Value(0);
     const animatedValue2 = new Animated.Value(0);
     const animatedValue3 = new Animated.Value(0);
+    useEffect(() => {
+        async function fetchBusId() {
+            const id = await AsyncStorage.getItem('bus-id');
+            setBusId(id);
+        }
 
+        fetchBusId();
+    }, []);
+
+    
     Animated.loop(
         Animated.parallel([
             Animated.timing(animatedValue, {
@@ -73,22 +94,49 @@ const Arrows = () => {
             },
         ],
     };
+
+    let pusherFunction = async () => {
+        await pusher.connect();
+        const channel = await pusher.subscribe('action');
+        channel.bind('test_event', function (data) {
+            if (typeof data === 'string') {
+                data = JSON.parse(data);
+            }
+            Object.keys(data.Actions).forEach((key) => {
+                if (JSON.parse(busId) === key) {
+                    const actionValue = Object.values(data.Actions)[0];
+                    if (actionValue === 0) {
+                        setAction('Default');
+                    } else if (actionValue === 1) {
+                        setAction('Maintain Speed');
+                    } else if (actionValue === 2) {
+                        setAction('Speed Up');
+                    } else if (actionValue === 3) {
+                        setAction('Slow Down');
+                    }
+                }
+            });
+        });
+    };
+    pusherFunction();
     return (
-        <View style={styles.arrow}>
-            <Animated.View style={[animatedStyle, { marginBottom: -70 }]}>
+        <View style={styles.container}>
+            <Text style={styles.text}>{currentAction === null ? "Default" : currentAction}</Text>
+            <View style={styles.arrow}>
+            <Animated.View style={[animatedStyle, {marginBottom: -70}]}>
                 <Entypo
                     name="chevron-right"
                     size={124}
                     color="black"
-                    style={{ transform: [{ rotate: '-90deg' }] }}
+                    style={{transform: [{rotate: '-90deg'}]}}
                 />
             </Animated.View>
-            <Animated.View style={[animatedStyle2, { marginBottom: -70 }]}>
+            <Animated.View style={[animatedStyle2, {marginBottom: -70}]}>
                 <Entypo
                     name="chevron-right"
                     size={124}
                     color="black"
-                    style={{ transform: [{ rotate: '-90deg' }] }}
+                    style={{transform: [{rotate: '-90deg'}]}}
                 />
             </Animated.View>
             <Animated.View style={[animatedStyle3]}>
@@ -96,23 +144,32 @@ const Arrows = () => {
                     name="chevron-right"
                     size={124}
                     color="black"
-                    style={{ transform: [{ rotate: '-90deg' }] }}
+                    style={{transform: [{rotate: '-90deg'}]}}
                 />
             </Animated.View>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    arrow: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+    container: {
+        flex: 1,
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
+     arrow: {
+          justifyContent: 'center',
+          alignItems: 'center',
+     },
+    text: {
+        fontSize: 50,
+        textAlign: 'center',
+        color: 'black',
+        marginRight: '30%',
+    },
+ 
 });
 
 export default Arrows;
