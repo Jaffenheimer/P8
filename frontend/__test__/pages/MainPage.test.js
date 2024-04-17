@@ -10,5 +10,5 @@ beforeEach(() => {
 
 test('renders all components on load', () => {
     expect(screen.getByText(/Log out/)).toBeTruthy();
-    expect(screen.getByText(/Keep Driving/)).toBeTruthy();
+    expect(screen.getByText(/Default/)).toBeTruthy();
 });
