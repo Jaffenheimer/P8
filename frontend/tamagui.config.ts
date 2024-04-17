@@ -97,17 +97,19 @@ export const ButtonText = styled(SizableText, {
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
 });
 
 export const LogOutButton = styled(Button, {
-    width: '30%',
-    marginTop: '10%',
-    marginLeft: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 3,
 });
 
 export const LogOutButtonContainer = styled(YStack, {
-    width: '100%',
-    height: '50%',
+    flexDirection: 'row',
+    justifyContent: 'center',
 });
 
 const config = createTamagui({
