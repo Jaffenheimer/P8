@@ -5,7 +5,7 @@ import { YStack, Text } from 'tamagui';
 import { Title, Button, Container, Input, ButtonText } from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
-const url = 'http://10.0.0.10:5000';
+const url = 'http://192.168.1.186:5000';
 const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [showWrongPasswordText, setShowWrongPasswordText] = useState(false);

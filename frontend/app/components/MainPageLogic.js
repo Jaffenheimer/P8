@@ -12,7 +12,7 @@ import {
 } from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const url = 'http://10.0.0.10:5000';
+const url = 'http://192.168.1.186:5000';
 
 async function getLocation() {
     let currentLocation = await Location.getCurrentPositionAsync();
@@ -88,8 +88,9 @@ const MainPageLogic = () => {
         }
     }
     console.log(busId);
+    
     return (
-        <Container>
+        <Container style={{flexDirection: 'column', justifyContent: 'flex-end'}}>
             <Stack.Screen options={{headerShown: false}}/>
             <YStack>
                 <LogOutButtonContainer>

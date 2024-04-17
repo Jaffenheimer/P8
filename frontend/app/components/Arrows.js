@@ -24,10 +24,15 @@ const Arrows = () => {
             setBusId(id);
         }
 
+        async function fetchAction() {
+            setAction(await AsyncStorage.getItem('action'));
+        }
+
+        fetchAction();
         fetchBusId();
     }, []);
 
-    
+
     Animated.loop(
         Animated.parallel([
             Animated.timing(animatedValue, {
@@ -122,32 +127,59 @@ const Arrows = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>{currentAction === null ? "Default" : currentAction}</Text>
-            <View style={styles.arrow}>
-            <Animated.View style={[animatedStyle, {marginBottom: -70}]}>
-                <Entypo
-                    name="chevron-right"
-                    size={124}
-                    color="black"
-                    style={{transform: [{rotate: '-90deg'}]}}
-                />
-            </Animated.View>
-            <Animated.View style={[animatedStyle2, {marginBottom: -70}]}>
-                <Entypo
-                    name="chevron-right"
-                    size={124}
-                    color="black"
-                    style={{transform: [{rotate: '-90deg'}]}}
-                />
-            </Animated.View>
-            <Animated.View style={[animatedStyle3]}>
-                <Entypo
-                    name="chevron-right"
-                    size={124}
-                    color="black"
-                    style={{transform: [{rotate: '-90deg'}]}}
-                />
-            </Animated.View>
-            </View>
+            {currentAction === 'Speed Up' ?
+                <View style={styles.arrow}>
+                    <Animated.View style={[animatedStyle, {marginBottom: -70}]}>
+                        <Entypo
+                            name="chevron-right"
+                            size={124}
+                            color="black"
+                            style={{transform: [{rotate: '-90deg'}]}}
+                        />
+                    </Animated.View>
+                    <Animated.View style={[animatedStyle2, {marginBottom: -70}]}>
+                        <Entypo
+                            name="chevron-right"
+                            size={124}
+                            color="black"
+                            style={{transform: [{rotate: '-90deg'}]}}
+                        />
+                    </Animated.View>
+                    <Animated.View style={[animatedStyle3]}>
+                        <Entypo
+                            name="chevron-right"
+                            size={124}
+                            color="black"
+                            style={{transform: [{rotate: '-90deg'}]}}
+                        />
+                    </Animated.View>
+                </View> : currentAction === 'Slow Down' ?
+                    <View style={styles.arrowFlipped}>
+                        <Animated.View style={[animatedStyle, {marginBottom: -70}]}>
+                            <Entypo
+                                name="chevron-right"
+                                size={124}
+                                color="black"
+                                style={{transform: [{rotate: '-90deg'}]}}
+                            />
+                        </Animated.View>
+                        <Animated.View style={[animatedStyle2, {marginBottom: -70}]}>
+                            <Entypo
+                                name="chevron-right"
+                                size={124}
+                                color="black"
+                                style={{transform: [{rotate: '-90deg'}]}}
+                            />
+                        </Animated.View>
+                        <Animated.View style={[animatedStyle3]}>
+                            <Entypo
+                                name="chevron-right"
+                                size={124}
+                                color="black"
+                                style={{transform: [{rotate: '-90deg'}]}}
+                            />
+                        </Animated.View>
+                    </View> : null}
         </View>
     );
 };
@@ -158,18 +190,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'absolute',
+        marginTop: '75%',
     },
-     arrow: {
-          justifyContent: 'center',
-          alignItems: 'center',
-     },
+    arrow: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    arrowFlipped: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        transform: [{rotate: '180deg'}],
+    },
     text: {
         fontSize: 50,
         textAlign: 'center',
         color: 'black',
-        marginRight: '30%',
+        marginRight: '15%',
     },
- 
 });
 
 export default Arrows;
