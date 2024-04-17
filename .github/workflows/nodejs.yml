@@ -9,7 +9,7 @@ on:
 
 jobs:
     build:
-        runs-on: windows-latest
+        runs-on: ubuntu-latest
 
         strategy:
             matrix:
@@ -22,6 +22,8 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: "20.x"
+            - name: clear cache
+              run: npm cache clean --force
             - name: install packages
               run: npm i
               working-directory: frontend
