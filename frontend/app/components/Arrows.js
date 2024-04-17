@@ -3,6 +3,7 @@ import {Animated, StyleSheet, Text, View} from 'react-native';
 import {Entypo} from 'react-native-vector-icons';
 import Pusher from 'pusher-js';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {Theme} from "tamagui";
 
 
 let secrets = require('../secrets.json');
@@ -125,36 +126,11 @@ const Arrows = () => {
     };
     pusherFunction();
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>{currentAction === null ? "Default" : currentAction}</Text>
-            {currentAction === 'Speed Up' ?
-                <View style={styles.arrow}>
-                    <Animated.View style={[animatedStyle, {marginBottom: -70}]}>
-                        <Entypo
-                            name="chevron-right"
-                            size={124}
-                            color="black"
-                            style={{transform: [{rotate: '-90deg'}]}}
-                        />
-                    </Animated.View>
-                    <Animated.View style={[animatedStyle2, {marginBottom: -70}]}>
-                        <Entypo
-                            name="chevron-right"
-                            size={124}
-                            color="black"
-                            style={{transform: [{rotate: '-90deg'}]}}
-                        />
-                    </Animated.View>
-                    <Animated.View style={[animatedStyle3]}>
-                        <Entypo
-                            name="chevron-right"
-                            size={124}
-                            color="black"
-                            style={{transform: [{rotate: '-90deg'}]}}
-                        />
-                    </Animated.View>
-                </View> : currentAction === 'Slow Down' ?
-                    <View style={styles.arrowFlipped}>
+        <Theme name="light">
+            <View style={styles.container}>
+                <Text style={styles.text}>{currentAction === null ? "Default" : currentAction}</Text>
+                {currentAction === 'Speed Up' ?
+                    <View style={styles.arrow}>
                         <Animated.View style={[animatedStyle, {marginBottom: -70}]}>
                             <Entypo
                                 name="chevron-right"
@@ -179,8 +155,35 @@ const Arrows = () => {
                                 style={{transform: [{rotate: '-90deg'}]}}
                             />
                         </Animated.View>
-                    </View> : null}
-        </View>
+                    </View> : currentAction === 'Slow Down' ?
+                        <View style={styles.arrowFlipped}>
+                            <Animated.View style={[animatedStyle, {marginBottom: -70}]}>
+                                <Entypo
+                                    name="chevron-right"
+                                    size={124}
+                                    color="black"
+                                    style={{transform: [{rotate: '-90deg'}]}}
+                                />
+                            </Animated.View>
+                            <Animated.View style={[animatedStyle2, {marginBottom: -70}]}>
+                                <Entypo
+                                    name="chevron-right"
+                                    size={124}
+                                    color="black"
+                                    style={{transform: [{rotate: '-90deg'}]}}
+                                />
+                            </Animated.View>
+                            <Animated.View style={[animatedStyle3]}>
+                                <Entypo
+                                    name="chevron-right"
+                                    size={124}
+                                    color="black"
+                                    style={{transform: [{rotate: '-90deg'}]}}
+                                />
+                            </Animated.View>
+                        </View> : null}
+            </View>
+        </Theme>
     );
 };
 

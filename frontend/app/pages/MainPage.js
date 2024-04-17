@@ -6,14 +6,15 @@ import Arrows from "../components/Arrows";
 import React, {useEffect, useState} from "react";
 
 
-
 export default function MainPage() {
     return (
-        <Container>
-            <Main>
-                <Arrows/>
-                <MainPageLogic/>
-            </Main>
-        </Container>
+        <Theme name="light">
+            <Container>
+                <Main>
+                    <Arrows/>
+                    <MainPageLogic/>
+                </Main>
+            </Container>
+        </Theme>
     );
 }

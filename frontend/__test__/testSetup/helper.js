@@ -1,4 +1,5 @@
 import { renderRouter } from 'expo-router/testing-library';
+import {config } from 'tamagui';
 
 function render(component) {
     const MockComponent = jest.fn(() => component);

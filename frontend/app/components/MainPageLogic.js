@@ -1,6 +1,6 @@
 import {Link, router, Stack} from 'expo-router';
 import React, {useEffect, useState} from 'react';
-import {YStack} from 'tamagui';
+import {Theme, YStack} from 'tamagui';
 import * as Location from 'expo-location';
 import {Arrows} from '../components/Arrows.js';
 
@@ -87,20 +87,22 @@ const MainPageLogic = () => {
             return;
         }
     }
-    console.log(busId);
-    
-    return (
-        <Container style={{flexDirection: 'column', justifyContent: 'flex-end'}}>
-            <Stack.Screen options={{headerShown: false}}/>
-            <YStack>
-                <LogOutButtonContainer>
-                    <LogOutButton onPress={logOut}>
-                        <ButtonText>Log out</ButtonText>
-                    </LogOutButton>
-                </LogOutButtonContainer>
-            </YStack>
-        </Container>
 
+    console.log(busId);
+
+    return (
+        <Theme name="light">
+            <Container style={{flexDirection: 'column', justifyContent: 'flex-end'}}>
+                <Stack.Screen options={{headerShown: false}}/>
+                <YStack>
+                    <LogOutButtonContainer>
+                        <LogOutButton onPress={logOut}>
+                            <ButtonText>Log out</ButtonText>
+                        </LogOutButton>
+                    </LogOutButtonContainer>
+                </YStack>
+            </Container>
+        </Theme>
     );
 };
 export default MainPageLogic;
