@@ -1,19 +1,20 @@
 
 from Helper.PlotDiagram import PlotOneAveragePeopleAtBusstops, PlotBoth, PlotAverageWaitTime
-from Helper.CSVWriter import CSVWriter
-from Helper.CollectionData import avarage_people_at_busstops
+from Helper.CollectionData import average_people_at_busstops
 from SumoEnviroment import SumoEnv
 import asyncio
 import traci
+import numpy as np
+from os import path, mkdir
 
 
-async def GreedyFastVersion(steps=1000):
+def GreedyFastVersion(steps=1000):
 
     # Importing the environment
     env = SumoEnv()
 
-    waiting_times_greedy_fast = []  # List to store average waiting time at each step
-    people_at_busstops = []
+    dtype = [ ('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
+    data = np.zeros(steps, dtype=dtype)
 
     step = 0
     obs = env.reset()
@@ -22,21 +23,18 @@ async def GreedyFastVersion(steps=1000):
 
         # Perform a step in the environment
         next_state, reward, done, info, truncated = env.step(action)
-        people_at_busstops.append(avarage_people_at_busstops())
-        waiting_times_greedy_fast.append(next_state.item(0))
+        data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
+        data['AverageWaitTime'][step] = next_state.item(0)
         step += 1
 
     # Save the data to a CSV file
-    newList = []
-    newList.append(waiting_times_greedy_fast)
-    newList.append(people_at_busstops)
-    CSVWriter(newList,
-              "GreedyFastVersion.csv", ["Waiting Times", "Average People at Busstops"])
+    if (path.isdir("../Output") == False):
+        mkdir("../Output")
+    np.savetxt(f"../Output/GreedyFastVersion.csv", data, delimiter=',',fmt='%f', header="AveragePeopleAtBusStops,AverageWaitTime") 
 
     # PlotAverageWaitTime(waiting_times_greedy_fast)
     # PlotOneAveragePeopleAtBusstops(people_at_busstops)
     # PlotBoth(waiting_times_greedy_fast, people_at_busstops)
 
-    return waiting_times_greedy_fast, people_at_busstops
+    return data
 
-asyncio.run(GreedyFastVersion())

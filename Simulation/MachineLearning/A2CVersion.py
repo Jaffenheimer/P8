@@ -1,12 +1,13 @@
 from stable_baselines3 import A2C
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnviroment import SumoEnv
-from Helper.CollectionData import avarage_people_at_busstops
+from Helper.CollectionData import average_people_at_busstops
 import numpy as np
 import asyncio
 
 
-async def A2CVersion(time_steps=10000, steps=1000):
+def A2CVersion(time_steps=10000, steps=1000):
+    
     # Importing the environment
     env = make_vec_env(SumoEnv, n_envs=1)
 
@@ -26,18 +27,17 @@ async def A2CVersion(time_steps=10000, steps=1000):
 
     # Test the agent
     obs = env.reset()
-    waiting_times_A2C = []  # List to store average waiting time at each step
-    people_at_busstops = []
+    dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
+    data = np.zeros(steps, dtype=dtype)
     step = 0
 
     while step < steps:
         action, _states = model.predict(obs)
         obs, rewards, dones, info = env.step(action)
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
-        waiting_times_A2C.append(obs.item(0))
-        people_at_busstops.append(avarage_people_at_busstops())
+        data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
+        data['AverageWaitTime'][step] = obs.item(0)
         step += 1
 
-    return waiting_times_A2C, people_at_busstops
+    return data
 
-asyncio.run(A2CVersion())  # Run the async function within an event loop

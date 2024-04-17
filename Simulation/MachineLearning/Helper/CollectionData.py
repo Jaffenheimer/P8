@@ -1,7 +1,7 @@
 import traci
 
 
-def avarage_people_at_busstops():
+def average_people_at_busstops():
     busstops = traci.busstop.getIDList()
     people_at_busstops = []
     for busstop in busstops:

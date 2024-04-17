@@ -54,13 +54,14 @@ def PlotBoth(waiting_times, people_at_busstops):
     plt.show()
 
 
-def PlotCombinedAverageWaitTime(waiting_times_Random, waiting_times_greedy_fast, waiting_times_PPO, waiting_times_TRPO, waiting_times_A2C):
+def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C,Schedule):
     plt.figure(figsize=(10, 6))
-    plt.plot(waiting_times_Random, label="Random Version")
-    plt.plot(waiting_times_greedy_fast, label="Greedy Fast Version")
-    plt.plot(waiting_times_PPO, label="PPO Version")
-    plt.plot(waiting_times_TRPO, label="TRPO Version")
-    plt.plot(waiting_times_A2C, label="A2C Version")
+    plt.plot(Random, label="Random Version")
+    plt.plot(greedy_fast, label="Greedy Fast Version")
+    plt.plot(PPO, label="PPO Version")
+    plt.plot(TRPO, label="TRPO Version")
+    plt.plot(A2C, label="A2C Version")
+    plt.plot(Schedule, label="Schedule Version")
     plt.xlabel("Steps")
     plt.ylabel("Waiting Time (seconds)")
     plt.title("Average Waiting Time Over Testing Steps")
@@ -69,13 +70,14 @@ def PlotCombinedAverageWaitTime(waiting_times_Random, waiting_times_greedy_fast,
     plt.show()
 
 
-def PlotCombinedAveragePeopleAtBusstops(people_at_busstops_Random, people_at_busstops_greedy_fast, people_at_busstops_times_PPO, people_at_busstops_times_TRPO, people_at_busstops_times_A2C):
+def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
     plt.figure(figsize=(10, 6))
-    plt.plot(people_at_busstops_Random, label="Random Version")
-    plt.plot(people_at_busstops_greedy_fast, label="Greedy Fast Version")
-    plt.plot(people_at_busstops_times_PPO, label="PPO Version")
-    plt.plot(people_at_busstops_times_TRPO, label="TRPO Version")
-    plt.plot(people_at_busstops_times_A2C, label="A2C Version")
+    plt.plot(Random, label="Random Version")
+    plt.plot(greedy_fast, label="Greedy Fast Version")
+    plt.plot(PPO, label="PPO Version")
+    plt.plot(TRPO, label="TRPO Version")
+    plt.plot(A2C, label="A2C Version")
+    plt.plot(Schedule, label="Schedule Version")
     plt.xlabel("Steps")
     plt.ylabel("Waiting Time (seconds)")
     plt.title("Average Waiting Time Over Testing Steps")

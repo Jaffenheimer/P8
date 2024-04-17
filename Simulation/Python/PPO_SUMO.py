@@ -202,7 +202,7 @@ if not os.path.exists(logdir):
 gym.register(
     "SumoEnv-v0",
     entry_point=SumoEnv,
-    max_episode_steps=2000,
+    max_episode_steps=500,
     reward_threshold=1000,
 )
 

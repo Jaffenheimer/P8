@@ -15,7 +15,7 @@ class SumoEnv(gym.Env):
 
         ## VARIABLES ##
         self.bus_num = 5
-        self.max_steps = 2000
+        self.max_steps = 500
         self.current_step = 0
         bus_stops_num = 4
         bus_speed_max = 50
@@ -194,6 +194,6 @@ if not os.path.exists(logdir):
 gym.register(
     "SumoEnv-v0",
     entry_point=SumoEnv,
-    max_episode_steps=2000,
+    max_episode_steps=500,
     reward_threshold=1000,
 )
