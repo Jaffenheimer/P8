@@ -11,7 +11,7 @@ import unittest
 
 
 #CONSTANT VALUE
-MAX_STEPS = 100
+MAX_STEPS = 10000
 
 class SumoEnv(gym.Env):
   def __init__(self):
@@ -67,27 +67,6 @@ class SumoEnv(gym.Env):
   def decelerate_km_h(self, speed):
     return speed - (0.25 * speed)
   
-  def get_next_bus_position(self, bus_id):
-    next_bus_index = self.bus_ids[0] if self.bus_ids.index(bus_id)+1 == len(self.bus_ids) else self.bus_ids.index(bus_id)
-    print(next_bus_index, len(self.bus_ids))
-    # next_bus_distance_driven = traci.vehicle.getDistance()
-    # next_bus_route = traci.vehicle.getRouteID(next_bus_index) 
-    # next_bus_route_index = 0 if next_bus_route == "r_0" else 1
-    # bus_position = round(next_bus_distance_driven % (self.route_lengths[next_bus_route_index]), 3)
-    # if bus_position < self.overlap_lane_length:
-    #   return bus_position
-    # else:
-    #   return 0
-      
-
-    # :
-    #   next_bus_position = traci.vehicle.getDistance(self.bus_ids[i+1])
-    # else:
-    #   next_bus_position = traci.vehicle.getDistance(self.bus_ids[0])
-    # if next_bus_position > self.overlap_lane_length:
-    #   next_bus_position = traci.vehicle.getDistance(self.bus_ids[i+2] if i+2 < len(self.bus_ids) else self.bus_ids[0])
-    # return next_bus_position
-
   def step(self, action):
     try:
       next_state = self.sumo_step()
@@ -112,13 +91,12 @@ class SumoEnv(gym.Env):
         bus_speed_km_h = bus_speed_m_s*3.6
 
         bus_stop_interval = [-22, 3] # interval for bus stop position where speed is not changed
-        min_distance_between_buses = 5 
         new_speed_m_s = bus_speed_m_s
         # if bus should keep speed, set speed to current speed if the previous speed is 0, otherwise to previous speed
         if bus_action == 0:
           if self.previous_speeds_m_s[i] not in [0.0, 0]:
             new_speed_m_s = self.previous_speeds_m_s[i]
-          traci.vehicle.setSpeed(bus_id, new_speed_m_s)
+          traci.vehicle.slowDown(bus_id, new_speed_m_s, 1) # smoothly changes to new speed over 1 time step
         # accelerate/decelerate if bus is not within the bus stop position interval
         elif (not (bus_position > nearest_bus_stop_position + bus_stop_interval[0] and bus_position < nearest_bus_stop_position + bus_stop_interval[1])):
           if bus_action == -1:
@@ -126,19 +104,8 @@ class SumoEnv(gym.Env):
           elif bus_action == 1:
             # if too close to the next bus accelerate=min(accelerate, speed of next bus), otherwise accelerate normally
             new_speed_m_s = self.accelerate_km_h(bus_speed_km_h) / 3.6
-            next_bus_position = self.get_next_bus_position(bus_id)
-            # res = next_bus_position - bus_position if i+1 < len(self.previous_positions) else next_bus_position + (bus_position - self.route_lengths[bus_route_index])
-            # print (bus_position, next_bus_position, i+1 < len(self.previous_positions), res)
-            # if res < min_distance_between_buses:
-            #   res = self.previous_speeds_m_s[i+1] if i+1 < len(self.previous_speeds_m_s) else self.previous_speeds_m_s[0]
-            #   if res not in [0, 0.0]:
-            #     new_speed_m_s = min(self.accelerate_km_h(bus_speed_km_h) / 3.6, res)
-            #   else:
-            #     new_speed_m_s = self.accelerate_km_h(bus_speed_km_h) / 3.6
-            # else: 
-            #   new_speed_m_s = self.accelerate_km_h(bus_speed_km_h) / 3.6
 
-          traci.vehicle.slowDown(bus_id, new_speed_m_s, 1) # smoothly changes to new speed over 1 time step
+          traci.vehicle.slowDown(bus_id, new_speed_m_s, 1) 
         
         # print(bus_action, bus_speed_m_s, new_speed_m_s, bus_position, nearest_bus_position)
         self.previous_speeds_m_s[i] = new_speed_m_s # store previous speed for keep speed action in next step
@@ -317,32 +284,24 @@ if __name__=="__main__":
   # unittest.main(argv=[''], exit=False)
 
   # # Parallel environments
-  vec_env = make_vec_env('SumoEnv-v1', n_envs=1, vec_env_cls=SubprocVecEnv) #subProcVecEnv: A2C is meant to be run primarily on the CPU, this class makes it so it runs on CPU
+  vec_env = make_vec_env('SumoEnv-v1', n_envs=4, vec_env_cls=SubprocVecEnv) #subProcVecEnv: A2C is meant to be run primarily on the CPU, this class makes it so it runs on CPU
   model = A2C("MlpPolicy", vec_env, verbose=1)
-  model.learn(total_timesteps=1, progress_bar=True)
-  i = 0
+  model.learn(total_timesteps=5000)
+
   obs = vec_env.reset()
 
-  while i < 100:
+  done = np.array([False], dtype='bool')
+  
+  step = 0
+  while not done.all():
     action, _ = model.predict(obs)
     obs, rewards, done, info = vec_env.step(action)
-    print(f"--- step {i} ---")
-    print(action)
-    print(obs)
-    i += 1
-
-  # obs = vec_env.reset()
-
-  # done = np.array([False], dtype='bool')
-  
-  # step = 0
-  # while not done.all():
-  #   action, _ = model.predict(obs)
-  #   obs, rewards, done, info = vec_env.step(action)
-  #   print(obs)
-  #   step += 1
-  #   # if step > MAX_STEPS - 5 and step != MAX_STEPS - 1:
-  #   #   print("step:", step, repr(obs))
-  #   if done.all():
-  #     vec_env.close()
+    step += 1
+    print("step:", step, repr(obs))
+    if step > MAX_STEPS - 10 and step != MAX_STEPS - 1:
+      # print("step:", step, repr(obs))
+      for n_env in range(0,4):
+        print([obs[n_env][i] for i in range(2, np.shape(obs)[1], 2)])
+    if done.all():
+      vec_env.close()
   print("done!")
