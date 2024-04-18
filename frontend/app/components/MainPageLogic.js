@@ -1,8 +1,7 @@
 import {Link, router, Stack} from 'expo-router';
 import React, {useEffect, useState} from 'react';
-import {Theme, YStack} from 'tamagui';
+import {Theme, YStack, AlertDialog, XStack, Button} from 'tamagui';
 import * as Location from 'expo-location';
-import {Arrows} from '../components/Arrows.js';
 
 import {
     Container,
@@ -11,8 +10,11 @@ import {
     LogOutButtonContainer,
 } from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert} from "react-native";
+import ip from '../constants.json';
 
-const url = 'http://192.168.1.186:5000';
+const url = ip.ip;
+const port = ip.port;
 
 async function getLocation() {
     let currentLocation = await Location.getCurrentPositionAsync();
@@ -38,7 +40,7 @@ async function sendLocation() {
                 longitude: JSON.parse(location.coords.longitude),
             }),
         };
-        await fetch(url + '/admin/bus/location', options).then((response) => {
+        await fetch('http://' + url + ':' + port + '/admin/bus/location', options).then((response) => {
             if (response.status === 400) {
                 console.log(response.status);
             }
@@ -75,7 +77,7 @@ const MainPageLogic = () => {
                     busId: JSON.parse(BusId),
                 }),
             };
-            await fetch(url + '/admin/bus/delete', options).then((response) => {
+            await fetch('http://' + url + ':' + port + '/admin/bus/delete', options).then((response) => {
                 if (response.status === 400) {
                     console.log(response.status);
                 } else {
@@ -96,9 +98,50 @@ const MainPageLogic = () => {
                 <Stack.Screen options={{headerShown: false}}/>
                 <YStack>
                     <LogOutButtonContainer>
-                        <LogOutButton onPress={logOut}>
-                            <ButtonText>Log out</ButtonText>
-                        </LogOutButton>
+                        <AlertDialog native>
+                            <AlertDialog.Trigger asChild>
+                                <LogOutButton>
+                                    <ButtonText>Log out</ButtonText>
+                                </LogOutButton>
+                            </AlertDialog.Trigger>
+                            <AlertDialog.Portal>
+                                <AlertDialog.Overlay
+                                    key="overlay"
+                                    animation="quick"
+                                    opacity={0.5}
+                                    enterStyle={{opacity: 0}}
+                                    exitStyle={{opacity: 0}}
+                                />
+                                <AlertDialog.Content
+                                    bordered
+                                    elevate
+                                    key="content"
+                                    animation={['quick', {
+                                        opacity: {
+                                            overshootClamping: true,
+                                        },
+                                    },]}
+                                    enterStyle={{x: 0, y: -20, opacity: 0, scale: 0.9}}
+                                    exitStyle={{x: 0, y: 10, opacity: 0, scale: 0.95}}
+                                    x={0}
+                                    scale={1}
+                                    opacity={1}
+                                    y={0}
+                                >
+                                    <YStack space>
+                                        <AlertDialog.Title>Are you sure?</AlertDialog.Title>
+                                        <XStack space="$3" justifyContent="flex-end">
+                                            <AlertDialog.Cancel asChild>
+                                                <Button>Cancel</Button>
+                                            </AlertDialog.Cancel>
+                                            <AlertDialog.Action asChild onPress={logOut}>
+                                                <Button>Log Out</Button>
+                                            </AlertDialog.Action>
+                                        </XStack>
+                                    </YStack>
+                                </AlertDialog.Content>
+                            </AlertDialog.Portal>
+                        </AlertDialog>
                     </LogOutButtonContainer>
                 </YStack>
             </Container>
