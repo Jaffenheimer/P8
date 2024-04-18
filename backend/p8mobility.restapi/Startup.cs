@@ -41,6 +41,7 @@ namespace p8_restapi
                 services.AddOptions();
                 services.AddSingleton<IPusherService, PusherService.PusherService>();
                 services.ConfigurePersistenceMySqlConnection(Configuration.GetConnectionString("MySqlDatabase"));
+                
             }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

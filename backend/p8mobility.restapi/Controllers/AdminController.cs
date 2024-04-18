@@ -31,20 +31,6 @@ public class AdminController : ControllerBase
         _pusherService = pusherService;
     }
 
-    [HttpPost("initProgram")]
-    public async Task<IActionResult> InitProgram()
-    {
-        if (Program._stateController.IsRunning)
-        {
-            return BadRequest("Program already initialized");
-        }
-
-        await Program._stateController.Init(_busStopRepository, _routeRelationsRepository);
-        // create a new thread to run the pusher service
-        new Thread(() => Program._stateController.Run(_pusherService)).Start();
-        return Ok("Program initialized");
-    }
-
     /// <summary>
     /// Creates an Instance of a bus in the system
     /// </summary>
@@ -105,7 +91,8 @@ public class AdminController : ControllerBase
     [HttpPost("bus/location")]
     public async Task<IActionResult> UpdateBusLocation([FromBody] UpdateBusLocationRequest req)
     {
-        var res = await Program._stateController.UpdateBusLocation(req.BusId, req.Latitude, req.Longitude, _busRepository);
+        var res = await Program._stateController.UpdateBusLocation(req.BusId, req.Latitude, req.Longitude,
+            _busRepository);
 
         if (res)
             return Ok($"Bus with id {req.BusId} was updated to location: {req.Latitude}, {req.Longitude}");

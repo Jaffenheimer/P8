@@ -2,10 +2,14 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using p8_restapi.PusherService;
 using p8_restapi.Translation.RestApi;
+using p8mobility.persistence.BusStopRepository;
+using p8mobility.persistence.RouteRelationsRepository;
 
 namespace p8_restapi
 {
@@ -35,6 +39,13 @@ namespace p8_restapi
                 {
                     _stateController = new StateController.StateController();
                     services.AddSingleton(_stateController);
+                    _stateController
+                        .Init(
+                            services.BuildServiceProvider().GetService<IBusStopRepository>() ??
+                            throw new InvalidOperationException(),
+                            services.BuildServiceProvider().GetService<IRouteRelationsRepository>() ??
+                            throw new InvalidOperationException()).Wait();
+                    new Thread(() => _stateController.Run(services.BuildServiceProvider().GetService<IPusherService>() ?? throw new InvalidOperationException())).Start();
                 });
     }
 }

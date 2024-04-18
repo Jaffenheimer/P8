@@ -47,12 +47,18 @@ public class StateController
             //Mutex might be necessary
             var currentState = SystemState;
             //SystemState = UpdateState(currentState);
+
+
             var pusherMessage = new PusherMessage(new Dictionary<Guid, Action>());
             if (SystemState.Buses.Any() && currentState.Buses.Any())
             {
-                foreach (var bus in SystemState.Buses.ToList())
+                var currentBuses = currentState.Buses.ToList();
+                var systemBuses = SystemState.Buses.ToList();
+
+                foreach (var bus in systemBuses)
                 {
-                    if (bus.Action != currentState.Buses.ToList().Find(bus2 => bus2.Id == bus.Id)!.Action)
+                    var currentBus = currentBuses.Find(bus2 => bus2.Id == bus.Id);
+                    if (currentBus != null && bus.Action != currentBus.Action)
                     {
                         pusherMessage.Actions.Add(bus.Id, bus.Action);
                     }
@@ -72,7 +78,8 @@ public class StateController
         IsRunning = false;
     }
 
-    public async Task<bool> UpdateBusLocation(Guid id, decimal latitude, decimal longitude, IBusRepository busRepository)
+    public async Task<bool> UpdateBusLocation(Guid id, decimal latitude, decimal longitude,
+        IBusRepository busRepository)
     {
         var bus = GetBus(id);
         if (bus == null)
