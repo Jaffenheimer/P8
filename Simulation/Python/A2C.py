@@ -11,12 +11,17 @@ import unittest
 
 
 #CONSTANT VALUE
-MAX_STEPS = 10000
+MAX_STEPS = 30000
+LEARN_TIME_STEPS = 1000
+SUMO_INIT_STEPS = 200
+REWARD_THRESHOLD = 500
+NUM_ENVS = 8
 
 class SumoEnv(gym.Env):
   def __init__(self):
     self.close()
     traci.start(["sumo", "-c", path.abspath("Simulation/SUMO/algorithm/algorithm.sumocfg")])
+
     ## VARIABLES ##
     self.bus_num = 10
     self.current_step = 0
@@ -43,6 +48,10 @@ class SumoEnv(gym.Env):
     low_obs = np.zeros([1 + 2*self.bus_num])
     high_obs = np.array([wait_time_max] + [bus_speed_max, self.route_lengths[0]]*5 + [bus_speed_max, self.route_lengths[1]]*5)
     self.observation_space = gym.spaces.Box(low=low_obs, high=high_obs, shape=(1 + 2*self.bus_num,), dtype=np.float32)
+
+    # Run simulation for SUMO_INIT_STEPS to initialize the simulation with stable wait time
+    for _ in range(SUMO_INIT_STEPS):
+      self.sumo_step()
 
   # GYM FUNCTIONS
   def reset(self, seed=None):
@@ -183,7 +192,6 @@ class SumoEnv(gym.Env):
     else:
       return array[idx]
 
-
 class TestSumoEnv(unittest.TestCase):
   def setUp(self): # setup the variables here before every test
     self.env = SumoEnv()
@@ -277,16 +285,16 @@ gym.envs.registration.register(
   id='SumoEnv-v1',
   entry_point=SumoEnv,
   max_episode_steps=MAX_STEPS,
-  reward_threshold=500, 
+  reward_threshold=REWARD_THRESHOLD, 
 )
 
 if __name__=="__main__":
   # unittest.main(argv=[''], exit=False)
 
   # # Parallel environments
-  vec_env = make_vec_env('SumoEnv-v1', n_envs=4, vec_env_cls=SubprocVecEnv) #subProcVecEnv: A2C is meant to be run primarily on the CPU, this class makes it so it runs on CPU
+  vec_env = make_vec_env('SumoEnv-v1', n_envs=NUM_ENVS, vec_env_cls=SubprocVecEnv) #subProcVecEnv: A2C is meant to be run primarily on the CPU, this class makes it so it runs on CPU
   model = A2C("MlpPolicy", vec_env, verbose=1)
-  model.learn(total_timesteps=5000)
+  model.learn(total_timesteps=LEARN_TIME_STEPS)
 
   obs = vec_env.reset()
 
@@ -297,10 +305,9 @@ if __name__=="__main__":
     action, _ = model.predict(obs)
     obs, rewards, done, info = vec_env.step(action)
     step += 1
-    print("step:", step, repr(obs))
-    if step > MAX_STEPS - 10 and step != MAX_STEPS - 1:
-      # print("step:", step, repr(obs))
-      for n_env in range(0,4):
+    if step > MAX_STEPS - 20 and step != MAX_STEPS - 1:
+      print("step:", step) #, repr(obs))
+      for n_env in range(NUM_ENVS):
         print([obs[n_env][i] for i in range(2, np.shape(obs)[1], 2)])
     if done.all():
       vec_env.close()
