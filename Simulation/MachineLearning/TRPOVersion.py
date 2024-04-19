@@ -2,35 +2,44 @@ from sb3_contrib import TRPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnviroment import SumoEnv
 from Helper.CollectionData import average_people_at_busstops
-import asyncio
 import numpy as np
+from Constants import TRPO_TOTAL_TIMESTEPS, TRPO_MAX_LEARN_STEPS
 
 
-def TRPOVersion(timesteps=10000, steps=1000):
-    env = make_vec_env(SumoEnv, n_envs=1)
+def TRPOVersion():
 
-    model = TRPO("MlpPolicy", env, verbose=1)
+    env = make_vec_env(SumoEnv, n_envs=8)
 
-    model.learn(total_timesteps=timesteps,
+    model = TRPO(policy="MlpPolicy", env=env, verbose=1)
+
+    model.learn(total_timesteps=TRPO_TOTAL_TIMESTEPS,
                 tb_log_name="TRPO_SUMO", progress_bar=True)
 
-    model.save("trpo_sumo")
+    # model.save("trpo_sumo")
 
-    del model
+    # del model
 
-    model = TRPO.load("trpo_sumo")
+    # model = TRPO.load("trpo_sumo")
+
     obs = env.reset()
     step = 0
-    dtype = [ ('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
-    data = np.zeros(steps, dtype=dtype)
+    dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
+    data = np.zeros(TRPO_MAX_LEARN_STEPS, dtype=dtype)
 
+    done = np.array([False], dtype='bool')
 
-    while step < steps:
+    while not done.all():
         action, _states = model.predict(obs)
-        obs, rewards, dones, info = env.step(action)
+        obs, rewards, done, info = env.step(action)
         data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
         data['AverageWaitTime'][step] = obs.item(0)
 
         step += 1
 
+        if done.all():
+            env.close()
+
     return data
+
+
+TRPOVersion()

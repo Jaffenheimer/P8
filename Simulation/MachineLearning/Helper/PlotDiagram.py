@@ -2,9 +2,9 @@
 import matplotlib.pyplot as plt
 
 
-def PlotAverageWaitTime(waiting_times):
+def PlotAverageWaitTime(data):
     plt.figure(figsize=(10, 6))
-    plt.plot(waiting_times, label="Average Waiting Time")
+    plt.plot(data['AverageWaitTime'], label="Average Waiting Time")
     plt.xlabel("Steps")
     plt.ylabel("Waiting Time (seconds)")
     plt.title("Average Waiting Time Over Testing Steps")
@@ -13,9 +13,10 @@ def PlotAverageWaitTime(waiting_times):
     plt.show()
 
 
-def PlotOneAveragePeopleAtBusstops(people_at_busstops):
+def PlotOneAveragePeopleAtBusstops(data):
     plt.figure(figsize=(10, 6))
-    plt.plot(people_at_busstops, label="Average People at Busstops")
+    plt.plot(data['AverageWaitTime'],
+             label="Average People at Busstops")
     plt.xlabel("Steps")
     plt.ylabel("Average People at Busstops")
     plt.title("Average People at Busstops Over Testing Steps")
@@ -24,18 +25,19 @@ def PlotOneAveragePeopleAtBusstops(people_at_busstops):
     plt.show()
 
 
-def PlotBoth(waiting_times, people_at_busstops):
+def PlotBoth(data):
     # Create a figure with 2 rows and 1 column (2 subplots)
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6))
 
     # Plot waiting times on the first subplot (ax1)
-    ax1.plot(waiting_times, label="Average Waiting Time (s)")
+    ax1.plot(data['AverageWaitTime'], label="Average Waiting Time (s)")
     ax1.set_ylabel("Waiting Time (seconds)", color='blue')
     ax1.set_title("Average Waiting Time")
     ax1.grid(True)
 
     # Plot average people at bus stops on the second subplot (ax2)
-    ax2.plot(people_at_busstops, label="Average People at Busstops", color='red')
+    ax2.plot(data['AveragePeopleAtBusStops'],
+             label="Average People at Busstops", color='red')
     ax2.set_ylabel("People at Busstops", color='red')
     ax2.set_xlabel("Steps")
     ax2.grid(True)
@@ -54,7 +56,7 @@ def PlotBoth(waiting_times, people_at_busstops):
     plt.show()
 
 
-def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C,Schedule):
+def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
     plt.figure(figsize=(10, 6))
     plt.plot(Random, label="Random Version")
     plt.plot(greedy_fast, label="Greedy Fast Version")
