@@ -47,7 +47,7 @@ class SumoEnv(gym.Env):
         self.action_space = gym.spaces.Box(low=np.array([np.float32(-1)]*self.bus_num), high=np.array(
             [np.float32(1)]*self.bus_num), shape=(self.bus_num,), dtype=np.float32)
 
-        # state: [avg_wait_time, b0(r0)_speed, b0(r0)_pos, (...), b0(r1)_speed, b0(r1)_pos, (...)]
+        # state: [avg_wait_time, avg_people_at_busstops, b0(r0)_speed, b0(r0)_pos, (...), b0(r1)_speed, b0(r1)_pos, (...)]
         wait_time_max = 100000
         average_people_at_busstops_max = 10000
         low_obs = np.zeros([1 + 1 + 2*self.bus_num])
@@ -69,7 +69,7 @@ class SumoEnv(gym.Env):
         self.previous_speeds_m_s = [0]*self.bus_num
         traci.start(
             ["sumo", "-c", path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/algorithm.sumocfg")])
-        return np.concatenate(([self.wait_time], np.zeros(2 * self.bus_num))).astype(np.float32)[:21], {}
+        return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
 
     def even_probability(self, action_value):
         if action_value < -0.33:
@@ -134,7 +134,6 @@ class SumoEnv(gym.Env):
 
                     traci.vehicle.slowDown(bus_id, new_speed_m_s, 1)
 
-                # print(bus_action, bus_speed_m_s, new_speed_m_s, bus_position, nearest_bus_position)
                 # store previous speed for keep speed action in next step
                 self.previous_speeds_m_s[i] = new_speed_m_s
 
@@ -172,7 +171,6 @@ class SumoEnv(gym.Env):
 
     # SUMO FUNCTIONS
     def sumo_step(self):
-        # state: [avg_wait_time, b0(r0)_speed, b0(r0)_pos, (...),  b0(r1)_speed, b0(r1)_pos, (...)]
         new_state = [0] * (1 + 1 + 2 * self.bus_num)
         personsWaitingTimeList = []
         traci.simulationStep()
@@ -235,7 +233,6 @@ class SumoEnv(gym.Env):
             return 0
 
         return sum(people_at_busstops) / len(people_at_busstops)
-
 
 class TestSumoEnv(unittest.TestCase):
     def setUp(self):  # setup the variables here before every test
@@ -326,7 +323,6 @@ class TestSumoEnv(unittest.TestCase):
     #   for i in [2*i for i in range(1, self.env.bus_num)]:
     #     self.assertGreater(state[i], 0.0)
 
-
 gym.envs.registration.register(
   id='SumoEnv-v1',
   entry_point=SumoEnv,
@@ -335,7 +331,7 @@ gym.envs.registration.register(
 )
 
 if __name__ == "__main__":
-    # unittest.main(argv=[''], exit=False)
+  unittest.main(argv=[''], exit=False)
 
   # # Parallel environments
   vec_env = make_vec_env('SumoEnv-v1', n_envs=NUM_ENVS, vec_env_cls=SubprocVecEnv) #subProcVecEnv: A2C is meant to be run primarily on the CPU, this class makes it so it runs on CPU

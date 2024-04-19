@@ -1,7 +1,7 @@
 import numpy as np
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-from SumoEnviroment import SumoEnv
+from SumoEnvironment import SumoEnv
 from Helper.CollectionData import average_people_at_busstops
 from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_LEARN_STEPS
 from Helper.PlotDiagram import PlotBoth
@@ -37,17 +37,13 @@ def PPOVersion():
 
         obs, rewards, done, info = env.step(action)
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
-        data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
         data['AverageWaitTime'][step] = obs.item(0)
+        data['AveragePeopleAtBusStops'][step] = obs.item(1)
         step += 1
 
         if done.all():
             env.close()
 
-    # Plotting wait times and people at bus stops
-    PlotBoth(data)
-
     return data[:-1]
-
 
 PPOVersion()

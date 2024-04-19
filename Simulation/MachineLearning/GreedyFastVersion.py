@@ -1,7 +1,6 @@
 from Helper.PlotDiagram import PlotOneAveragePeopleAtBusstops, PlotBoth, PlotAverageWaitTime
 from Helper.CollectionData import average_people_at_busstops
 from stable_baselines3.common.env_util import make_vec_env
-from SumoEnviroment import SumoEnv
 import numpy as np
 from os import path, mkdir
 from Constants import GREEDY_MAX_LEARN_STEPS
@@ -31,8 +30,8 @@ def GreedyFastVersion():
 
         done = np.array([done], dtype='bool')
 
-        data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
         data['AverageWaitTime'][step] = obs.item(0)
+        data['AveragePeopleAtBusStops'][step] = obs.item(1)
 
         step += 1
 

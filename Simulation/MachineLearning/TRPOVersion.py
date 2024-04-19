@@ -1,6 +1,6 @@
 from sb3_contrib import TRPO
 from stable_baselines3.common.env_util import make_vec_env
-from SumoEnviroment import SumoEnv
+from SumoEnvironment import SumoEnv
 from Helper.CollectionData import average_people_at_busstops
 import numpy as np
 from Constants import TRPO_TOTAL_TIMESTEPS, TRPO_MAX_LEARN_STEPS
@@ -31,8 +31,8 @@ def TRPOVersion():
     while not done.all():
         action, _states = model.predict(obs)
         obs, rewards, done, info = env.step(action)
-        data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
         data['AverageWaitTime'][step] = obs.item(0)
+        data['AveragePeopleAtBusStops'][step] = obs.item(1)
 
         step += 1
 

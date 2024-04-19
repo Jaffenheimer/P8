@@ -1,16 +1,16 @@
 from stable_baselines3 import A2C
 from stable_baselines3.common.env_util import make_vec_env
-from SumoEnviroment import SumoEnv
+from SumoEnvironment import SumoEnv
 from Helper.CollectionData import average_people_at_busstops
 from stable_baselines3.common.vec_env import SubprocVecEnv
 import numpy as np
 from Constants import A2C_TOTAL_TIMESTEPS, A2C_MAX_LEARN_STEPS
-
+from  Helper.PlotDiagram import PlotBoth
 
 def A2CVersion():
 
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=8, vec_env_cls=SubprocVecEnv)
+    env = make_vec_env(SumoEnv, n_envs=1, vec_env_cls=SubprocVecEnv)
 
     # Create the agent
     model = A2C("MlpPolicy", env, verbose=1)
@@ -38,8 +38,8 @@ def A2CVersion():
         obs, rewards, done, info = env.step(action)
         print(f"Step: {step}, done: {done}")
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
-        data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
         data['AverageWaitTime'][step] = obs.item(0)
+        data['AveragePeopleAtBusStops'][step] = obs.item(1)
         step += 1
 
         if done.all():
@@ -47,6 +47,3 @@ def A2CVersion():
 
     return data[:-1]
 
-
-if __name__ == "__main__":
-    A2CVersion()

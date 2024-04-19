@@ -1,4 +1,3 @@
-import os
 import gymnasium as gym
 import numpy as np
 import traci
@@ -10,14 +9,13 @@ from Constants import MAX_LEARN_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, SEED
 class SumoEnv(gym.Env):
     def __init__(self):
         self.close()
-        print("Seed:", SEED)
 
         traci.start(
-            ["sumo", "-c", path.abspath("../SUMO/algorithm/algorithm.sumocfg"), "--seed", str(SEED)])
+            ["sumo", "-c", path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/algorithm.sumocfg"), "--seed", str(SEED)])
         ## VARIABLES ##
         self.bus_num = 10
         self.current_step = 0
-        self.max_steps = MAX_LEARN_STEPS
+        self.max_steps = MAX_LEARN_STEPS+1
         bus_speed_max = 13.9  # 13.9 m/s = 50 km/h
 
         ## SUMO VARIABLES ##
@@ -38,13 +36,14 @@ class SumoEnv(gym.Env):
         self.action_space = gym.spaces.Box(low=np.array([np.float32(-1)]*self.bus_num), high=np.array(
             [np.float32(1)]*self.bus_num), shape=(self.bus_num,), dtype=np.float32)
 
-        # state: [avg_wait_time, b0(r0)_speed, b0(r0)_pos, (...), b0(r1)_speed, b0(r1)_pos, (...)]
+        # state: [avg_wait_time, avg_people_at_busstops, b0(r0)_speed, b0(r0)_pos, (...), b0(r1)_speed, b0(r1)_pos, (...)]
         wait_time_max = 100000
-        low_obs = np.zeros([1 + 2*self.bus_num])
-        high_obs = np.array([wait_time_max] + [bus_speed_max, self.route_lengths[0]]
+        average_people_at_busstops_max = 10000
+        low_obs = np.zeros([1 + 1 + 2*self.bus_num])
+        high_obs = np.array([wait_time_max] + [average_people_at_busstops_max] + [bus_speed_max, self.route_lengths[0]]
                             * 5 + [bus_speed_max, self.route_lengths[1]]*5)
         self.observation_space = gym.spaces.Box(
-            low=low_obs, high=high_obs, shape=(1 + 2*self.bus_num,), dtype=np.float32)
+            low=low_obs, high=high_obs, shape=(1 + 1 + 2*self.bus_num,), dtype=np.float32)
 
         # Run simulation for SUMO_INIT_STEPS to initialize the simulation with stable wait time
 
@@ -58,8 +57,8 @@ class SumoEnv(gym.Env):
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
         traci.start(
-            ["sumo", "-c", path.abspath("../SUMO/algorithm/algorithm.sumocfg"), "--seed", str(SEED)])
-        return np.concatenate(([self.wait_time], np.zeros(2 * self.bus_num))).astype(np.float32)[:21], {}
+            ["sumo", "-c", path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/algorithm.sumocfg"), "--seed", str(SEED)])
+        return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
 
     def even_probability(self, action_value):
         if action_value < -0.33:
@@ -124,7 +123,6 @@ class SumoEnv(gym.Env):
 
                     traci.vehicle.slowDown(bus_id, new_speed_m_s, 1)
 
-                # print(bus_action, bus_speed_m_s, new_speed_m_s, bus_position, nearest_bus_position)
                 # store previous speed for keep speed action in next step
                 self.previous_speeds_m_s[i] = new_speed_m_s
 
@@ -162,8 +160,7 @@ class SumoEnv(gym.Env):
 
     # SUMO FUNCTIONS
     def sumo_step(self):
-        # state: [avg_wait_time, b0(r0)_speed, b0(r0)_pos, (...),  b0(r1)_speed, b0(r1)_pos, (...)]
-        new_state = [0] * (1 + 2 * self.bus_num)
+        new_state = [0] * (1 + 1 + 2 * self.bus_num)
         personsWaitingTimeList = []
         traci.simulationStep()
 
@@ -183,6 +180,9 @@ class SumoEnv(gym.Env):
         else:
             new_state[0] = 0.0
 
+        # find average people at bus stops
+        new_state[1] = self.get_average_people_at_busstops()
+
         # finds bus speed and position
         bus_route_counter = [0, self.bus_num]
         for j in range(0, len(vehicles)):
@@ -194,8 +194,8 @@ class SumoEnv(gym.Env):
             vehiclePosition = traci.vehicle.getDistance(
                 vehicleId) % (self.route_lengths[vehicleRoute_index])
             index_buffer = bus_route_counter[vehicleRoute_index]
-            new_state[1 + index_buffer] = round(vehicleSpeed_km_h, 2)
-            new_state[2 + index_buffer] = round(vehiclePosition, 2)
+            new_state[2 + index_buffer] = round(vehicleSpeed_km_h, 2)
+            new_state[3 + index_buffer] = round(vehiclePosition, 2)
             bus_route_counter[vehicleRoute_index] += 2
 
         return new_state
@@ -208,7 +208,20 @@ class SumoEnv(gym.Env):
             return array[idx-1]
         else:
             return array[idx]
+            
+    def get_average_people_at_busstops(self):
+        busstops = traci.busstop.getIDList()
+        people_at_busstops = []
+        for busstop in busstops:
+            people_at_busstops.append(traci.busstop.getPersonCount(busstop))
 
+        if len(people_at_busstops) == 0:
+            return 0
+
+        if sum(people_at_busstops) == 0:
+            return 0
+
+        return sum(people_at_busstops) / len(people_at_busstops)
 
 gym.envs.registration.register(
     id='SumoEnv-v1',
