@@ -1,29 +1,39 @@
 
 from SumoEnviroment import SumoEnv
-from Helper.CollectionData import avarage_people_at_busstops
+from Helper.CollectionData import average_people_at_busstops
 import random
-import asyncio
+import numpy as np
+from Constants import RANDOM_MAX_LEARN_STEPS
 
 
-async def RandomVersion(steps=1000):
+def RandomVersion():
 
     # Importing the environment
     env = SumoEnv()
 
-    waiting_times_Random = []
-    people_at_busstops = []
+    dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
+    data = np.zeros(RANDOM_MAX_LEARN_STEPS, dtype=dtype)
+
     step = 0
     obs = env.reset()
 
-    while step < steps:
+    done = np.array([False], dtype='bool')
+
+    while not done:
         action = [random.randint(-1, 1) for i in range(5)]
 
         # Perform a step in the environment
         next_state, reward, done, info, truncated = env.step(action)
-        waiting_times_Random.append(next_state.item(0))
-        people_at_busstops.append(avarage_people_at_busstops())
+        data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
+        data['AverageWaitTime'][step] = next_state.item(0)
         step += 1
 
-    return waiting_times_Random, people_at_busstops
+        print(f"Step: {step}, done: {done}, rewards: {reward}, info: {info}")
 
-asyncio.run(RandomVersion())
+        if done:
+            env.close()
+
+    return data
+
+
+RandomVersion()

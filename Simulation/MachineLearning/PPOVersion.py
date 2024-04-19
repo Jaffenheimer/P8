@@ -1,12 +1,13 @@
 import numpy as np
-from stable_baselines3 import PPO, A2C
+from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnviroment import SumoEnv
-from Helper.CollectionData import avarage_people_at_busstops
-import asyncio
+from Helper.CollectionData import average_people_at_busstops
+from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_LEARN_STEPS
+from Helper.PlotDiagram import PlotBoth
 
 
-async def PPOVersion(timesteps=10000, steps=1000):
+def PPOVersion():
     # Importing the environment
     env = make_vec_env(SumoEnv, n_envs=1)
 
@@ -14,30 +15,42 @@ async def PPOVersion(timesteps=10000, steps=1000):
     model = PPO("MlpPolicy", env, verbose=1)
 
     # Train the agent
-    model.learn(total_timesteps=timesteps, progress_bar=True)
+    # model.learn(total_timesteps=PPO_TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
-    model.save("ppo_sumo")
+    # model.save("ppo_sumo")
 
-    del model  # remove to demonstrate saving and loading
+    # del model  # remove to demonstrate saving and loading
 
     # Load the trained agent
-    model = PPO.load("ppo_sumo")
+    # model = PPO.load("ppo_sumo")
 
     # Test the agent
     obs = env.reset()
-    waiting_times_PPO = []  # List to store average waiting time at each step
-    people_at_busstops = []
+    dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
+    data = np.zeros(PPO_MAX_LEARN_STEPS, dtype=dtype)
     step = 0
+    done = np.array([False], dtype='bool')
 
-    while step < steps:
-        action, _states = model.predict(obs)
-        obs, rewards, dones, info = env.step(action)
+    while not done.all():
+        action, _ = model.predict(obs)
+
+        print(
+            f"Step: {step}, done: {done}, donetype: {type(done)}, actions{action}, actions_type: {type(action)}")
+
+        obs, rewards, done, info = env.step(action)
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
-        waiting_times_PPO.append(obs.item(0))
-        people_at_busstops.append(avarage_people_at_busstops())
+        data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
+        data['AverageWaitTime'][step] = obs.item(0)
         step += 1
 
-    return waiting_times_PPO, people_at_busstops
+        if done.all():
+            env.close()
 
-asyncio.run(PPOVersion())
+    # Plotting wait times and people at bus stops
+    PlotBoth(data)
+
+    return data
+
+
+PPOVersion()
