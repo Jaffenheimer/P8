@@ -15,7 +15,7 @@ def PPOVersion():
     model = PPO("MlpPolicy", env, verbose=1)
 
     # Train the agent
-    # model.learn(total_timesteps=PPO_TOTAL_TIMESTEPS, progress_bar=True)
+    model.learn(total_timesteps=PPO_TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
     # model.save("ppo_sumo")
@@ -35,9 +35,6 @@ def PPOVersion():
     while not done.all():
         action, _ = model.predict(obs)
 
-        print(
-            f"Step: {step}, done: {done}, donetype: {type(done)}, actions{action}, actions_type: {type(action)}")
-
         obs, rewards, done, info = env.step(action)
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
         data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
@@ -50,7 +47,7 @@ def PPOVersion():
     # Plotting wait times and people at bus stops
     PlotBoth(data)
 
-    return data
+    return data[:-1]
 
 
 PPOVersion()

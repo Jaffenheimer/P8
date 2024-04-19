@@ -6,6 +6,7 @@ from RandomVersion import RandomVersion
 from GreedyFastVersion import GreedyFastVersion
 from ScheduleVersion import ScheduleVersion
 
+
 def CombinedTest():
 
     data_PPO = PPOVersion()

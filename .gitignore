@@ -429,3 +429,5 @@ fabric.properties
 .Simulation/Python/logs
 ./Simulation/Python/logs
 /Simulation/Python/logs
+
+/Simulation/Output/*
