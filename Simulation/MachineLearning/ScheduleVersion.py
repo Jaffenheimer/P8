@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from os import path, mkdir
 from random import randint
-from Constants import SCHEDULE_MAX_LEARN_STEPS
+from Constants import SCHEDULE_MAX_LEARN_STEPS, SEED
 
 
 def ScheduleVersion(inputFile="../SUMO/schedule/schedule.sumocfg", outputFileName="output_schedule.csv"):
@@ -17,8 +17,7 @@ def ScheduleVersion(inputFile="../SUMO/schedule/schedule.sumocfg", outputFileNam
         traci.close()
     except:
         pass
-    traci.start(["sumo", "-c", path.abspath(inputFile),
-                "--seed", str(randint(1, 100000))])
+    traci.start(["sumo", "-c", path.abspath(inputFile),"--seed", str(SEED)])
 
     done = np.array([False], dtype='bool')
 
@@ -55,7 +54,6 @@ def getAverageWaitTime(persons):
     for j in range(numOfPersons):
         personWaitingTime = traci.person.getWaitingTime(persons[j])
         personsWaitingTimeList.append(personWaitingTime)
-
     # finds average wait time
     length = len(personsWaitingTimeList)
     averageWaitTime = sum(personsWaitingTimeList)/length if length != 0 else 0
@@ -63,11 +61,8 @@ def getAverageWaitTime(persons):
 
 
 def getAveragePeopleAtBusStops():
-    busStops = ["bs_road_-overlap", "bs_road_-R2", "bs_road_-R1", "bs_road_-R0", "bs_road_-L3",
-                "bs_road_-L2", "bs_road_-L1", "bs_road_-L0"]  # excluding overlap for special case handling
-
+    busStops = traci.busstop.getIDList()
     totalPeopleAtBusStops = 0
-    # finds the number of people at each bus stop
     for busStop in busStops:
         totalPeopleAtBusStops += traci.busstop.getPersonCount(busStop)
     return totalPeopleAtBusStops/len(busStops)
@@ -82,7 +77,7 @@ def runMultiple(inputFile="../SUMO/algorithm/algorithm.sumocfg", outputFileName=
     for run in range(runs):
         # Connect to SUMO simulation
         traci.start(["sumo", "-c", path.abspath(inputFile),
-                    "--seed", str(randint(1, 100000))])
+                    "--seed", str(SEED)])
 
         # simulation loop
         step = 0
@@ -97,17 +92,12 @@ def runMultiple(inputFile="../SUMO/algorithm/algorithm.sumocfg", outputFileName=
 
             if run == 0:
                 data['Step'][step] = step
-            # if run == 800:
-            #     print(data['PedestrianCount'][step])
             data['PedestrianCount'][step] += pedestrianCount
             data['AveragePeopleAtBusStops'][step] += averagePeopleAtBusStops
             data['AverageWaitTime'][step] += averageWaitTime
-            # data.loc[len(data)] = {"Step": step, "PedestrianCount": pedestrianCount, "AveragePeopleAtBusStops": averagePeopleAtBusStops, "AverageWaitTime": averageWaitTime}
-
+            
             step += 1
         traci.close()
-        # print(run)
-        # print(data['AverageWaitTime'][800])
     data['PedestrianCount'] = data['PedestrianCount']/runs
     data['AveragePeopleAtBusStops'] = data['AveragePeopleAtBusStops']/runs
     data['AverageWaitTime'] = data['AverageWaitTime']/runs
@@ -117,5 +107,5 @@ def runMultiple(inputFile="../SUMO/algorithm/algorithm.sumocfg", outputFileName=
     np.savetxt(f"../Output/{outputFileName}", data, delimiter=',', fmt='%f',
                header="Step,PedestrianCount,AveragePeopleAtBusStops,AverageWaitTime")
 
-
-ScheduleVersion()
+if __name__ == "__main__":
+    ScheduleVersion()
