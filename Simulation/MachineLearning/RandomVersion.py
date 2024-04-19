@@ -23,17 +23,15 @@ def RandomVersion():
         action = [random.randint(-1, 1) for i in range(5)]
 
         # Perform a step in the environment
-        next_state, reward, done, info, truncated = env.step(action)
+        obs, reward, truncated, done, _ = env.step(action)
         data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
-        data['AverageWaitTime'][step] = next_state.item(0)
+        data['AverageWaitTime'][step] = obs.item(0)
         step += 1
-
-        print(f"Step: {step}, done: {done}, rewards: {reward}, info: {info}")
 
         if done:
             env.close()
 
-    return data
+    return data[:-1]
 
 
 RandomVersion()

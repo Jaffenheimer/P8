@@ -36,6 +36,7 @@ def A2CVersion():
     while not done.all():
         action, _states = model.predict(obs)
         obs, rewards, done, info = env.step(action)
+        print(f"Step: {step}, done: {done}")
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
         data['AveragePeopleAtBusStops'][step] = average_people_at_busstops()
         data['AverageWaitTime'][step] = obs.item(0)
@@ -44,4 +45,8 @@ def A2CVersion():
         if done.all():
             env.close()
 
-    return data
+    return data[:-1]
+
+
+if __name__ == "__main__":
+    A2CVersion()

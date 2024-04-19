@@ -39,7 +39,7 @@ def TRPOVersion():
         if done.all():
             env.close()
 
-    return data
+    return data[:-1]
 
 
 TRPOVersion()
