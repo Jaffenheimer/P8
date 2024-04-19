@@ -5,11 +5,6 @@ from TRPOVersion import TRPOVersion
 from RandomVersion import RandomVersion
 from GreedyFastVersion import GreedyFastVersion
 from ScheduleVersion import ScheduleVersion
-import warnings
-
-warnings.filterwarnings('ignore', message='Person')
-warnings.filterwarnings('ignore', message='Environment')
-
 
 def CombinedTest():
 
