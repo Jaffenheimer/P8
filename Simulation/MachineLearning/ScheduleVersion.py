@@ -5,7 +5,7 @@ from random import randint
 from Constants import SCHEDULE_MAX_LEARN_STEPS, SEED
 
 
-def ScheduleVersion(inputFile="../SUMO/schedule/schedule.sumocfg", outputFileName="output_schedule.csv"):
+def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.sumocfg", outputFileName="output_schedule.csv"):
     # initializations
 
     dtype = [('Step', int), ('AveragePeopleAtBusStops', float),
@@ -65,7 +65,7 @@ def getAveragePeopleAtBusStops():
 # now for multiple runs, where the values are the average of the runs:
 
 
-def runMultiple(inputFile="../SUMO/algorithm/algorithm.sumocfg", outputFileName="output.csv", steps=500, runs=10):
+def runMultiple(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.sumocfg", outputFileName="output.csv", steps=500, runs=10):
     dtype = [('Step', int), ('PedestrianCount', float),
              ('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
     data = np.zeros(steps, dtype=dtype)

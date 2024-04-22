@@ -82,7 +82,7 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
     plt.plot(Schedule, label="Schedule Version")
     plt.xlabel("Steps")
     plt.ylabel("Waiting Time (seconds)")
-    plt.title("Average Waiting Time Over Testing Steps")
+    plt.title("Average People at Busstops Over Testing Steps")
     plt.legend()
     plt.grid(True)
     plt.show()

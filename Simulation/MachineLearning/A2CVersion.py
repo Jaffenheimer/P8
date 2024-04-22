@@ -5,12 +5,13 @@ from Helper.CollectionData import average_people_at_busstops
 from stable_baselines3.common.vec_env import SubprocVecEnv
 import numpy as np
 from Constants import A2C_TOTAL_TIMESTEPS, A2C_MAX_LEARN_STEPS
-from  Helper.PlotDiagram import PlotBoth
+from Helper.PlotDiagram import PlotBoth
+
 
 def A2CVersion():
 
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=1, vec_env_cls=SubprocVecEnv)
+    env = make_vec_env(SumoEnv, n_envs=4, vec_env_cls=SubprocVecEnv)
 
     # Create the agent
     model = A2C("MlpPolicy", env, verbose=1)
@@ -36,7 +37,7 @@ def A2CVersion():
     while not done.all():
         action, _states = model.predict(obs)
         obs, rewards, done, info = env.step(action)
-        print(f"Step: {step}, done: {done}")
+        # print(f"Step: {step}, done: {done}")
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
@@ -46,4 +47,3 @@ def A2CVersion():
             env.close()
 
     return data[:-1]
-

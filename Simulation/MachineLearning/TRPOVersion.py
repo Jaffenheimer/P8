@@ -8,7 +8,7 @@ from Constants import TRPO_TOTAL_TIMESTEPS, TRPO_MAX_LEARN_STEPS
 
 def TRPOVersion():
 
-    env = make_vec_env(SumoEnv, n_envs=8)
+    env = make_vec_env(SumoEnv, n_envs=4)
 
     model = TRPO(policy="MlpPolicy", env=env, verbose=1)
 

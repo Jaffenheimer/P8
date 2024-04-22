@@ -9,7 +9,7 @@ from Helper.PlotDiagram import PlotBoth
 
 def PPOVersion():
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=1)
+    env = make_vec_env(SumoEnv, n_envs=4)
 
     # Create the agent
     model = PPO("MlpPolicy", env, verbose=1)
@@ -45,5 +45,6 @@ def PPOVersion():
             env.close()
 
     return data[:-1]
+
 
 PPOVersion()

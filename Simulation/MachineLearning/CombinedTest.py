@@ -33,5 +33,6 @@ def CombinedTest():
     PlotCombinedAveragePeopleAtBusstops(data_random['AveragePeopleAtBusStops'], data_greedy['AveragePeopleAtBusStops'],
                                         data_PPO['AveragePeopleAtBusStops'], data_TRPO['AveragePeopleAtBusStops'], data_A2C['AveragePeopleAtBusStops'], data_schedule['AveragePeopleAtBusStops'])
 
+
 if __name__ == "__main__":
     CombinedTest()

@@ -5,13 +5,14 @@ import numpy as np
 from os import path, mkdir
 from Constants import GREEDY_MAX_LEARN_STEPS
 import gymnasium as gym
+from SumoEnvironment import SumoEnv
 
 
 def GreedyFastVersion():
 
     # Importing the environment
     # env = SumoEnv()
-    env = gym.make("SumoEnv-v1")
+    env = SumoEnv()
 
     obs = env.reset()
 
@@ -46,7 +47,7 @@ def GreedyFastVersion():
 
     # PlotAverageWaitTime(waiting_times_greedy_fast)
     # PlotOneAveragePeopleAtBusstops(people_at_busstops)
-    PlotBoth(data[:-1])
+    # PlotBoth(data[:-1])
 
     return data[:-1]
 

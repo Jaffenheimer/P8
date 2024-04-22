@@ -208,7 +208,7 @@ class SumoEnv(gym.Env):
             return array[idx-1]
         else:
             return array[idx]
-            
+
     def get_average_people_at_busstops(self):
         busstops = traci.busstop.getIDList()
         people_at_busstops = []
@@ -222,6 +222,7 @@ class SumoEnv(gym.Env):
             return 0
 
         return sum(people_at_busstops) / len(people_at_busstops)
+
 
 gym.envs.registration.register(
     id='SumoEnv-v1',
