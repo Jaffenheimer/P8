@@ -8,10 +8,11 @@ from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, SEED
 
 class SumoEnv(gym.Env):
     def __init__(self):
+        self.path = path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/high.sumocfg")
         self.close()
 
         traci.start(
-            ["sumo", "-c", path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/algorithm.sumocfg"), "--seed", str(SEED)])
+            ["sumo", "-c", self.path, "--seed", str(SEED)])
         ## VARIABLES ##
         self.bus_num = 10
         self.current_step = 0
@@ -57,7 +58,7 @@ class SumoEnv(gym.Env):
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
         traci.start(
-            ["sumo", "-c", path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/algorithm.sumocfg"), "--seed", str(SEED)])
+            ["sumo", "-c", self.path, "--seed", str(SEED)])
         return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
 
     def even_probability(self, action_value):

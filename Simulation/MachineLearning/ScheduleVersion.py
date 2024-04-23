@@ -5,7 +5,7 @@ from random import randint
 from Constants import SCHEDULE_MAX_STEPS, SEED
 
 
-def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.sumocfg", outputFileName="output_schedule.csv"):
+def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_schedule.sumocfg", outputFileName="output_schedule.csv"):
     # initializations
 
     dtype = [('Step', int), ('AveragePeopleAtBusStops', float),

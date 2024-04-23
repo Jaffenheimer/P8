@@ -3,7 +3,7 @@ from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
 from Helper.CollectionData import average_people_at_busstops
 import numpy as np
-from Constants import TRPO_TOTAL_TIMESTEPS, TRPO_MAX_LEARN_STEPS
+from Constants import TRPO_TOTAL_TIMESTEPS, TRPO_MAX_STEPS
 
 
 def TRPOVersion():
@@ -24,7 +24,7 @@ def TRPOVersion():
     obs = env.reset()
     step = 0
     dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
-    data = np.zeros(TRPO_MAX_LEARN_STEPS, dtype=dtype)
+    data = np.zeros(TRPO_MAX_STEPS, dtype=dtype)
 
     done = np.array([False], dtype='bool')
 
