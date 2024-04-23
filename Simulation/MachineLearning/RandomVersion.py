@@ -2,7 +2,7 @@ from SumoEnvironment import SumoEnv
 from Helper.CollectionData import average_people_at_busstops
 import random
 import numpy as np
-from Constants import RANDOM_MAX_LEARN_STEPS
+from Constants import RANDOM_MAX_STEPS
 
 
 def RandomVersion():
@@ -11,7 +11,7 @@ def RandomVersion():
     env = SumoEnv()
 
     dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
-    data = np.zeros(RANDOM_MAX_LEARN_STEPS, dtype=dtype)
+    data = np.zeros(RANDOM_MAX_STEPS, dtype=dtype)
 
     step = 0
     obs = env.reset()

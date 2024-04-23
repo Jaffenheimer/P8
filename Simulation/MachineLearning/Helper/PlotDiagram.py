@@ -61,7 +61,7 @@ def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
     plt.plot(Random, label="Random Version")
     plt.plot(greedy_fast, label="Greedy Fast Version")
     plt.plot(PPO, label="PPO Version")
-    plt.plot(TRPO, label="TRPO Version")
+    plt.plot(TRPO, label="PPO Tuned Version")
     plt.plot(A2C, label="A2C Version")
     plt.plot(Schedule, label="Schedule Version")
     plt.xlabel("Steps")
@@ -69,7 +69,8 @@ def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
     plt.title("Average Waiting Time Over Testing Steps")
     plt.legend()
     plt.grid(True)
-    plt.show()
+    # plt.show()
+    plt.savefig('CombinedAverageWaitingTime.png')
 
 
 def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
@@ -77,7 +78,7 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
     plt.plot(Random, label="Random Version")
     plt.plot(greedy_fast, label="Greedy Fast Version")
     plt.plot(PPO, label="PPO Version")
-    plt.plot(TRPO, label="TRPO Version")
+    plt.plot(TRPO, label="PPO Tuned Version")
     plt.plot(A2C, label="A2C Version")
     plt.plot(Schedule, label="Schedule Version")
     plt.xlabel("Steps")
@@ -85,4 +86,5 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
     plt.title("Average People at Busstops Over Testing Steps")
     plt.legend()
     plt.grid(True)
-    plt.show()
+    # plt.show()
+    plt.savefig('CombinedAveragePeopleAtBusstops.png')

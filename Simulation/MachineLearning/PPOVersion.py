@@ -1,9 +1,9 @@
 import numpy as np
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
+from Helper.CSVWriter import CSVWriter
 from SumoEnvironment import SumoEnv
-from Helper.CollectionData import average_people_at_busstops
-from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_LEARN_STEPS
+from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_STEPS
 from Helper.PlotDiagram import PlotBoth
 
 
@@ -28,7 +28,7 @@ def PPOVersion():
     # Test the agent
     obs = env.reset()
     dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
-    data = np.zeros(PPO_MAX_LEARN_STEPS, dtype=dtype)
+    data = np.zeros(PPO_MAX_STEPS, dtype=dtype)
     step = 0
     done = np.array([False], dtype='bool')
 
@@ -43,6 +43,8 @@ def PPOVersion():
 
         if done.all():
             env.close()
+
+    # PlotBoth(data)
 
     return data[:-1]
 

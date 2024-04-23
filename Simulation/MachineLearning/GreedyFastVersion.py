@@ -3,7 +3,7 @@ from Helper.CollectionData import average_people_at_busstops
 from stable_baselines3.common.env_util import make_vec_env
 import numpy as np
 from os import path, mkdir
-from Constants import GREEDY_MAX_LEARN_STEPS
+from Constants import GREEDY_MAX_STEPS
 import gymnasium as gym
 from SumoEnvironment import SumoEnv
 
@@ -17,7 +17,7 @@ def GreedyFastVersion():
     obs = env.reset()
 
     dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
-    data = np.zeros(GREEDY_MAX_LEARN_STEPS, dtype=dtype)
+    data = np.zeros(GREEDY_MAX_STEPS, dtype=dtype)
 
     step = 0
     done = np.array([False], dtype='bool')

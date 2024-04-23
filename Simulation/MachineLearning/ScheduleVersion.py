@@ -2,7 +2,7 @@ import traci
 import numpy as np
 from os import path, mkdir
 from random import randint
-from Constants import SCHEDULE_MAX_LEARN_STEPS, SEED
+from Constants import SCHEDULE_MAX_STEPS, SEED
 
 
 def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.sumocfg", outputFileName="output_schedule.csv"):
@@ -10,7 +10,7 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.
 
     dtype = [('Step', int), ('AveragePeopleAtBusStops', float),
              ('AverageWaitTime', float)]
-    data = np.zeros(SCHEDULE_MAX_LEARN_STEPS, dtype=dtype)
+    data = np.zeros(SCHEDULE_MAX_STEPS, dtype=dtype)
     # Connect to SUMO simulation
     try:
         traci.close()
@@ -20,7 +20,7 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.
 
     # simulation loop
     step = 0
-    while step < SCHEDULE_MAX_LEARN_STEPS:
+    while step < SCHEDULE_MAX_STEPS:
         traci.simulationStep()
 
         persons = traci.person.getIDList()

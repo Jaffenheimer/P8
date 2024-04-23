@@ -3,7 +3,7 @@ import numpy as np
 import traci
 import math
 from os import path
-from Constants import MAX_LEARN_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, SEED
+from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, SEED
 
 
 class SumoEnv(gym.Env):
@@ -15,7 +15,7 @@ class SumoEnv(gym.Env):
         ## VARIABLES ##
         self.bus_num = 10
         self.current_step = 0
-        self.max_steps = MAX_LEARN_STEPS+1
+        self.max_steps = MAX_STEPS+1
         bus_speed_max = 13.9  # 13.9 m/s = 50 km/h
 
         ## SUMO VARIABLES ##
@@ -227,6 +227,6 @@ class SumoEnv(gym.Env):
 gym.envs.registration.register(
     id='SumoEnv-v1',
     entry_point=SumoEnv,
-    max_episode_steps=MAX_LEARN_STEPS,
+    max_episode_steps=MAX_STEPS,
     reward_threshold=REWARD_THRESHOLD,
 )
