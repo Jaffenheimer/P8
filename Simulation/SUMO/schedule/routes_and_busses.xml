@@ -20,9 +20,12 @@
         <stop busStop="bs_road_-L0" duration="5.00" until="500"   />
     </route>
     
+    <!-- Bus routes -->
     <flow id="busR" route="r_0" type="minibus" begin="0" end="800" color="yellow" period="200" >
     </flow>
     
     <flow id="busL" route="r_1" type="minibus" begin="50" end="850" color="green" period="200">
     </flow>
+
+
 </routes>

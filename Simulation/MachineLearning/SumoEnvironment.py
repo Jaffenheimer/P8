@@ -8,7 +8,7 @@ from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, SEED
 
 class SumoEnv(gym.Env):
     def __init__(self):
-        self.path = path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/high.sumocfg")
+        self.path = path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/high_person_low_traffic.sumocfg")
         self.close()
 
         traci.start(

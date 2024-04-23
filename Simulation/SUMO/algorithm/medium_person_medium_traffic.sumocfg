@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-03-18 13:02:29 by Eclipse SUMO sumo Version 1.17.0
--->
-
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
     <input>
         <net-file value="../sumo.net.xml"/>
-        <route-files value="../high_person_flow.xml,routes_and_busses.xml" />
+        <route-files value="../personFlow/medium_person_flow.xml,routes_and_busses.xml,../traffic/medium_traffic.xml" />
         <additional-files value="../bus_stops.xml"/>
     </input>
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+    <input>
+        <net-file value="../sumo.net.xml"/>
+        <route-files value="../personFlow/medium_person_flow.xml,routes_and_busses.xml,../traffic/low_traffic.xml" />
+        <additional-files value="../bus_stops.xml"/>
+    </input>
+
+</configuration>
