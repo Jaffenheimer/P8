@@ -67,12 +67,14 @@ class SumoEnv(gym.Env):
             return 1
         else:
             return 0
+    def normalize(self, input_min, input_max, output_min, output_max, value): 
+        return ((output_max - output_min) * ((value - input_min) / (input_max - input_min)) + output_min) 
 
-    def accelerate_km_h(self, speed):
-        return min(50, speed + (-0.0125*(speed**2)+(0.346428*speed)+13.9286))
+    def accelerate_km_h(self, speed, action_value): # [0.33 : 1]
+        return min(50, speed + (-0.0125*(speed**2)+(0.346428*speed)+13.9286)*(self.normalize(0.33, 1, 0.5, 1, action_value)))
 
-    def decelerate_km_h(self, speed):
-        return speed - (0.25 * speed)
+    def decelerate_km_h(self, speed, action_value): # [-1 : 0.33]
+        return speed - (0.25 * speed)*(self.normalize(0.33, 1, 0.5, 1, action_value))
 
     def step(self, action):
         try:
@@ -115,11 +117,11 @@ class SumoEnv(gym.Env):
                 elif (not (bus_position > nearest_bus_stop_position + bus_stop_interval[0] and bus_position < nearest_bus_stop_position + bus_stop_interval[1])):
                     if bus_action == -1:
                         new_speed_m_s = self.decelerate_km_h(
-                            bus_speed_km_h) / 3.6
+                            bus_speed_km_h, action_value) / 3.6
                     elif bus_action == 1:
                         # if too close to the next bus accelerate=min(accelerate, speed of next bus), otherwise accelerate normally
                         new_speed_m_s = self.accelerate_km_h(
-                            bus_speed_km_h) / 3.6
+                            bus_speed_km_h, action_value) / 3.6
 
                     traci.vehicle.slowDown(bus_id, new_speed_m_s, 1)
 
