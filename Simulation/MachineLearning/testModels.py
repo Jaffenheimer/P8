@@ -3,12 +3,9 @@ from stable_baselines3 import DDPG, HER, SAC, TD3, PPO, A2C
 from sb3_contrib import QRDQN, TQC, ARS, RecurrentPPO, MaskablePPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
-from Helper.CollectionData import average_people_at_busstops
 import numpy as np
-from Constants import TRPO_TOTAL_TIMESTEPS, TRPO_MAX_LEARN_STEPS
 import Constants
 from Helper.PlotDiagram import PlotAveragePeopleAtBusstopsMultiple, PlotAverageWaitTimeMultiple
-from varname import nameof
 
 np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
 
@@ -49,7 +46,7 @@ def run(runs=1):
         # Test the agent
         obs = env.reset()
         dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
-        data = np.zeros(Constants.MAX_LEARN_STEPS, dtype=dtype)
+        data = np.zeros(Constants.MAX_STEPS, dtype=dtype)
         
         for _ in range(runs):
             Constants.SEED = randint(0, 1000000)
@@ -74,9 +71,9 @@ def run(runs=1):
         
 
     #pass the data as tuples with key as first value and the data as the second value, for all elems in dataList
-    PlotAverageWaitTimeMultiple(5,dataList[0], dataList[1], dataList[2], dataList[3], dataList[4])
+    PlotAverageWaitTimeMultiple(dataList[0], dataList[1], dataList[2], dataList[3], dataList[4])
     
-    PlotAveragePeopleAtBusstopsMultiple(5,dataList[0], dataList[1], dataList[2], dataList[3], dataList[4])
+    PlotAveragePeopleAtBusstopsMultiple(dataList[0], dataList[1], dataList[2], dataList[3], dataList[4])
     
 if __name__ == "__main__":
     run()
