@@ -18,7 +18,7 @@ def A2CVersion():
     model = A2C("MlpPolicy", env, verbose=1)
 
     # Train the agent
-    # model.learn(total_timesteps=A2C_TOTAL_TIMESTEPS, progress_bar=True)
+    model.learn(total_timesteps=A2C_TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
     # model.save("a2c_sumo")
@@ -51,5 +51,5 @@ def A2CVersion():
     return data[:-1]
 
 
-if __name__ == "__main__":
-    A2CVersion()
+# if __name__ == "__main__":
+#     A2CVersion()

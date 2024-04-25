@@ -8,11 +8,14 @@ from Helper.PlotDiagram import PlotBoth
 
 
 def PPOVersion():
+
+    print()
+
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=4)
+    env = make_vec_env(SumoEnv, n_envs=1)
 
     # Create the agent
-    model = PPO("MlpPolicy", env, verbose=1)
+    model = PPO("MlpPolicy", env, verbose=1, n_steps=PPO_MAX_STEPS)
 
     # Train the agent
     model.learn(total_timesteps=PPO_TOTAL_TIMESTEPS, progress_bar=True)
@@ -44,7 +47,8 @@ def PPOVersion():
         if done.all():
             env.close()
 
-    # PlotBoth(data)
+    print(data)
+    PlotBoth(data)
 
     return data[:-1]
 

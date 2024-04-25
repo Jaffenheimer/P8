@@ -3,9 +3,10 @@ import numpy as np
 from os import path, mkdir
 from random import randint
 from Constants import SCHEDULE_MAX_STEPS, SEED
+from Helper.PlotDiagram import PlotBoth
 
 
-def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_schedule.sumocfg", outputFileName="output_schedule.csv"):
+def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output_schedule.csv"):
     # initializations
 
     dtype = [('Step', int), ('AveragePeopleAtBusStops', float),
@@ -101,4 +102,5 @@ def runMultiple(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.sumo
 
 
 if __name__ == "__main__":
-    ScheduleVersion()
+    data = ScheduleVersion()
+    PlotBoth(data)
