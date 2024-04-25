@@ -5,36 +5,33 @@ from TRPOVersion import TRPOVersion
 from RandomVersion import RandomVersion
 from GreedyFastVersion import GreedyFastVersion
 from ScheduleVersion import ScheduleVersion
+import time
+
 
 def CombinedTest():
 
+    total_time = time.time()
+
     data_PPO = PPOVersion()
-    print("PPO done")
 
     data_A2C = A2CVersion()
-    print("A2C done")
 
     data_TRPO = TRPOVersion()
-    print("TRPO done")
 
     data_random = RandomVersion()
-    print("Random done")
 
     data_schedule = ScheduleVersion()
-    print("Schedule done")
 
     data_greedy = GreedyFastVersion()
-    print("Greedy Fast done")
-    
 
+    PlotAverageWaitTimeMultiple(("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO),
+                                ("TRPO", data_TRPO), ("A2C", data_A2C), ("Schedule", data_schedule))
 
-    PlotAverageWaitTimeMultiple(("Random",data_random),("Greedy",data_greedy), ("PPO",data_PPO),
-                                ("TRPO",data_TRPO), ("A2C",data_A2C), ("Schedule",data_schedule))
+    PlotAveragePeopleAtBusstopsMultiple(("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO),
+                                        ("TRPO", data_TRPO), ("A2C", data_A2C), ("Schedule", data_schedule))
 
-    PlotAveragePeopleAtBusstopsMultiple(("Random",data_random),("Greedy",data_greedy), ("PPO",data_PPO),
-                                ("TRPO",data_TRPO), ("A2C",data_A2C), ("Schedule",data_schedule))
+    print(f"Total time: {time.time() - total_time:.2f} seconds")
 
-    
 
 if __name__ == "__main__":
     CombinedTest()

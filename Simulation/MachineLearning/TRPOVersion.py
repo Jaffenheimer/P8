@@ -2,17 +2,20 @@ from random import randint
 from sb3_contrib import TRPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
-from Helper.CollectionData import average_people_at_busstops
+from Helper.PlotDiagram import PlotBoth
 import numpy as np
 from Constants import TRPO_TOTAL_TIMESTEPS, TRPO_MAX_STEPS
 
 
 def TRPOVersion():
+    print("====================== <TRPO Init> ======================")
 
-    env = make_vec_env(SumoEnv, n_envs=1)
+    env = make_vec_env(SumoEnv, n_envs=4)
 
-    model = TRPO(policy="MlpPolicy", env=env, verbose=1, n_steps=TRPO_MAX_STEPS)
+    model = TRPO(policy="MlpPolicy", env=env, verbose=1,
+                 n_steps=TRPO_MAX_STEPS, batch_size=80)
 
+    print("====================== <TRPO Training Started> ======================")
     model.learn(total_timesteps=TRPO_TOTAL_TIMESTEPS,
                 tb_log_name="TRPO_SUMO", progress_bar=True)
 
@@ -23,6 +26,8 @@ def TRPOVersion():
     # model = TRPO.load("trpo_sumo")
     dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
     data = np.zeros(TRPO_MAX_STEPS, dtype=dtype)
+
+    print("====================== <TRPO Training Completed> ======================")
 
     obs = env.reset()
     step = 0
@@ -40,7 +45,11 @@ def TRPOVersion():
         if done.all():
             env.close()
 
+    print("====================== <TRPO Done> ======================")
+
     return data[:-1]
 
+
 if __name__ == "__main__":
-    TRPOVersion()
+    data = TRPOVersion()
+    PlotBoth(data)

@@ -2,9 +2,12 @@ from SumoEnvironment import SumoEnv
 from random import randint
 import numpy as np
 from Constants import RANDOM_MAX_STEPS
+from Helper.PlotDiagram import PlotBoth
 
 
 def RandomVersion():
+
+    print("====================== <Random Init> ======================")
 
     # Importing the environment
     env = SumoEnv()
@@ -29,6 +32,11 @@ def RandomVersion():
         if done:
             env.close()
 
-    
+    print("====================== <Random Done> ======================")
+
     return data[:-1]
 
+
+if __name__ == "__main__":
+    data = RandomVersion()
+    PlotBoth(data)

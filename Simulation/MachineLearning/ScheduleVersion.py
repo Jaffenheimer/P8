@@ -8,6 +8,8 @@ from Helper.PlotDiagram import PlotBoth
 def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output_schedule.csv"):
     # initializations
 
+    print("====================== <Schedule Init> ======================")
+
     dtype = [('Step', int), ('AveragePeopleAtBusStops', float),
              ('AverageWaitTime', float)]
     data = np.zeros(SCHEDULE_MAX_STEPS, dtype=dtype)
@@ -39,6 +41,8 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_pers
     np.savetxt(f"../Output/{outputFileName}", data, delimiter=',',
                fmt='%f', header="Step,AveragePeopleAtBusStops,AverageWaitTime")
 
+    print("====================== <Schedule Done> ======================")
+
     return data[:-1]
 
 
@@ -65,7 +69,7 @@ def getAveragePeopleAtBusStops():
 # now for multiple runs, where the values are the average of the runs:
 
 
-def ScheduleVersionMultiple( runs=1,inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output.csv"):
+def ScheduleVersionMultiple(runs=1, inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output.csv"):
     dtype = [('Step', int), ('PedestrianCount', float),
              ('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
     data = np.zeros(SCHEDULE_MAX_STEPS, dtype=dtype)
@@ -99,6 +103,7 @@ def ScheduleVersionMultiple( runs=1,inputFile="../P8-Mobility/Simulation/SUMO/sc
     np.savetxt(f"../Output/{outputFileName}", data, delimiter=',',
                fmt='%f', header="Step,AveragePeopleAtBusStops,AverageWaitTime")
     return data
+
 
 if __name__ == "__main__":
     data = ScheduleVersion()

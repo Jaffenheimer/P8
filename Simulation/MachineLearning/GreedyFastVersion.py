@@ -2,9 +2,12 @@ import numpy as np
 from os import path, mkdir
 from Constants import GREEDY_MAX_STEPS
 from SumoEnvironment import SumoEnv
+from Helper.PlotDiagram import PlotBoth
 
 
 def GreedyFastVersion():
+
+    print("====================== <Greedy Fast Init> ======================")
 
     # Importing the environment
     env = SumoEnv()
@@ -34,8 +37,13 @@ def GreedyFastVersion():
     if (path.isdir("../Output") == False):
         mkdir("../Output")
     np.savetxt(f"../Output/GreedyFastVersion.csv", data, delimiter=',',
-            fmt='%f', header="AveragePeopleAtBusStops,AverageWaitTime")
+               fmt='%f', header="AveragePeopleAtBusStops,AverageWaitTime")
+
+    print("====================== <Greedy Fast Done> ======================")
+
     return data[:-1]
 
+
 if __name__ == "__main__":
-    GreedyFastVersion()
+    data = GreedyFastVersion()
+    PlotBoth(data)

@@ -4,15 +4,22 @@ from SumoEnvironment import SumoEnv
 from stable_baselines3.common.vec_env import SubprocVecEnv
 import numpy as np
 from Constants import A2C_TOTAL_TIMESTEPS, A2C_MAX_STEPS
+from Helper.PlotDiagram import PlotBoth
 
 np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
 
+
 def A2CVersion():
+
+    print("====================== <A2C Init> ======================")
+
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=1, vec_env_cls=SubprocVecEnv)
+    env = make_vec_env(SumoEnv, n_envs=4, vec_env_cls=SubprocVecEnv)
 
     # Create the agent
-    model = A2C("MlpPolicy", env, n_steps=A2C_MAX_STEPS)
+    model = A2C("MlpPolicy", env, verbose=1, n_steps=A2C_MAX_STEPS)
+
+    print("====================== <A2C Training Started> ======================")
 
     # Train the agent
     model.learn(total_timesteps=A2C_TOTAL_TIMESTEPS, progress_bar=True)
@@ -24,6 +31,8 @@ def A2CVersion():
 
     # # Load the trained agent
     # model = A2C.load("a2c_sumo")
+
+    print("====================== <A2C Traning Completed> ======================")
 
     # Test the agent
     obs = env.reset()
@@ -43,8 +52,10 @@ def A2CVersion():
         if done.all():
             env.close()
 
+    print("====================== <A2C Done> ======================")
     return data[:-1]
 
 
-# if __name__ == "__main__":
-#     A2CVersion()
+if __name__ == "__main__":
+    data = A2CVersion()
+    PlotBoth(data)

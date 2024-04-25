@@ -4,16 +4,21 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
 from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_STEPS
+from Helper.PlotDiagram import PlotBoth
+
 
 def PPOVersion():
 
-    print()
+    print("====================== <PPO Init> ======================")
 
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=1)
+    env = make_vec_env(SumoEnv, n_envs=4)
 
     # Create the agent
-    model = PPO("MlpPolicy", env, verbose=1, n_steps=PPO_MAX_STEPS)
+    model = PPO("MlpPolicy", env, verbose=1,
+                n_steps=PPO_MAX_STEPS, batch_size=80, device="cuda")
+
+    print("====================== <PPO Training> ======================")
 
     # Train the agent
     model.learn(total_timesteps=PPO_TOTAL_TIMESTEPS, progress_bar=True)
@@ -25,6 +30,8 @@ def PPOVersion():
 
     # Load the trained agent
     # model = PPO.load("ppo_sumo")
+
+    print("====================== <PPO Traning Completed> ======================")
 
     # Test the agent
     obs = env.reset()
@@ -45,10 +52,10 @@ def PPOVersion():
         if done.all():
             env.close()
 
-    print(data)
-    PlotBoth(data)
-
+    print("====================== <PPO Done> ======================")
     return data[:-1]
 
+
 if __name__ == "__main__":
-    PPOVersion()
+    data = PPOVersion()
+    PlotBoth(data)
