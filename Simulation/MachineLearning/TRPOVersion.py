@@ -16,8 +16,8 @@ def TRPOVersion():
                  n_steps=TRPO_MAX_STEPS, batch_size=80)
 
     print("====================== <TRPO Training Started> ======================")
-    # model.learn(total_timesteps=TRPO_TOTAL_TIMESTEPS,
-    #            tb_log_name="TRPO_SUMO", progress_bar=True)
+    model.learn(total_timesteps=TRPO_TOTAL_TIMESTEPS,
+                tb_log_name="TRPO_SUMO", progress_bar=True)
 
     # model.save("trpo_sumo")
 

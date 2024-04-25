@@ -22,7 +22,7 @@ def A2CVersion():
     print("====================== <A2C Training Started> ======================")
 
     # Train the agent
-    # model.learn(total_timesteps=A2C_TOTAL_TIMESTEPS, progress_bar=True)
+    model.learn(total_timesteps=A2C_TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
     # model.save("a2c_sumo")
