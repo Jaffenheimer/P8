@@ -11,11 +11,11 @@ import unittest
 
 
 #CONSTANT VALUE
-MAX_STEPS = 30000
-LEARN_TIME_STEPS = 1000
-SUMO_INIT_STEPS = 200
+MAX_STEPS = 10
+LEARN_TIME_STEPS = 10
+SUMO_INIT_STEPS = 1
 REWARD_THRESHOLD = 500
-NUM_ENVS = 8
+NUM_ENVS = 1
 
 class SumoEnv(gym.Env):
     def __init__(self):
@@ -345,12 +345,15 @@ if __name__ == "__main__":
   step = 0
   while not done.all():
     action, _ = model.predict(obs)
-    obs, rewards, done, info = vec_env.step(action)
+    print(action)
+    # obs, rewards, done, info = vec_env.step(action)
     step += 1
-    if step > MAX_STEPS - 20 and step != MAX_STEPS - 1:
-      print("step:", step) #, repr(obs))
-      for n_env in range(NUM_ENVS):
-        print([obs[n_env][i] for i in range(2, np.shape(obs)[1], 2)])
-    if done.all():
-      vec_env.close()
+    # if step > MAX_STEPS - 20 and step != MAX_STEPS - 1:
+    #   print("step:", step) #, repr(obs))
+    #   for n_env in range(NUM_ENVS):
+    #     print([obs[n_env][i] for i in range(2, np.shape(obs)[1], 2)])
+    # if done.all():
+    #   vec_env.close()
+    if step > 10:
+        break
   print("done!")

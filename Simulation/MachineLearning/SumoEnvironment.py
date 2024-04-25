@@ -39,20 +39,21 @@ class SumoEnv(gym.Env):
             [np.float32(1)]*self.bus_num), shape=(self.bus_num,), dtype=np.float32)
 
         # state: [avg_wait_time, avg_people_at_busstops, b0(r0)_speed, b0(r0)_pos, (...), b0(r1)_speed, b0(r1)_pos, (...)]
+        self.info_states = 2 # avg_wait_time, avg_people_at_busstops
         wait_time_max = 100000
         average_people_at_busstops_max = 10000
-        low_obs = np.zeros([1 + 1 + 2*self.bus_num])
+        low_obs = np.zeros([self.info_states + 2*self.bus_num])
         high_obs = np.array([wait_time_max] + [average_people_at_busstops_max] + [bus_speed_max, self.route_lengths[0]]
                             * 5 + [bus_speed_max, self.route_lengths[1]]*5)
         self.observation_space = gym.spaces.Box(
-            low=low_obs, high=high_obs, shape=(1 + 1 + 2*self.bus_num,), dtype=np.float32)
+            low=low_obs, high=high_obs, shape=(self.info_states + 2*self.bus_num,), dtype=np.float32)
 
         # Run simulation for SUMO_INIT_STEPS to initialize the simulation with stable wait time
 
         for _ in range(SUMO_INIT_STEPS):
             self.sumo_step()
 
-    # GYM FUNCTIONS
+    ## GYM FUNCTIONS
     def reset(self, seed=None, options=None):
         try:
             traci.close()
@@ -65,32 +66,15 @@ class SumoEnv(gym.Env):
             ["sumo", "-c", self.path, "--seed", str(Constants.SEED)])
         return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
 
-    def even_probability(self, action_value):
-        if action_value < -0.33:
-            return -1
-        elif action_value > 0.33:
-            return 1
-        else:
-            return 0
-
-    def normalize(self, input_min, input_max, output_min, output_max, value):
-        return ((output_max - output_min) * ((value - input_min) / (input_max - input_min)) + output_min)
-
-    def accelerate_km_h(self, speed, action_value):  # [0.33 : 1]
-        return min(50, speed + (-0.0125*(speed**2)+(0.346428*speed)+13.9286)*(self.normalize(0.33, 1, 0.5, 1, action_value)))
-
-    def decelerate_km_h(self, speed, action_value):  # [-1 : 0.33]
-        return speed - (0.25 * speed)*(self.normalize(0.33, 1, 0.5, 1, action_value))
-
     def step(self, action):
         try:
             next_state = self.sumo_step()
 
             # set action for each bus: -1 = slow down, 0 = keep speed, 1 = speed up
-            vehicles_length = len(self.bus_ids)
+            vehicles_count = len(traci.vehicle.getIDList())
 
             for i, action_value in enumerate(action):
-                if i >= vehicles_length:
+                if i >= vehicles_count:
                     break
 
                 bus_id = self.bus_ids[i]
@@ -105,10 +89,10 @@ class SumoEnv(gym.Env):
                 bus_route_index = 0 if bus_route == "r_0" else 1
                 bus_position = round(bus_distance_driven %
                                      (self.route_lengths[bus_route_index]), 3)
-                nearest_bus_stop_position = self._find_nearest(
+                nearest_bus_stop_position = self.find_nearest(
                     self.bus_stop_positions[bus_route_index], bus_position)
                 bus_speed_m_s = traci.vehicle.getSpeed(bus_id)
-                bus_speed_km_h = bus_speed_m_s*3.6
+                bus_speed_km_h = self.m_s_to_km_h(bus_speed_m_s)
 
                 # interval for bus stop position where speed is not changed
                 bus_stop_interval = [-22, 3]
@@ -122,20 +106,20 @@ class SumoEnv(gym.Env):
                 # accelerate/decelerate if bus is not within the bus stop position interval
                 elif (not (bus_position > nearest_bus_stop_position + bus_stop_interval[0] and bus_position < nearest_bus_stop_position + bus_stop_interval[1])):
                     if bus_action == -1:
-                        new_speed_m_s = self.decelerate_km_h(
-                            bus_speed_km_h, action_value) / 3.6
+                        new_speed_m_s = self.km_h_to_m_s(self.slow_down_km_h(
+                            bus_speed_km_h, action_value))
                     elif bus_action == 1:
                         # if too close to the next bus accelerate=min(accelerate, speed of next bus), otherwise accelerate normally
-                        new_speed_m_s = self.accelerate_km_h(
-                            bus_speed_km_h, action_value) / 3.6
+                        new_speed_m_s = self.km_h_to_m_s(self.speed_up_km_h(
+                            bus_speed_km_h, action_value))
 
                     traci.vehicle.slowDown(bus_id, new_speed_m_s, 1)
 
                 # store previous speed for keep speed action in next step
                 self.previous_speeds_m_s[i] = new_speed_m_s
 
-            # reward are given if the new waiting time is strictly lower, otherwise punished
-            reward = 1 if next_state[0] <= self.wait_time else -1
+            # reward are given if the new waiting time is strictly lower, otherwise punished        
+            reward = self.reward_function_simple(current_wait_time=next_state[0])
 
             # set the wait time to the current wait time
             self.wait_time = next_state[0]
@@ -188,7 +172,7 @@ class SumoEnv(gym.Env):
             new_state[0] = 0.0
 
         # find average people at bus stops
-        new_state[1] = self.get_average_people_at_busstops()
+        new_state[1] = self.get_average_people_at_bus_stops()
 
         # finds bus speed and position
         bus_route_counter = [0, self.bus_num]
@@ -204,10 +188,9 @@ class SumoEnv(gym.Env):
             new_state[2 + index_buffer] = round(vehicleSpeed_km_h, 2)
             new_state[3 + index_buffer] = round(vehiclePosition, 2)
             bus_route_counter[vehicleRoute_index] += 2
-
         return new_state
 
-    def _find_nearest(self, array, value):
+    def find_nearest(self, array, value):
         idx = np.searchsorted(array, value, side="left")
         if (idx == len(array) and math.fabs(value - (array[0] + array[idx-1])) < math.fabs(value - array[idx-1])):
             return array[0]
@@ -216,20 +199,43 @@ class SumoEnv(gym.Env):
         else:
             return array[idx]
 
-    def get_average_people_at_busstops(self):
-        busstops = traci.busstop.getIDList()
-        people_at_busstops = []
-        for busstop in busstops:
-            people_at_busstops.append(traci.busstop.getPersonCount(busstop))
-
-        if len(people_at_busstops) == 0:
+    def get_average_people_at_bus_stops(self):
+        bus_stops = traci.busstop.getIDList()
+        people_at_bus_stops = []
+        for busstop in bus_stops:
+            people_at_bus_stops.append(traci.busstop.getPersonCount(busstop))
+        if len(people_at_bus_stops) == 0 or sum(people_at_bus_stops) == 0:
             return 0
-
-        if sum(people_at_busstops) == 0:
+        
+        return sum(people_at_bus_stops) / len(people_at_bus_stops)
+    
+    ## EVEN ACTION VALUE USING PROBABILITY FUNCTION
+    def even_probability(self, action_value):
+        if action_value < -0.33:
+            return -1
+        elif action_value > 0.33:
+            return 1
+        else:
             return 0
+    
+    def reward_function_simple(self, current_wait_time):
+        return 1 if current_wait_time < self.wait_time else -1
+    
+    ## VELOCITY FUNCTIONS
+    def normalize(self, input_min, input_max, output_min, output_max, value): 
+        return ((output_max - output_min) * ((value - input_min) / (input_max - input_min)) + output_min) 
 
-        return sum(people_at_busstops) / len(people_at_busstops)
+    def speed_up_km_h(self, speed, action_value):
+        return min(50, speed + (-0.0125*(speed**2)+(0.346428*speed)+13.9286)*(self.normalize(0.33, 1, 0.5, 1, action_value)))
 
+    def slow_down_km_h(self, speed, action_value):
+        return speed - (0.25 * speed)*(self.normalize(0.33, 1, 0.5, 1, action_value))
+    
+    def m_s_to_km_h(self, m_s):
+        return m_s*3.6
+    
+    def km_h_to_m_s(self, km_h):
+        return km_h/3.6
 
 gym.envs.registration.register(
     id='SumoEnv-v1',
