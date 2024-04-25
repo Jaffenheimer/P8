@@ -1,4 +1,5 @@
 
+from os import mkdir, path
 import matplotlib.pyplot as plt
 
 
@@ -70,13 +71,15 @@ def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
     plt.legend()
     plt.grid(True)
     # plt.show()
-    plt.savefig('CombinedAverageWaitingTime.png')
+    if not path.isdir("./Simulation/MachineLearning/Output"):
+        mkdir("./Simulation/MachineLearning/Output")
+    plt.savefig('./Simulation/MachineLearning/Output/CombinedAverageWaitingTime.png')
 
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
 
 
 def PlotAverageWaitTimeMultiple(*data):
-    plt.figure(figsize=(10, len(data)))
+    plt.figure(figsize=(10, 6))
     for i in data:
         plt.plot(i[1]['AverageWaitTime'], label=i[0])
     plt.xlabel("Steps")
@@ -84,14 +87,16 @@ def PlotAverageWaitTimeMultiple(*data):
     plt.title("Average Waiting Time Over Testing Steps")
     plt.legend()
     plt.grid(True)
-    plt.savefig('CombinedAverageWaitingTime.png')
+    if not path.isdir("./Simulation/MachineLearning/Output"):
+        mkdir("./Simulation/MachineLearning/Output")
+    plt.savefig('./Simulation/MachineLearning/Output/CombinedAverageWaitingTime.png')
     # plt.show()
 
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
 
 
 def PlotAveragePeopleAtBusstopsMultiple(*data):
-    plt.figure(figsize=(10, len(data)))
+    plt.figure(figsize=(10, 6))
     for i in data:
         plt.plot(i[1]['AveragePeopleAtBusStops'], label=i[0])
     plt.xlabel("Steps")
@@ -99,7 +104,10 @@ def PlotAveragePeopleAtBusstopsMultiple(*data):
     plt.title("Average People at Busstops Over Testing Steps")
     plt.legend()
     plt.grid(True)
-    plt.savefig('CombinedAveragePeopleAtBusstops.png')
+    print(path.abspath("./Simulation/MachineLearning/Output"))
+    if not path.isdir("./Simulation/MachineLearning/Output"):
+        mkdir("./Simulation/MachineLearning/Output")
+    plt.savefig('./Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png')
     # plt.show()
 
 
@@ -117,4 +125,6 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
     plt.legend()
     plt.grid(True)
     # plt.show()
-    plt.savefig('CombinedAveragePeopleAtBusstops.png')
+    if not path.isdir("./Simulation/MachineLearning/Output"):
+        mkdir("./Simulation/MachineLearning/Output")
+    plt.savefig('./Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png')

@@ -9,6 +9,10 @@ import Constants
 
 class SumoEnv(gym.Env):
     def __init__(self):
+        try:
+            traci.close()
+        except:
+            pass
         self.path = path.abspath(
             "../P8-Mobility/Simulation/SUMO/algorithm/high_person_low_traffic.sumocfg")
         self.close()
