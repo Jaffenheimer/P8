@@ -18,7 +18,7 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_pers
         traci.close()
     except:
         pass
-    traci.start(["sumo", "-c", path.abspath(inputFile), "--seed", str(SEED)])
+    traci.start(["sumo", "-c", path.abspath(inputFile), "--seed", str(SEED), "--no-warnings"])
 
     # simulation loop
     step = 0
