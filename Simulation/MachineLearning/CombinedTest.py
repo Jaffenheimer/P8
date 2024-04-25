@@ -24,13 +24,13 @@ def CombinedTest():
 
     data_greedy = GreedyFastVersion()
 
+    print(f"Total time: {time.time() - total_time:.2f} seconds")
+
     PlotAverageWaitTimeMultiple(("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO),
                                 ("TRPO", data_TRPO), ("A2C", data_A2C), ("Schedule", data_schedule))
 
     PlotAveragePeopleAtBusstopsMultiple(("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO),
                                         ("TRPO", data_TRPO), ("A2C", data_A2C), ("Schedule", data_schedule))
-
-    print(f"Total time: {time.time() - total_time:.2f} seconds")
 
 
 if __name__ == "__main__":

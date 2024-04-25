@@ -85,7 +85,7 @@ def PlotAverageWaitTimeMultiple(*data):
     plt.legend()
     plt.grid(True)
     plt.savefig('CombinedAverageWaitingTime.png')
-    plt.show()
+    # plt.show()
 
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
 
@@ -100,7 +100,7 @@ def PlotAveragePeopleAtBusstopsMultiple(*data):
     plt.legend()
     plt.grid(True)
     plt.savefig('CombinedAveragePeopleAtBusstops.png')
-    plt.show()
+    # plt.show()
 
 
 def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
