@@ -3,11 +3,9 @@ import numpy as np
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
-from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_STEPS
+from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_STEPS, PEEK_LEARN_STEPS, PEEK_INTERVAL
 
-def PPOVersion():
-
-    print()
+def PPOPeekVersion():
 
     # Importing the environment
     env = make_vec_env(SumoEnv, n_envs=1)
@@ -32,20 +30,20 @@ def PPOVersion():
     data = np.zeros(PPO_MAX_STEPS, dtype=dtype)
     step = 0
     done = np.array([False], dtype='bool')
+    np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
 
-    while not done.all():
+    for step in range(PPO_MAX_STEPS):
         action, _ = model.predict(obs)
-
         obs, rewards, done, info = env.step(action)
-        np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
+
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
         step += 1
 
         if done.all():
             env.close()
+            break
+        elif step % PEEK_INTERVAL == PEEK_INTERVAL:
+            model.learn(PEEK_LEARN_STEPS)
 
     return data[:-1]
-
-if __name__ == "__main__":
-    PPOVersion()
