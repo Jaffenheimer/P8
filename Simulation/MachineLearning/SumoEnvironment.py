@@ -9,7 +9,8 @@ import Constants
 
 class SumoEnv(gym.Env):
     def __init__(self):
-        self.path = path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/high_person_low_traffic.sumocfg")
+        self.path = path.abspath(
+            "../P8-Mobility/Simulation/SUMO/algorithm/high_person_low_traffic.sumocfg")
         self.close()
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(Constants.SEED)])
@@ -71,13 +72,14 @@ class SumoEnv(gym.Env):
             return 1
         else:
             return 0
-    def normalize(self, input_min, input_max, output_min, output_max, value): 
-        return ((output_max - output_min) * ((value - input_min) / (input_max - input_min)) + output_min) 
 
-    def accelerate_km_h(self, speed, action_value): # [0.33 : 1]
+    def normalize(self, input_min, input_max, output_min, output_max, value):
+        return ((output_max - output_min) * ((value - input_min) / (input_max - input_min)) + output_min)
+
+    def accelerate_km_h(self, speed, action_value):  # [0.33 : 1]
         return min(50, speed + (-0.0125*(speed**2)+(0.346428*speed)+13.9286)*(self.normalize(0.33, 1, 0.5, 1, action_value)))
 
-    def decelerate_km_h(self, speed, action_value): # [-1 : 0.33]
+    def decelerate_km_h(self, speed, action_value):  # [-1 : 0.33]
         return speed - (0.25 * speed)*(self.normalize(0.33, 1, 0.5, 1, action_value))
 
     def step(self, action):

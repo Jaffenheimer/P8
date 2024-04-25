@@ -46,5 +46,5 @@ def A2CVersion():
     return data[:-1]
 
 
-if __name__ == "__main__":
-    A2CVersion()
+# if __name__ == "__main__":
+#     A2CVersion()

@@ -2,6 +2,7 @@ import traci
 import numpy as np
 from os import path, mkdir
 from Constants import SCHEDULE_MAX_STEPS, SEED
+from Helper.PlotDiagram import PlotBoth
 
 
 def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output_schedule.csv"):
@@ -100,4 +101,5 @@ def ScheduleVersionMultiple( runs=1,inputFile="../P8-Mobility/Simulation/SUMO/sc
     return data
 
 if __name__ == "__main__":
-    ScheduleVersion()
+    data = ScheduleVersion()
+    PlotBoth(data)

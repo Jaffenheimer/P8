@@ -6,6 +6,9 @@ from SumoEnvironment import SumoEnv
 from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_STEPS
 
 def PPOVersion():
+
+    print()
+
     # Importing the environment
     env = make_vec_env(SumoEnv, n_envs=1)
 
@@ -42,7 +45,8 @@ def PPOVersion():
         if done.all():
             env.close()
 
-    # PlotBoth(data)
+    print(data)
+    PlotBoth(data)
 
     return data[:-1]
 
