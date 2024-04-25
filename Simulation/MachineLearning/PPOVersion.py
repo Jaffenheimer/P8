@@ -21,7 +21,7 @@ def PPOVersion():
     print("====================== <PPO Training> ======================")
 
     # Train the agent
-    model.learn(total_timesteps=PPO_TOTAL_TIMESTEPS, progress_bar=True)
+    # model.learn(total_timesteps=PPO_TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
     # model.save("ppo_sumo")

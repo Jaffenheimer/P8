@@ -5,6 +5,7 @@ from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
 from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_STEPS, PEEK_LEARN_STEPS, PEEK_INTERVAL
 
+
 def PPOPeekVersion():
 
     # Importing the environment
