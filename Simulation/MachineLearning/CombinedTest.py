@@ -1,11 +1,10 @@
 from PPOVersion import PPOVersion
 from A2CVersion import A2CVersion
-from Helper.PlotDiagram import PlotCombinedAverageWaitTime, PlotCombinedAveragePeopleAtBusstops
+from Helper.PlotDiagram import PlotAveragePeopleAtBusstopsMultiple, PlotAverageWaitTimeMultiple
 from TRPOVersion import TRPOVersion
 from RandomVersion import RandomVersion
 from GreedyFastVersion import GreedyFastVersion
 from ScheduleVersion import ScheduleVersion
-
 
 def CombinedTest():
 
@@ -26,13 +25,16 @@ def CombinedTest():
 
     data_greedy = GreedyFastVersion()
     print("Greedy Fast done")
+    
 
-    PlotCombinedAverageWaitTime(data_random['AverageWaitTime'], data_greedy['AverageWaitTime'], data_PPO['AverageWaitTime'],
-                                data_TRPO['AverageWaitTime'], data_A2C['AverageWaitTime'], data_schedule['AverageWaitTime'])
 
-    PlotCombinedAveragePeopleAtBusstops(data_random['AveragePeopleAtBusStops'], data_greedy['AveragePeopleAtBusStops'],
-                                        data_PPO['AveragePeopleAtBusStops'], data_TRPO['AveragePeopleAtBusStops'], data_A2C['AveragePeopleAtBusStops'], data_schedule['AveragePeopleAtBusStops'])
+    PlotAverageWaitTimeMultiple(("Random",data_random),("Greedy",data_greedy), ("PPO",data_PPO),
+                                ("TRPO",data_TRPO), ("A2C",data_A2C), ("Schedule",data_schedule))
 
+    PlotAveragePeopleAtBusstopsMultiple(("Random",data_random),("Greedy",data_greedy), ("PPO",data_PPO),
+                                ("TRPO",data_TRPO), ("A2C",data_A2C), ("Schedule",data_schedule))
+
+    
 
 if __name__ == "__main__":
     CombinedTest()

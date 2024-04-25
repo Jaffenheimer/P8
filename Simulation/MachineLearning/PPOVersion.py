@@ -1,18 +1,16 @@
+from random import randint
 import numpy as np
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-from Helper.CSVWriter import CSVWriter
 from SumoEnvironment import SumoEnv
 from Constants import PPO_TOTAL_TIMESTEPS, PPO_MAX_STEPS
-from Helper.PlotDiagram import PlotBoth
-
 
 def PPOVersion():
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=4)
+    env = make_vec_env(SumoEnv, n_envs=1)
 
     # Create the agent
-    model = PPO("MlpPolicy", env, verbose=1)
+    model = PPO("MlpPolicy", env, verbose=1, n_steps=PPO_MAX_STEPS)
 
     # Train the agent
     model.learn(total_timesteps=PPO_TOTAL_TIMESTEPS, progress_bar=True)
@@ -48,5 +46,5 @@ def PPOVersion():
 
     return data[:-1]
 
-
-PPOVersion()
+if __name__ == "__main__":
+    PPOVersion()

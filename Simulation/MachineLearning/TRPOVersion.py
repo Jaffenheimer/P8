@@ -1,3 +1,4 @@
+from random import randint
 from sb3_contrib import TRPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
@@ -8,9 +9,9 @@ from Constants import TRPO_TOTAL_TIMESTEPS, TRPO_MAX_STEPS
 
 def TRPOVersion():
 
-    env = make_vec_env(SumoEnv, n_envs=4)
+    env = make_vec_env(SumoEnv, n_envs=1)
 
-    model = TRPO(policy="MlpPolicy", env=env, verbose=1)
+    model = TRPO(policy="MlpPolicy", env=env, verbose=1, n_steps=TRPO_MAX_STEPS)
 
     model.learn(total_timesteps=TRPO_TOTAL_TIMESTEPS,
                 tb_log_name="TRPO_SUMO", progress_bar=True)
@@ -20,11 +21,11 @@ def TRPOVersion():
     # del model
 
     # model = TRPO.load("trpo_sumo")
+    dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
+    data = np.zeros(TRPO_MAX_STEPS, dtype=dtype)
 
     obs = env.reset()
     step = 0
-    dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
-    data = np.zeros(TRPO_MAX_STEPS, dtype=dtype)
 
     done = np.array([False], dtype='bool')
 
@@ -41,5 +42,5 @@ def TRPOVersion():
 
     return data[:-1]
 
-
-TRPOVersion()
+if __name__ == "__main__":
+    TRPOVersion()

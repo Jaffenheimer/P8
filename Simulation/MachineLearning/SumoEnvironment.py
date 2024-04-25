@@ -3,16 +3,16 @@ import numpy as np
 import traci
 import math
 from os import path
-from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, SEED
+from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD
+import Constants
 
 
 class SumoEnv(gym.Env):
     def __init__(self):
         self.path = path.abspath("../P8-Mobility/Simulation/SUMO/algorithm/high_person_low_traffic.sumocfg")
         self.close()
-
         traci.start(
-            ["sumo", "-c", self.path, "--seed", str(SEED)])
+            ["sumo", "-c", self.path, "--seed", str(Constants.SEED)])
         ## VARIABLES ##
         self.bus_num = 10
         self.current_step = 0
@@ -53,12 +53,15 @@ class SumoEnv(gym.Env):
 
     # GYM FUNCTIONS
     def reset(self, seed=None, options=None):
-        traci.close()
+        try:
+            traci.close()
+        except:
+            pass
         self.wait_time = 0
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
         traci.start(
-            ["sumo", "-c", self.path, "--seed", str(SEED)])
+            ["sumo", "-c", self.path, "--seed", str(Constants.SEED)])
         return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
 
     def even_probability(self, action_value):
@@ -82,7 +85,7 @@ class SumoEnv(gym.Env):
             next_state = self.sumo_step()
 
             # set action for each bus: -1 = slow down, 0 = keep speed, 1 = speed up
-            vehicles_length = len(traci.vehicle.getIDList())
+            vehicles_length = len(self.bus_ids)
 
             for i, action_value in enumerate(action):
                 if i >= vehicles_length:
@@ -167,7 +170,6 @@ class SumoEnv(gym.Env):
         personsWaitingTimeList = []
         traci.simulationStep()
 
-        vehicles = traci.vehicle.getIDList()
         persons = traci.person.getIDList()
 
         # finds the average waiting time
@@ -188,8 +190,8 @@ class SumoEnv(gym.Env):
 
         # finds bus speed and position
         bus_route_counter = [0, self.bus_num]
-        for j in range(0, len(vehicles)):
-            vehicleId = vehicles[j]
+        for j in range(0, len(self.bus_ids)):
+            vehicleId = self.bus_ids[j]
             vehicleSpeed_km_h = traci.vehicle.getSpeed(
                 vehicleId)*3.6  # m/s to km/h
             vehicleRoute_index = 0 if (

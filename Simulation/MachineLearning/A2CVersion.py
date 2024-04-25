@@ -1,24 +1,21 @@
 from stable_baselines3 import A2C
 from stable_baselines3.common.env_util import make_vec_env
-from Helper.CSVWriter import CSVWriter
 from SumoEnvironment import SumoEnv
-from Helper.CollectionData import get_people_at_bus_stops
 from stable_baselines3.common.vec_env import SubprocVecEnv
 import numpy as np
 from Constants import A2C_TOTAL_TIMESTEPS, A2C_MAX_STEPS
-from Helper.PlotDiagram import PlotBoth
 
+np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
 
 def A2CVersion():
-
     # Importing the environment
     env = make_vec_env(SumoEnv, n_envs=1, vec_env_cls=SubprocVecEnv)
 
     # Create the agent
-    model = A2C("MlpPolicy", env, verbose=1)
+    model = A2C("MlpPolicy", env, n_steps=A2C_MAX_STEPS)
 
     # Train the agent
-    # model.learn(total_timesteps=A2C_TOTAL_TIMESTEPS, progress_bar=True)
+    model.learn(total_timesteps=A2C_TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
     # model.save("a2c_sumo")
@@ -38,9 +35,7 @@ def A2CVersion():
     while not done.all():
         action, _states = model.predict(obs)
         obs, rewards, done, info = env.step(action)
-        # print(f"Step: {step}, done: {done}")
 
-        np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
         step += 1

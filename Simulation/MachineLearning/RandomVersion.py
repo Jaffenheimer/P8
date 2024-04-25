@@ -1,6 +1,5 @@
 from SumoEnvironment import SumoEnv
-from Helper.CollectionData import average_people_at_busstops
-import random
+from random import randint
 import numpy as np
 from Constants import RANDOM_MAX_STEPS
 
@@ -19,7 +18,7 @@ def RandomVersion():
     done = np.array([False], dtype='bool')
 
     while not done:
-        action = [random.randint(-1, 1) for i in range(10)]
+        action = [randint(-1, 1) for i in range(10)]
 
         # Perform a step in the environment
         obs, reward, truncated, done, _ = env.step(action)
@@ -30,7 +29,6 @@ def RandomVersion():
         if done:
             env.close()
 
+    
     return data[:-1]
 
-
-RandomVersion()

@@ -72,6 +72,29 @@ def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
     # plt.show()
     plt.savefig('CombinedAverageWaitingTime.png')
 
+#more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
+def PlotAverageWaitTimeMultiple(*data):
+    plt.figure(figsize=(10, len(data)))
+    for i in data:
+        plt.plot(i[1]['AverageWaitTime'], label=i[0])
+    plt.xlabel("Steps")
+    plt.ylabel("Waiting Time (seconds)")
+    plt.title("Average Waiting Time Over Testing Steps")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+    
+#more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
+def PlotAveragePeopleAtBusstopsMultiple(*data):
+    plt.figure(figsize=(10, len(data)))
+    for i in data:
+        plt.plot(i[1]['AveragePeopleAtBusStops'], label=i[0])
+    plt.xlabel("Steps")
+    plt.ylabel("Average People at Busstops")
+    plt.title("Average People at Busstops Over Testing Steps")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
     plt.figure(figsize=(10, 6))

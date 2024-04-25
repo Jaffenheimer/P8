@@ -1,11 +1,10 @@
 import traci
 import numpy as np
 from os import path, mkdir
-from random import randint
 from Constants import SCHEDULE_MAX_STEPS, SEED
 
 
-def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_schedule.sumocfg", outputFileName="output_schedule.csv"):
+def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output_schedule.csv"):
     # initializations
 
     dtype = [('Step', int), ('AveragePeopleAtBusStops', float),
@@ -65,18 +64,18 @@ def getAveragePeopleAtBusStops():
 # now for multiple runs, where the values are the average of the runs:
 
 
-def runMultiple(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.sumocfg", outputFileName="output.csv", steps=500, runs=10):
+def ScheduleVersionMultiple( runs=1,inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output.csv"):
     dtype = [('Step', int), ('PedestrianCount', float),
              ('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
-    data = np.zeros(steps, dtype=dtype)
+    data = np.zeros(SCHEDULE_MAX_STEPS, dtype=dtype)
     for run in range(runs):
         # Connect to SUMO simulation
         traci.start(
-            ["sumo", "-c", path.abspath(inputFile), "--seed", str(SEED)])
+            ["sumo", "-c", path.abspath(inputFile), "--seed", str(SEED), "--emission-output", "emissions.xml"])
 
         # simulation loop
         step = 0
-        while step < steps:
+        while step < SCHEDULE_MAX_STEPS:
             traci.simulationStep()
 
             persons = traci.person.getIDList()
@@ -98,7 +97,7 @@ def runMultiple(inputFile="../P8-Mobility/Simulation/SUMO/schedule/schedule.sumo
         mkdir("../Output")
     np.savetxt(f"../Output/{outputFileName}", data, delimiter=',',
                fmt='%f', header="Step,AveragePeopleAtBusStops,AverageWaitTime")
-
+    return data
 
 if __name__ == "__main__":
     ScheduleVersion()
