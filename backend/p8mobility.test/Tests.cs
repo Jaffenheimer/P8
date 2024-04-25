@@ -12,6 +12,7 @@ using PusherServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace p8mobility.test
@@ -30,6 +31,23 @@ namespace p8mobility.test
             busStopRepositoryMock.Setup(x => x.GetAllBusStops()).Returns(Task.FromResult(new List<BusStop>() { new BusStop(Guid.Parse("d1eb0f95-2f04-4bdd-82d0-5a94dd402eea"), 59, 7, 25), new BusStop(Guid.Parse("efe4f617-45bb-46e1-8b8a-bd7cd10250de"), 11, 22, 42) }));
             sc.Init(busStopRepositoryMock.Object, routeRelationsRepositoryMock.Object);
         }
+        [Test]
+        public void RunStopStateSuccess()
+        {
+            StateController sc = new StateController();
+            Mock<IPusherService> pusherMock = new();
+            ////Arrange/Act/Assert
+            new Thread (() => sc.Run(pusherMock.Object));
+            var isRunning = sc.IsRunning; //Sets running to true
+            var running = sc.Running;
+
+            sc.Stop(); //Sets running to false
+            var afterStop = sc.Running;
+            Assert.AreNotEqual(running, afterStop);
+            Assert.IsFalse(isRunning);
+            Assert.IsTrue(running);
+        }
+        
         [Test]
         public void AddBusToStateSuccess()
         {
@@ -64,22 +82,7 @@ namespace p8mobility.test
             var state = sc.GetState();
             Assert.NotNull(state);
         }
-
-
-        [Test]
-        public void RunStopStateSuccess()
-        {
-            ////Arrange/Act/Assert
-            //sc.Run(pusherMock.Object);
-            //var isRunning = sc.IsRunning; //Sets running to true
-            //var running = sc.Running;
-
-            //sc.Stop(); //Sets running to false
-            //var afterStop = sc.Running;
-            //Assert.AreNotEqual(running, afterStop);
-            //Assert.IsFalse(isRunning);
-            //Assert.IsTrue(running);
-        }
+        
 
         [TestCase("d1eb0f95-2f04-4bdd-82d0-5a94dd402eea", 0)]
         [TestCase("efe4f617-45bb-46e1-8b8a-bd7cd10250de", 42)]

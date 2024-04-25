@@ -16,7 +16,7 @@ public class StateController
     private static State SystemState { get; set; }
     private static List<Route> Routes { get; set; } = new List<Route>();
     public bool Running { get; set; } = true;
-    public bool IsRunning { get; set; } = false;
+    public bool IsRunning { get; set; }
     private static List<BusStop> BusStops { get; set; } = new List<BusStop>();
 
     public async Task Init(IBusStopRepository busStopRepository, IRouteRelationsRepository routeRelationsRepository)
@@ -36,7 +36,7 @@ public class StateController
 
     public void Run(IPusherService pusherService)
     {
-        IsRunning = true;
+        IsRunning = Running;
         Console.WriteLine("Running");
         while (Running)
         {
@@ -68,7 +68,6 @@ public class StateController
 
             pusherMessage.Actions.Clear();
         }
-
         IsRunning = false;
     }
 
