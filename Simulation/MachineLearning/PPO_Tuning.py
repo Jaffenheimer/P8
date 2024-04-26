@@ -4,6 +4,7 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from optuna.samplers import TPESampler
 from SumoEnvironment import SumoEnv
+import numpy as np
 
 '''  This script is used to tune the hyperparameters of the PPO algorithm using Optuna.'''
 
@@ -32,8 +33,8 @@ def objective(trial: optuna.Trial):
     env = make_vec_env(SumoEnv, n_envs=n_envs)
 
     # Create the model with the hyperparameters
-    model = PPO("MlpPolicy", env=env, verbose=1, learning_rate=learning_rate,
-                ent_coef=ent_coef, vf_coef=vf_coef, gamma=gamma, gae_lambda=gae_lambda, batch_size=batch_size, device='auto')
+    model = PPO("MlpPolicy", env=env, verbose=0, learning_rate=learning_rate,
+                ent_coef=ent_coef, vf_coef=vf_coef, gamma=gamma, gae_lambda=gae_lambda, batch_size=batch_size, device='auto', n_steps=1000)
 
     # Train the model
     model.learn(total_timesteps=10000)
@@ -41,14 +42,14 @@ def objective(trial: optuna.Trial):
     # Evaluate the model
     obs = env.reset()
     rewards = 0
-    done = False
+    done = np.array([False], dtype='bool')
 
-    while not done:
+    while not done.all():
         action, _ = model.predict(obs)
         obs, reward, done, info = env.step(action)
-        rewards += reward
+        rewards += np.mean(reward)
 
-        if done:
+        if done.all():
             env.close()
 
     return -rewards
@@ -57,7 +58,7 @@ def objective(trial: optuna.Trial):
 # Optimize the hyperparameters using Optuna
 study = optuna.create_study(direction="minimize")
 
-study.optimize(objective, n_trials=100, show_progress_bar=True)
+study.optimize(objective, n_trials=10, show_progress_bar=True)
 
 # Retrive the best hyperparameters
 best_trial = study.best_trial
