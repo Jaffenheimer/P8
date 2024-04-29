@@ -24,8 +24,6 @@ def get_model_params(modelType, trial):
     if modelType == A2C:
         a2c_params = {
             "learning_rate": trial.suggest_float("learning_rate", 1e-5, 1e-2, log=True),
-            # "gamma": trial.suggest_float("gamma", 0.9, 0.999, log=True),
-            # "gae_lambda": trial.suggest_float("gae_lambda", 0.8, 0.99, log=True),
             "ent_coef": trial.suggest_float("ent_coef", 0.00000001, 0.1, log=True),
             "vf_coef": trial.suggest_float("vf_coef", 0.00000001, 0.5, log=True),
             "max_grad_norm": trial.suggest_float("max_grad_norm", 0.3, 1.0, log=True)
