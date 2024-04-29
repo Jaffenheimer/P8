@@ -1,11 +1,14 @@
+from os import mkdir, path
 from random import randint
 import numpy as np
+import pandas as pd
 from stable_baselines3 import A2C, PPO
 from sb3_contrib import TRPO, RecurrentPPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
 from Constants import TOTAL_TIMESTEPS, MAX_STEPS, N_ENVS
 from Helper.PlotDiagram import PlotBoth
+from Helper.TOCSV import TOCSV
 
 def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
@@ -14,7 +17,7 @@ def run(modelType,name,policy):
     env = make_vec_env(SumoEnv, n_envs=N_ENVS)
 
     #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
-    model_params = {"policy": policy, "env": env, "verbose": 1, "n_steps": MAX_STEPS}
+    model_params = {"policy": policy, "env": env, "verbose": 0, "n_steps": MAX_STEPS}
     if modelType != A2C:
         model_params["batch_size"] = 80
     
@@ -24,7 +27,7 @@ def run(modelType,name,policy):
     print(f"====================== <{name} Training> ======================")
 
     # Train the agent
-    model.learn(total_timesteps=TOTAL_TIMESTEPS, progress_bar=True)
+    #model.learn(total_timesteps=TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
     # model.save(f"{name}")
@@ -55,7 +58,11 @@ def run(modelType,name,policy):
         if done.all():
             env.close()
 
+    # Save the data to a CSV file
+    TOCSV(data, name)
+    
     print(f"====================== <{name} Done> ======================")
+
     return data[:-1]
 
 if __name__ == "__main__":

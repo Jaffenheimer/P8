@@ -1,9 +1,11 @@
 import numpy as np
 from os import path, mkdir
+
+import pandas as pd
 from Constants import GREEDY_MAX_STEPS
 from SumoEnvironment import SumoEnv
 from Helper.PlotDiagram import PlotBoth
-
+from Helper.TOCSV import TOCSV
 
 def GreedyFastVersion():
 
@@ -33,11 +35,9 @@ def GreedyFastVersion():
 
         if done.all():
             env.close()
-        # Save the data to a CSV file
-    if (path.isdir("../Output") == False):
-        mkdir("../Output")
-    np.savetxt(f"../Output/GreedyFastVersion.csv", data, delimiter=',',
-               fmt='%f', header="AveragePeopleAtBusStops,AverageWaitTime")
+            
+    # Save the data to a CSV file
+    TOCSV(data, "Random")
 
     print("====================== <Greedy Fast Done> ======================")
 

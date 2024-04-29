@@ -1,7 +1,8 @@
 
 from os import mkdir, path
 import matplotlib.pyplot as plt
-
+import numpy as np
+from Constants import MAX_STEPS
 
 def PlotAverageWaitTime(data):
     plt.figure(figsize=(10, 6))
@@ -73,29 +74,93 @@ def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
     # plt.show()
     if not path.isdir("./Simulation/MachineLearning/Output"):
         mkdir("./Simulation/MachineLearning/Output")
-    plt.savefig('./Simulation/MachineLearning/Output/CombinedAverageWaitingTime.png')
+    plt.savefig(
+        './Simulation/MachineLearning/Output/CombinedAverageWaitingTime.png')
 
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
 
 
-def PlotAverageWaitTimeMultiple(*data):
+def PlotAverageWaitTimeMultipleOld(*data):
     plt.figure(figsize=(10, 6))
+
     for i in data:
         plt.plot(i[1]['AverageWaitTime'], label=i[0])
+
     plt.xlabel("Steps")
     plt.ylabel("Waiting Time (seconds)")
     plt.title("Average Waiting Time Over Testing Steps")
     plt.legend()
     plt.grid(True)
+
     if not path.isdir("./Simulation/MachineLearning/Output"):
         mkdir("./Simulation/MachineLearning/Output")
-    plt.savefig('./Simulation/MachineLearning/Output/CombinedAverageWaitingTime.png')
-    # plt.show()
+    plt.savefig(
+        './Simulation/MachineLearning/Output/CombinedAverageWaitingTimeOld.png', dpi=1200)
+    plt.show()
+
+
+def PlotAverageWaitTimeMultiple(*data):
+    plt.figure(figsize=(10, 6))
+
+    for index, i in enumerate(data):
+        colors = plt.cm.get_cmap('tab10')
+        if MAX_STEPS >= 1000:
+            step_factor = MAX_STEPS // 200
+            pl_data = i[1]['AverageWaitTime'][::step_factor]
+            list_length = len(pl_data)
+            x = [step_factor * step for step in range(0, list_length)]
+
+            #print(f"Name: {i[0]}, Step Factor: {step_factor}, plot length: {len(pl_data)}, Data: {pl_data}, x: {x}, Length: {list_length}, x length: {len(x)}")
+            
+            plt.plot(x, pl_data ,label=i[0], color=colors(index % len(data)))
+            plt.title(f"Average Waiting Time Over Testing (every {step_factor} steps)")
+        else:
+            plt.plot(i[1]['AverageWaitTime'], label=i[0], color=colors(index % len(data)))
+
+    plt.xlabel("Steps")
+    plt.ylabel("Waiting Time (seconds)")
+    plt.legend()
+    plt.grid(True)
+
+    if not path.isdir("./Simulation/MachineLearning/Output"):
+        mkdir("./Simulation/MachineLearning/Output")
+    plt.savefig(
+        './Simulation/MachineLearning/Output/CombinedAverageWaitingTimeOld.png', dpi=1200)
+    plt.show()
 
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
 
 
 def PlotAveragePeopleAtBusstopsMultiple(*data):
+    plt.figure(figsize=(10, 6))
+    
+    for index, i in enumerate(data):
+        colors = plt.cm.get_cmap('tab10')
+        if MAX_STEPS >= 1000:
+            step_factor = MAX_STEPS // 200
+            pl_data = i[1]['AverageWaitTime'][::step_factor]
+            list_length = len(pl_data)
+            x = [step_factor * step for step in range(0, list_length)]
+
+            plt.plot(x, pl_data, label=i[0], color=colors(index % len(data)))
+            plt.title(f"Average People at Busstops Over Testing (every {step_factor} steps)")
+        else:
+            plt.plot(i[1]['AverageWaitTime'], label=i[0], color=colors(index % len(data)))
+            plt.title(f"Average People at Busstops Over Testing Steps")
+
+    plt.xlabel("Steps")
+    plt.ylabel("Average People at Busstops")
+    plt.legend()
+    plt.grid(True)
+
+    if not path.isdir("./Simulation/MachineLearning/Output"):
+        mkdir("./Simulation/MachineLearning/Output")
+    plt.savefig(
+        './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png', dpi=1200)
+    # plt.show()
+
+
+def PlotAveragePeopleAtBusstopsMultipleOld(*data):
     plt.figure(figsize=(10, 6))
     for i in data:
         plt.plot(i[1]['AveragePeopleAtBusStops'], label=i[0])
@@ -107,7 +172,8 @@ def PlotAveragePeopleAtBusstopsMultiple(*data):
     print(path.abspath("./Simulation/MachineLearning/Output"))
     if not path.isdir("./Simulation/MachineLearning/Output"):
         mkdir("./Simulation/MachineLearning/Output")
-    plt.savefig('./Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png')
+    plt.savefig(
+        './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png', dpi=1200)
     # plt.show()
 
 
@@ -127,4 +193,5 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
     # plt.show()
     if not path.isdir("./Simulation/MachineLearning/Output"):
         mkdir("./Simulation/MachineLearning/Output")
-    plt.savefig('./Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png')
+    plt.savefig(
+        './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png')

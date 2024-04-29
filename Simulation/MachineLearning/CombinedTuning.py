@@ -57,7 +57,7 @@ def CombinedTuning(modelType, policy, name):
 
 
 if __name__ == "__main__":
-    # CombinedTuning(PPO, "MlpPolicy", "PPO")
-    CombinedTuning(A2C, "MlpPolicy", "A2C")
+    CombinedTuning(PPO, "MlpPolicy", "PPO")
+    # CombinedTuning(A2C, "MlpPolicy", "A2C")
     # CombinedTuning(TRPO, "MlpPolicy", "TRPO")
     # CombinedTuning(RecurrentPPO, "MlpLstmPolicy", "RecurrentPPO")

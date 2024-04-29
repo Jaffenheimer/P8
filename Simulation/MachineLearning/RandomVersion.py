@@ -1,8 +1,10 @@
+import pandas as pd
 from SumoEnvironment import SumoEnv
 from random import randint
 import numpy as np
 from Constants import RANDOM_MAX_STEPS
 from Helper.PlotDiagram import PlotBoth
+from Helper.TOCSV import TOCSV
 
 
 def RandomVersion():
@@ -31,6 +33,10 @@ def RandomVersion():
 
         if done:
             env.close()
+
+    # Save the data to a CSV file
+    TOCSV(data, "Random")
+
 
     print("====================== <Random Done> ======================")
 

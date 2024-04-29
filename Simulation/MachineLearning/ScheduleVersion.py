@@ -1,3 +1,5 @@
+import os
+import pandas as pd
 import traci
 import numpy as np
 from os import path, mkdir
@@ -5,7 +7,7 @@ from Constants import SCHEDULE_MAX_STEPS, SEED
 from Helper.PlotDiagram import PlotBoth
 
 
-def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output_schedule.csv"):
+def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="Schedule.csv"):
     # initializations
 
     print("====================== <Schedule Init> ======================")
@@ -36,10 +38,12 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_pers
 
         step += 1
     traci.close()
-    if (path.isdir("../Output") == False):
-        mkdir("../Output")
-    np.savetxt(f"../Output/{outputFileName}", data, delimiter=',',
-               fmt='%f', header="Step,AveragePeopleAtBusStops,AverageWaitTime")
+
+    if not os.path.isdir("./Simulation/MachineLearning/Output/TestFiles"):
+        os.mkdir("./Simulation/MachineLearning/Output/TestFiles")
+
+    np.savetxt(f"./Simulation/MachineLearning/Output/TestFiles/{outputFileName}", data, delimiter=',',
+            fmt='%f', header="Step,AveragePeopleAtBusStops,AverageWaitTime")
 
     print("====================== <Schedule Done> ======================")
 
