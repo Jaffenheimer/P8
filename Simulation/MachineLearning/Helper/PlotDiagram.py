@@ -173,7 +173,7 @@ def PlotAveragePeopleAtBusstopsMultipleOld(*data):
     if not path.isdir("./Simulation/MachineLearning/Output"):
         mkdir("./Simulation/MachineLearning/Output")
     plt.savefig(
-        './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png', dpi=1200)
+        './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstopsOld.png', dpi=1200)
     # plt.show()
 
 

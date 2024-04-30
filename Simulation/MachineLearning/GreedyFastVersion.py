@@ -37,7 +37,7 @@ def GreedyFastVersion():
             env.close()
             
     # Save the data to a CSV file
-    TOCSV(data, "Random")
+    TOCSV(data, "GreedyFast")
 
     print("====================== <Greedy Fast Done> ======================")
 
