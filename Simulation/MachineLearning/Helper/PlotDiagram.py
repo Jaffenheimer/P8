@@ -3,6 +3,7 @@ from os import mkdir, path
 import matplotlib.pyplot as plt
 import numpy as np
 from Constants import MAX_STEPS
+from Helper.TOCSV import TOCSV
 
 def PlotAverageWaitTime(data):
     plt.figure(figsize=(10, 6))
@@ -110,12 +111,15 @@ def PlotAverageWaitTimeMultiple(*data):
             list_length = len(pl_data)
             x = [step_factor * step for step in range(0, list_length)]
 
-            #print(f"Name: {i[0]}, Step Factor: {step_factor}, plot length: {len(pl_data)}, Data: {pl_data}, x: {x}, Length: {list_length}, x length: {len(x)}")
+            TOCSV(pl_data, f"{i[0]}_AverageWaitTime")
             
             plt.plot(x, pl_data ,label=i[0], color=colors(index % len(data)))
             plt.title(f"Average Waiting Time Over Testing (every {step_factor} steps)")
         else:
             plt.plot(i[1]['AverageWaitTime'], label=i[0], color=colors(index % len(data)))
+            plt.title(
+                f"Average Waiting Time Over Testing (every step)")
+
 
     plt.xlabel("Steps")
     plt.ylabel("Waiting Time (seconds)")
@@ -143,6 +147,11 @@ def PlotAveragePeopleAtBusstopsMultiple(*data):
             x = [step_factor * step for step in range(0, list_length)]
 
             plt.plot(x, pl_data, label=i[0], color=colors(index % len(data)))
+            
+            print(
+                f"Name: {i[0]}, Step Factor: {step_factor}, plot length: {len(pl_data)}, Data: {pl_data}, x: {x}, Length: {list_length}, x length: {len(x)}")
+
+
             plt.title(f"Average People at Busstops Over Testing (every {step_factor} steps)")
         else:
             plt.plot(i[1]['AverageWaitTime'], label=i[0], color=colors(index % len(data)))
@@ -156,7 +165,7 @@ def PlotAveragePeopleAtBusstopsMultiple(*data):
     if not path.isdir("./Simulation/MachineLearning/Output"):
         mkdir("./Simulation/MachineLearning/Output")
     plt.savefig(
-        './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png', dpi=1200)
+        './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops1.png', dpi=1200)
     # plt.show()
 
 

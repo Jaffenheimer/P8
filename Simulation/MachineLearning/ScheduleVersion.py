@@ -12,7 +12,7 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_pers
 
     print("====================== <Schedule Init> ======================")
 
-    dtype = [('Step', int), ('AveragePeopleAtBusStops', float),
+    dtype = [('AveragePeopleAtBusStops', float),
              ('AverageWaitTime', float)]
     data = np.zeros(SCHEDULE_MAX_STEPS, dtype=dtype)
     # Connect to SUMO simulation
@@ -32,7 +32,7 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_pers
         averageWaitTime = getAverageWaitTime(persons)
         averagePeopleAtBusStops = getAveragePeopleAtBusStops()
 
-        data['Step'][step] = step
+        #data['Step'][step] = step
         data['AveragePeopleAtBusStops'][step] = averagePeopleAtBusStops
         data['AverageWaitTime'][step] = averageWaitTime
 
@@ -43,7 +43,7 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_pers
         os.mkdir("./Simulation/MachineLearning/Output/TestFiles")
 
     np.savetxt(f"./Simulation/MachineLearning/Output/TestFiles/{outputFileName}", data, delimiter=',',
-            fmt='%f', header="Step,AveragePeopleAtBusStops,AverageWaitTime")
+            fmt='%f', header="AveragePeopleAtBusStops,AverageWaitTime")
 
     print("====================== <Schedule Done> ======================")
 

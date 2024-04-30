@@ -6,13 +6,13 @@
     <!-- so for example: -->
         <!-- <stop busStop="bs_road_-overlap" duration="5.00" until="100"/> -->
     
-    <route id="r_0" edges="-overlap -R2 -R1 -R0" color="yellow" cycleTime="300.00" repeat="500">
+    <route id="r_0" edges="-overlap -R2 -R1 -R0" color="yellow" cycleTime="300.00" repeat="10000">
         <stop busStop="bs_road_-overlap" duration="5.00" until="100"   />
         <stop busStop="bs_road_-R2" duration="5.00" until="200"   />
         <stop busStop="bs_road_-R1" duration="5.00" until="300"   />
         <stop busStop="bs_road_-R0" duration="5.00" until="400"   />
     </route>
-    <route id="r_1" edges="-overlap -L3 -L2 -L1 -L0" color="blue" cycleTime="300.00" repeat="500">
+    <route id="r_1" edges="-overlap -L3 -L2 -L1 -L0" color="blue" cycleTime="300.00" repeat="10000">
         <stop busStop="bs_road_-overlap" duration="5.00" until="100"   />
         <stop busStop="bs_road_-L3" duration="5.00" until="200"   />
         <stop busStop="bs_road_-L2" duration="5.00" until="300"   />
