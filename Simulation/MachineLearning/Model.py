@@ -30,7 +30,7 @@ def run(modelType,name,policy):
     model.learn(total_timesteps=TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
-    # model.save(f"{name}")
+    model.save(f"./Simulation/MachineLearning/Output/{name}")
 
     # del model  # remove to demonstrate saving and loading
 
