@@ -5,19 +5,32 @@ import pandas as pd
 from stable_baselines3 import A2C, PPO
 from sb3_contrib import TRPO, RecurrentPPO
 from stable_baselines3.common.env_util import make_vec_env
+from stable_baselines3.common.vec_env import SubprocVecEnv
 from SumoEnvironment import SumoEnv
 from Constants import TOTAL_TIMESTEPS, MAX_STEPS, N_ENVS
 from Helper.PlotDiagram import PlotBoth
 from Helper.TOCSV import TOCSV
+import gymnasium as gym
+
+def make_env(env_id: str, rank: int, seed: int = 0):
+    def _init(): 
+        env = gym.make(env_id)
+        env.reset()
+        return env
+    return _init
+    
+
 
 def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
 
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=N_ENVS)
+    #env = make_vec_env(SumoEnv, n_envs=N_ENVS)
+
+    vec_env = SubprocVecEnv([make_env('SumoEnv-v1', i) for i in range(20)])
 
     #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
-    model_params = {"policy": policy, "env": env, "verbose": 0, "n_steps": MAX_STEPS}
+    model_params = {"policy": policy, "env": vec_env, "verbose": 0, "n_steps": MAX_STEPS}
     if modelType != A2C:
         model_params["batch_size"] = 80
     
@@ -40,7 +53,7 @@ def run(modelType,name,policy):
     print(f"====================== <{name} Traning Completed> ======================")
 
     # Test the agent
-    obs = env.reset()
+    obs = vec_env.reset()
     dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
     data = np.zeros(MAX_STEPS, dtype=dtype)
     step = 0
@@ -49,14 +62,14 @@ def run(modelType,name,policy):
     while not done.all():
         action, _ = model.predict(obs)
 
-        obs, rewards, done, info = env.step(action)
+        obs, rewards, done, info = vec_env.step(action)
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
         step += 1
 
         if done.all():
-            env.close()
+            vec_env.close()
 
     # Save the data to a CSV file
     TOCSV(data, name)
