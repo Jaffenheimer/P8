@@ -27,7 +27,7 @@ def run(modelType,name,policy):
     print(f"====================== <{name} Training> ======================")
 
     # Train the agent
-    #model.learn(total_timesteps=TOTAL_TIMESTEPS, progress_bar=True)
+    model.learn(total_timesteps=TOTAL_TIMESTEPS, progress_bar=True)
 
     # Save the agent
     # model.save(f"{name}")
