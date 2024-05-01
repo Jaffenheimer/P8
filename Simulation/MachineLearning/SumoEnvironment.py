@@ -3,7 +3,7 @@ import numpy as np
 import traci
 import math
 from os import path
-from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD
+from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, INPUTFILE
 import Constants
 
 
@@ -14,7 +14,7 @@ class SumoEnv(gym.Env):
         except:
             pass
         self.path = path.abspath(
-            "../P8-Mobility/Simulation/SUMO/algorithm/high_person_low_traffic.sumocfg")
+            f"../P8-Mobility/Simulation/SUMO/algorithm/{INPUTFILE}")
         self.close()
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(Constants.SEED), "--no-warnings"])

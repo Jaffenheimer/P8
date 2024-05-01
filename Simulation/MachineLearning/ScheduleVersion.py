@@ -3,11 +3,11 @@ import pandas as pd
 import traci
 import numpy as np
 from os import path, mkdir
-from Constants import SCHEDULE_MAX_STEPS, SEED
+from Constants import SCHEDULE_MAX_STEPS, SEED, INPUTFILE
 from Helper.PlotDiagram import PlotBoth
 
 
-def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="Schedule.csv"):
+def ScheduleVersion(inputFile=f"../P8-Mobility/Simulation/SUMO/schedule/{INPUTFILE}", outputFileName="Schedule.csv"):
     # initializations
 
     print("====================== <Schedule Init> ======================")

@@ -111,7 +111,7 @@ def PlotAverageWaitTimeMultiple(*data):
         mkdir("./Simulation/MachineLearning/Output")
     plt.savefig(
         './Simulation/MachineLearning/Output/CombinedAverageWaitingTimeOld.png', dpi=1200)
-    plt.show()
+    #plt.show()
 
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
 
