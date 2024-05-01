@@ -5,6 +5,8 @@ import numpy as np
 
 
 def TOCSV(data, name):
+    if not os.path.isdir("./Simulation/MachineLearning/Output"):
+        os.mkdir("./Simulation/MachineLearning/Output")
     if not os.path.isdir("./Simulation/MachineLearning/Output/TestFiles"):
         os.mkdir("./Simulation/MachineLearning/Output/TestFiles")
 
