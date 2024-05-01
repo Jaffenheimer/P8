@@ -12,7 +12,10 @@ from Helper.PlotDiagram import PlotBoth
 from Helper.TOCSV import TOCSV
 import gymnasium as gym
 
-def make_env(env_id: str, rank: int, seed: int = 0):
+
+np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
+
+def make_env(env_id: str, rank: int):
     def _init(): 
         env = gym.make(env_id)
         env.reset()
@@ -24,10 +27,8 @@ def make_env(env_id: str, rank: int, seed: int = 0):
 def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
 
-    # Importing the environment
-    #env = make_vec_env(SumoEnv, n_envs=N_ENVS)
+    vec_env = SubprocVecEnv([make_env('SumoEnv-v1', i) for i in range(N_ENVS)])
 
-    vec_env = SubprocVecEnv([make_env('SumoEnv-v1', i) for i in range(20)])
 
     #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
     model_params = {"policy": policy, "env": vec_env, "verbose": 0, "n_steps": MAX_STEPS}
@@ -63,7 +64,6 @@ def run(modelType,name,policy):
         action, _ = model.predict(obs)
 
         obs, rewards, done, info = vec_env.step(action)
-        np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
         step += 1

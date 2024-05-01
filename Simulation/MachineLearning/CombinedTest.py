@@ -1,7 +1,7 @@
 import numpy as np
 from stable_baselines3 import PPO, A2C
 from sb3_contrib import RecurrentPPO, TRPO
-from Helper.PlotDiagram import PlotAveragePeopleAtBusstopsMultiple, PlotAverageWaitTimeMultiple, PlotAverageWaitTimeMultipleOld, PlotAveragePeopleAtBusstopsMultipleOld
+from Helper.PlotDiagram import PlotAveragePeopleAtBusstopsMultiple, PlotAverageWaitTimeMultiple
 from RandomVersion import RandomVersion
 from Helper.FindAverage import FindAverage
 from GreedyFastVersion import GreedyFastVersion
@@ -33,6 +33,10 @@ def CombinedTest():
 
     FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO,
                 data_random, data_schedule, data_greedy)
-    
+        
+    PlotAverageWaitTimeMultiple(("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO), ("A2C", data_A2C), ("TRPO", data_TRPO), ("Random", data_random), ("Greedy Fast", data_greedy))
+
+    PlotAveragePeopleAtBusstopsMultiple(("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO), ("A2C", data_A2C), ("TRPO", data_TRPO), ("Random", data_random), ("Greedy Fast", data_greedy))
+
 if __name__ == "__main__":
     CombinedTest()
