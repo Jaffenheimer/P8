@@ -34,9 +34,10 @@ def CombinedTest():
     FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO,
                 data_random, data_schedule, data_greedy)
         
-    PlotAverageWaitTimeMultiple(("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO), ("A2C", data_A2C), ("TRPO", data_TRPO), ("Random", data_random), ("Greedy Fast", data_greedy))
+    PlotAverageWaitTimeMultiple("CombinedTest", ("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO), ("A2C", data_A2C), ("TRPO", data_TRPO), ("Random", data_random), ("Greedy Fast", data_greedy))
 
-    PlotAveragePeopleAtBusstopsMultiple(("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO), ("A2C", data_A2C), ("TRPO", data_TRPO), ("Random", data_random), ("Greedy Fast", data_greedy))
+    PlotAveragePeopleAtBusstopsMultiple("CombinedTest", ("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO), (
+        "A2C", data_A2C), ("TRPO", data_TRPO), ("Random", data_random), ("Greedy Fast", data_greedy))
 
 if __name__ == "__main__":
     CombinedTest()

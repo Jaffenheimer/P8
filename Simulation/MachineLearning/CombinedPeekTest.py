@@ -6,6 +6,7 @@ from GreedyFastVersion import GreedyFastVersion
 from ScheduleVersion import ScheduleVersion
 import time
 import ModelPeek
+from Helper.FindAverage import FindAverage
 
 def CombinedTest():
 
@@ -27,11 +28,14 @@ def CombinedTest():
 
     print(f"Total time: {time.time() - start_time:.2f} seconds")
 
-    PlotAverageWaitTimeMultiple(("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO),
-                                ("TRPO", data_TRPO), ("A2C", data_A2C), ("Schedule", data_schedule))
+    FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO,
+                data_random, data_schedule, data_greedy)
 
-    PlotAveragePeopleAtBusstopsMultiple(("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO),
-                                        ("TRPO", data_TRPO), ("A2C", data_A2C), ("Schedule", data_schedule))
+    PlotAverageWaitTimeMultiple("CombinedPeek", ("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO),
+                                ("TRPO", data_TRPO), ("A2C", data_A2C))
+
+    PlotAveragePeopleAtBusstopsMultiple("CombinedPeek", ("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO),
+                                        ("TRPO", data_TRPO), ("A2C", data_A2C))
 
 
 if __name__ == "__main__":
