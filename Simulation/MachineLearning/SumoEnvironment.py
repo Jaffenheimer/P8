@@ -53,7 +53,6 @@ class SumoEnv(gym.Env):
             low=low_obs, high=high_obs, shape=(self.info_states + 2*self.bus_num,), dtype=np.float32)
 
         # Run simulation for SUMO_INIT_STEPS to initialize the simulation with stable wait time
-
         for _ in range(SUMO_INIT_STEPS):
             self.sumo_step()
 
