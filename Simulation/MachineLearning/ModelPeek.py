@@ -9,23 +9,15 @@ from Constants import TOTAL_TIMESTEPS, MAX_STEPS, N_ENVS, PEEK_INTERVAL, PEEK_LE
 from Helper.PlotDiagram import PlotBoth
 import gymnasium as gym
 
-def make_env(env_id: str, rank: int):
-    def _init(): 
-        env = gym.make(env_id)
-        env.reset()
-        return env
-    return _init
 
 def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
 
     # Importing the environment
-    #env = make_vec_env(SumoEnv, n_envs=N_ENVS)
-    vec_env = SubprocVecEnv([make_env('SumoEnv-v1', i) for i in range(N_ENVS)])
-
+    env = make_vec_env(SumoEnv, n_envs=N_ENVS)
 
     #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
-    model_params = {"policy": policy, "env": vec_env,
+    model_params = {"policy": policy, "env": env,
                     "verbose": 0, "n_steps": MAX_STEPS}
     if modelType != A2C:
         model_params["batch_size"] = 80
@@ -59,14 +51,14 @@ def run(modelType,name,policy):
     for _ in range(MAX_STEPS):
         action, _ = model.predict(obs)
 
-        obs, rewards, done, info = vec_env.step(action)
+        obs, rewards, done, info = env.step(action)
         np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
         step += 1
 
         if done.all():
-            vec_env.close()
+            env.close()
             break
         elif step % PEEK_INTERVAL == PEEK_INTERVAL:
             model.learn(PEEK_LEARN_STEPS)
