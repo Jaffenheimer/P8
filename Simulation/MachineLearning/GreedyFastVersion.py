@@ -4,6 +4,7 @@ from os import path, mkdir
 import pandas as pd
 from Constants import GREEDY_MAX_STEPS
 from SumoEnvironment import SumoEnv
+from stable_baselines3.common.env_util import make_vec_env
 from Helper.PlotDiagram import PlotBoth
 from Helper.TOCSV import TOCSV
 
@@ -12,7 +13,7 @@ def GreedyFastVersion():
     print("====================== <Greedy Fast Init> ======================")
 
     # Importing the environment
-    env = SumoEnv()
+    env = make_vec_env(SumoEnv, n_envs=1)
 
     obs = env.reset()
 
@@ -24,9 +25,9 @@ def GreedyFastVersion():
     done = np.array([False], dtype='bool')
 
     while not done.all():
-        action = np.array([1]*10, dtype='float32')
+        action = np.ones((1, 10), dtype='float32')
         # Perform a step in the environment
-        obs, reward, truncated, done, _ = env.step(action)
+        obs, rewards, done, info = env.step(action)
         done = np.array([done], dtype='bool')
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)

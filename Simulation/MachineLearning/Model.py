@@ -9,20 +9,17 @@ from SumoEnvironment import SumoEnv
 from Constants import TOTAL_TIMESTEPS, MAX_STEPS, N_ENVS
 from Helper.PlotDiagram import PlotBoth
 from Helper.TOCSV import TOCSV
-import gymnasium as gym
-
 
 np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
-
 
 def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
 
+    # Importing the environment
     env = make_vec_env(SumoEnv, n_envs=N_ENVS)
 
     #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
-    model_params = {"policy": policy, "env": env, "verbose": 0, "n_steps": 1}
-    
+    model_params = {"policy": policy, "env": env, "verbose": 0, "n_steps": MAX_STEPS}
     if modelType != A2C:
         model_params["batch_size"] = 80
     
@@ -53,7 +50,6 @@ def run(modelType,name,policy):
 
     while not done.all():
         action, _ = model.predict(obs)
-
         obs, rewards, done, info = env.step(action)
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
@@ -71,7 +67,7 @@ def run(modelType,name,policy):
 
 if __name__ == "__main__":
     data = run(PPO, "PPO", "MlpPolicy")
-    data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
-    data = run(A2C, "A2C", "MlpPolicy")
-    data = run(TRPO, "TRPO", "MlpPolicy")
-    PlotBoth(data)
+    # data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
+    # data = run(A2C, "A2C", "MlpPolicy")
+    # data = run(TRPO, "TRPO", "MlpPolicy")
+    # PlotBoth(data)

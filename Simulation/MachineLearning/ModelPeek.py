@@ -66,9 +66,9 @@ def run(modelType,name,policy):
     print(f"====================== <{name} Done> ======================")
     return data[:-1]
 
-if __name__ == "__main__":
-    data = run(PPO, "PPO", "MlpPolicy")
-    data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
-    data = run(A2C, "A2C", "MlpPolicy")
-    data = run(TRPO, "TRPO", "MlpPolicy")
-    PlotBoth(data)
+# if __name__ == "__main__":
+#     data = run(PPO, "PPO", "MlpPolicy")
+#     data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
+#     data = run(A2C, "A2C", "MlpPolicy")
+#     data = run(TRPO, "TRPO", "MlpPolicy")
+#     PlotBoth(data)
