@@ -118,7 +118,6 @@ class SumoEnv(gym.Env):
                             bus_speed_km_h, action_value))
 
                     traci.vehicle.slowDown(bus_id, new_speed_m_s, 1)
-                print(self.m_s_to_km_h(self.previous_speeds_m_s[i]), bus_action, self.m_s_to_km_h(new_speed_m_s))
                 # store previous speed for keep speed action in next step
                 self.previous_speeds_m_s[i] = new_speed_m_s
 
