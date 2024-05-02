@@ -42,7 +42,7 @@ def run(modelType,name,policy):
     print(f"====================== <{name} Traning Completed> ======================")
 
     # Test the agent
-    obs = vec_env.reset()
+    obs = env.reset()
     dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
     data = np.zeros(MAX_STEPS, dtype=dtype)
     step = 0
