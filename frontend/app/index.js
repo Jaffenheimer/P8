@@ -4,7 +4,6 @@ import {Theme} from 'tamagui';
 import {Container, Main} from '~/tamagui.config';
 import LoginPage from './pages/LoginPage';
 import React from "react";
-import MainPage from "~/app/pages/MainPage";
 
 export default function Page() {
     return (

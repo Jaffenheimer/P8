@@ -1,22 +1,26 @@
-import { Stack, router } from 'expo-router';
-import React, { useState } from 'react';
+import {Stack, router} from 'expo-router';
+import React, {useState} from 'react';
 
-import { YStack, Text } from 'tamagui';
-import { Title, Button, Container, Input, ButtonText } from '~/tamagui.config';
+import {YStack, Text} from 'tamagui';
+import {Title, Button, Container, Input, ButtonText} from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
-const url = 'http://192.168.1.186:5000';
+import ip from '../constants.json';
+
+const url = ip.ip;
+const port = ip.port;
 const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [showWrongPasswordText, setShowWrongPasswordText] = useState(false);
 
     async function requestLocation() {
-        let { status } = await Location.requestForegroundPermissionsAsync();
+        let {status} = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
             setError('Adgang til placering er nægtet');
             return;
         }
     }
+
     async function login() {
         requestLocation();
         try {
@@ -33,7 +37,7 @@ const LoginPage = () => {
                     longitude: 0,
                 }),
             };
-            await fetch(url +'/admin/bus', options).then((response) => {
+            await fetch('http://' + url + ':' + port + '/admin/bus', options).then((response) => {
                 if (response.status === 400) {
                     setShowWrongPasswordText(true);
                 } else {
@@ -48,9 +52,10 @@ const LoginPage = () => {
             return;
         }
     }
+
     return (
         <Container>
-            <Stack.Screen options={{ headerShown: false }} />
+            <Stack.Screen options={{headerShown: false}}/>
             <YStack>
                 <Title>Login</Title>
                 <Input
@@ -61,7 +66,7 @@ const LoginPage = () => {
                     onChangeText={(text) => setPassword(text)}
                 />
                 {showWrongPasswordText && (
-                    <Text style={{ color: 'red' }}>Password does not match any route</Text>
+                    <Text style={{color: 'red'}}>Password does not match any route</Text>
                 )}
                 <Button onPress={login}>
                     <ButtonText>Start Driving</ButtonText>

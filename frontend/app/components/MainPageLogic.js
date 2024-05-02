@@ -1,8 +1,7 @@
 import {Link, router, Stack} from 'expo-router';
 import React, {useEffect, useState} from 'react';
-import {Theme, YStack} from 'tamagui';
+import {Theme, YStack, AlertDialog, XStack, Button} from 'tamagui';
 import * as Location from 'expo-location';
-import {Arrows} from '../components/Arrows.js';
 
 import {
     Container,
@@ -11,8 +10,11 @@ import {
     LogOutButtonContainer,
 } from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ip from '../constants.json';
+import LogOut from "./LogOut";
 
-const url = 'http://192.168.1.186:5000';
+const url = ip.ip;
+const port = ip.port;
 
 async function getLocation() {
     let currentLocation = await Location.getCurrentPositionAsync();
@@ -38,7 +40,7 @@ async function sendLocation() {
                 longitude: JSON.parse(location.coords.longitude),
             }),
         };
-        await fetch(url + '/admin/bus/location', options).then((response) => {
+        await fetch('http://' + url + ':' + port + '/admin/bus/location', options).then((response) => {
             if (response.status === 400) {
                 console.log(response.status);
             }
@@ -61,33 +63,6 @@ const MainPageLogic = () => {
         fetchBusId();
     }, []);
 
-    async function logOut() {
-        const BusId = await AsyncStorage.getItem('bus-id');
-        try {
-            const options = {
-                method: 'Delete',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'access-control-allow-origin': '*',
-                },
-                body: JSON.stringify({
-                    busId: JSON.parse(BusId),
-                }),
-            };
-            await fetch(url + '/admin/bus/delete', options).then((response) => {
-                if (response.status === 400) {
-                    console.log(response.status);
-                } else {
-                    router.replace('/pages/LoginPage');
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            return;
-        }
-    }
-
     console.log(busId);
 
     return (
@@ -96,9 +71,7 @@ const MainPageLogic = () => {
                 <Stack.Screen options={{headerShown: false}}/>
                 <YStack>
                     <LogOutButtonContainer>
-                        <LogOutButton onPress={logOut}>
-                            <ButtonText>Log out</ButtonText>
-                        </LogOutButton>
+                        <LogOut/>
                     </LogOutButtonContainer>
                 </YStack>
             </Container>
