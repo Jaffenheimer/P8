@@ -32,10 +32,10 @@ def CombinedTest():
                 data_random, data_schedule, data_greedy)
 
     PlotAverageWaitTimeMultiple("CombinedPeek", ("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO),
-                                ("TRPO", data_TRPO), ("A2C", data_A2C))
+                                ("TRPO", data_TRPO), ("A2C", data_A2C), ("Schedule", data_schedule))
 
     PlotAveragePeopleAtBusstopsMultiple("CombinedPeek", ("Random", data_random), ("Greedy", data_greedy), ("PPO", data_PPO), ("Recurrent PPO", data_recurrent_PPO),
-                                        ("TRPO", data_TRPO), ("A2C", data_A2C))
+                                        ("TRPO", data_TRPO), ("A2C", data_A2C), ("Schedule", data_schedule))
 
 
 if __name__ == "__main__":

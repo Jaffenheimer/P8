@@ -10,12 +10,25 @@ from Helper.PlotDiagram import PlotBoth
 from Helper.TOCSV import TOCSV
 import gymnasium as gym
 
+np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
+
+
+def make_env():
+    env = SumoEnv()
+    return env
+
 
 def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
 
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=N_ENVS)
+    #env = make_vec_env(SumoEnv, n_envs=N_ENVS)
+
+    # Multi core
+    env = SubprocVecEnv([make_env for _ in range(N_ENVS)])
+
+    # Single core / Multi Threads
+    # env = DummyVecEnv([make_env for _ in range(N_ENVS)])
 
     #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
     model_params = {"policy": policy, "env": env,

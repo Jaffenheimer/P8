@@ -7,16 +7,28 @@ from sb3_contrib import TRPO, RecurrentPPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
 from Constants import TOTAL_TIMESTEPS, MAX_STEPS, N_ENVS, UPDATEPOLICY
+from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv
 from Helper.PlotDiagram import PlotBoth
 from Helper.TOCSV import TOCSV
 
 np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
+
+def make_env(): 
+    env = SumoEnv()
+    return env
 
 def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
 
     # Importing the environment
     env = make_vec_env(SumoEnv, n_envs=N_ENVS)
+
+    # Multi core 
+    #env = SubprocVecEnv([make_env for _ in range(N_ENVS)])
+
+    # Single core / Multi Threads 
+    #env = DummyVecEnv([make_env for _ in range(N_ENVS)])
+
 
     #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
     model_params = {"policy": policy, "env": env, "verbose": 0, "n_steps": UPDATEPOLICY}

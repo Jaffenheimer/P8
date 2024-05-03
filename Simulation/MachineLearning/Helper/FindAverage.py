@@ -34,9 +34,15 @@ def FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO, data_random, 
     os.makedirs(directory, exist_ok=True)
     file_path = os.path.join(directory, "AverageData.csv")
 
+
+    modelAverage = (average_wait_time_PPO+average_wait_time_recurrent_PPO+average_wait_time_A2C+average_wait_time_TRPO)/4
+    print(f"Average waittime for all models: {modelAverage:.2f}\n")
+
+
     # Print the result to csv
     with open(file_path, 'w') as f:
         f.write("Model,Average Wait Time,Average People at Bus Stops\n")
+        f.write(f"Average waittime for all models: {modelAverage:.2f}")
         f.write(f"PPO,{average_wait_time_PPO:.2f},{average_people_PPO:.2f}\n")
         f.write(
             f"Recurrent PPO,{average_wait_time_recurrent_PPO:.2f},{average_people_recurrent_PPO:.2f}\n")
@@ -49,3 +55,7 @@ def FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO, data_random, 
             f"Schedule,{average_wait_time_schedule:.2f},{average_people_schedule:.2f}\n")
         f.write(
             f"Greedy,{average_wait_time_greedy:.2f},{average_people_greedy:.2f}\n")
+
+
+
+
