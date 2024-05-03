@@ -165,19 +165,6 @@ class SumoEnv(gym.Env):
 
         new_state[0] = self.getAverageWaitTime(persons)
 
-        # finds the average waiting time
-        # for i in range(0, len(persons)):
-        #     personWaitingTime = traci.person.getWaitingTime(persons[i])
-        #     personsWaitingTimeList.append(personWaitingTime)
-
-        # persons_waiting_num = len(personsWaitingTimeList)
-
-        # if (persons_waiting_num != 0) and not np.isnan(persons_waiting_num) and not np.isnan(personsWaitingTimeList).any():
-        #     new_state[0] = round(
-        #         sum(personsWaitingTimeList) / persons_waiting_num, 3)
-        # else:
-        #     new_state[0] = 0.0
-
         # find average people at bus stops
         new_state[1] = self.get_average_people_at_bus_stops()
 

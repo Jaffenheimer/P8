@@ -22,10 +22,10 @@ def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
 
     # Importing the environment
-    #env = make_vec_env(SumoEnv, n_envs=N_ENVS)
+    env = make_vec_env(SumoEnv, n_envs=N_ENVS)
 
     # Multi core
-    env = SubprocVecEnv([make_env for _ in range(N_ENVS)])
+    #env = SubprocVecEnv([make_env for _ in range(N_ENVS)])
 
     # Single core / Multi Threads
     # env = DummyVecEnv([make_env for _ in range(N_ENVS)])
