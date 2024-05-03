@@ -18,6 +18,7 @@ class SumoEnv(gym.Env):
         self.close()
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(Constants.SEED), "--no-warnings"])
+        
         ## VARIABLES ##
         self.bus_num = 10
         self.current_step = 0
