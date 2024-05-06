@@ -30,7 +30,7 @@ public interface IBusStopRepository
     /// <returns></returns>
     public Task<bool> UpsertBusStop(Guid id, decimal latitude, decimal longitude);
 
-    public Task<BusStop> UpdatePeopleCount(Guid id, int peopleCount);
+    public Task<bool> UpdatePeopleCount(Guid id, int peopleCount);
     public Task<List<BusStop>> GetAllBusStops();
     public Task<BusStop> GetBusStopFromId(Guid id);
 }

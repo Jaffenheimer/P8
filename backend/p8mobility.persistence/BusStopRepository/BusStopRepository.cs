@@ -36,13 +36,12 @@ public class BusStopRepository : IBusStopRepository
         return await Connection.QueryFirstOrDefaultAsync<BusStop>(query, parameters);
     }
 
-    public async Task<BusStop> UpdatePeopleCount(Guid id, int peopleCount)
+    public async Task<bool> UpdatePeopleCount(Guid id, int peopleCount)
     {
         var query = $@"
             UPDATE {TableName}
             SET PeopleCount = @PeopleCount, UpdatedAt = @UpdatedAt
-            WHERE Id = @Id
-            RETURNING *";
+            WHERE Id = @Id";
 
         var parameters = new
         {
@@ -50,7 +49,8 @@ public class BusStopRepository : IBusStopRepository
             PeopleCount = peopleCount,
             UpdatedAt = DateTime.UtcNow
         };
-        return await Connection.QueryFirstOrDefaultAsync<BusStop>(query, parameters);
+        return await Connection.ExecuteAsync(query, parameters) > 0;
+       
     }
 
     public async Task<bool> UpsertBusStop(Guid id, decimal latitude, decimal longitude)
