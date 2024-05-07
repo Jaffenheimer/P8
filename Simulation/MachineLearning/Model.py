@@ -23,7 +23,7 @@ def run(modelType,name,policy):
     # Importing the environment
     #env = make_vec_env(SumoEnv, n_envs=N_ENVS)
 
-    # Multi core 
+    # Multi core    
     env = SubprocVecEnv([make_env for _ in range(N_ENVS)])
 
     # Single core / Multi Threads 
