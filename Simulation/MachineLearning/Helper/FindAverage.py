@@ -42,7 +42,7 @@ def FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO, data_random, 
     # Print the result to csv
     with open(file_path, 'w') as f:
         f.write("Model,Average Wait Time,Average People at Bus Stops\n")
-        f.write(f"Average waittime for all models: {modelAverage:.2f}")
+        f.write(f"Average waittime for all models: {modelAverage:.2f}\n")
         f.write(f"PPO,{average_wait_time_PPO:.2f},{average_people_PPO:.2f}\n")
         f.write(
             f"Recurrent PPO,{average_wait_time_recurrent_PPO:.2f},{average_people_recurrent_PPO:.2f}\n")
@@ -56,6 +56,20 @@ def FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO, data_random, 
         f.write(
             f"Greedy,{average_wait_time_greedy:.2f},{average_people_greedy:.2f}\n")
 
+
+
+def FindAverage1(data): 
+    np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
+
+    average_wait_time = np.average(data['AverageWaitTime'])
+
+    directory = "./Simulation/MachineLearning/Output"
+    os.makedirs(directory, exist_ok=True)
+    file_path = os.path.join(directory, "AverageDataDATA.csv")
+
+    with open(file_path, 'w') as f:
+        f.write("Model,Average Wait Time\n")
+        f.write(f"Average waittime,{average_wait_time:.2f}\n")
 
 
 

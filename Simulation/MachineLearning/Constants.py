@@ -2,8 +2,8 @@ import Helper.SeedGenerator as sg
 import multiprocessing
 
 # TOTAL_TIMESTEPS / (MAX_STEPS * N_ENVS) must be an integer
-TOTAL_TIMESTEPS = 20000
-MAX_STEPS = 10000
+TOTAL_TIMESTEPS = 1000000
+MAX_STEPS = 50000
 N_ENVS = 4 # MAX (amout of core - 1)
 
 RANDOM_MAX_STEPS = MAX_STEPS

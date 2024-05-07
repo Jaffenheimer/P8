@@ -4,8 +4,9 @@ import traci
 import math
 from os import path
 from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, INPUTFILE
-import Constants
-    
+import Helper.SeedGenerator as sg
+import Constants    
+import random
 
 class SumoEnv(gym.Env):
     def __init__(self):
@@ -16,6 +17,8 @@ class SumoEnv(gym.Env):
         self.path = path.abspath(
             f"../P8-Mobility/Simulation/SUMO/algorithm/{INPUTFILE}")
         self.close()
+
+        print(f"Staring SUMO with seed: {Constants.SEED}")
 
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(Constants.SEED), "--no-warnings"])
@@ -67,6 +70,9 @@ class SumoEnv(gym.Env):
         self.wait_time = 0
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
+
+        print(f"Restating SUMO with seed: {Constants.SEED}")
+
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(Constants.SEED), "--no-warnings"])
         return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
@@ -132,6 +138,8 @@ class SumoEnv(gym.Env):
             self.current_step += 1
             done = False
             if (self.current_step >= self.max_steps-1):
+                print(f"Max steps reached: {self.current_step}")
+                Constants.SEED = random.randint(0, 100000)
                 done = True
 
             truncated = False
@@ -164,6 +172,7 @@ class SumoEnv(gym.Env):
         persons = traci.person.getIDList()
 
         new_state[0] = self.getAverageWaitTime(persons)
+
 
         # find average people at bus stops
         new_state[1] = self.get_average_people_at_bus_stops()
@@ -241,6 +250,7 @@ class SumoEnv(gym.Env):
         # finds average wait time
         length = len(personsWaitingTimeList)
         averageWaitTime = sum(personsWaitingTimeList)/length if length != 0 else 0
+
         
         return averageWaitTime
 

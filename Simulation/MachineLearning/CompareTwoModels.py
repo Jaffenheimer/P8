@@ -10,48 +10,28 @@ from Constants import TOTAL_TIMESTEPS, MAX_STEPS, N_ENVS, UPDATEPOLICY
 from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv
 from Helper.PlotDiagram import PlotBoth, PlotAverageWaitTime
 from Helper.TOCSV import TOCSV
+from Helper.FindAverage import FindAverage1
 
 np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
 
-def make_env(): 
+
+def make_env():
     env = SumoEnv()
     return env
 
-def run(modelType,name,policy):
+
+def run(modelType, name, policy):
     print(f"====================== <{name} Init> ======================")
 
     # Importing the environment
-    #env = make_vec_env(SumoEnv, n_envs=N_ENVS)
-
-    # Multi core 
-    env = SubprocVecEnv([make_env for _ in range(N_ENVS)])
-
-    # Single core / Multi Threads 
-    #env = DummyVecEnv([make_env for _ in range(N_ENVS)])
-
-
-    # #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
-    model_params = {"policy": policy, "env": env, "verbose": 0, "n_steps": UPDATEPOLICY}
-    # if modelType != A2C:
-    #     model_params["batch_size"] = 80
-    
-    # # Create the agent
-    model = modelType(**model_params)
-
-    # print(f"====================== <{name} Training> ======================")
-
-    # # Train the agent
-    model.learn(total_timesteps=TOTAL_TIMESTEPS, progress_bar=True)
-
-    # # Save the agent
-    model.save(f"./Simulation/MachineLearning/Output/{name}")
-
-    # del model  # remove to demonstrate saving and loading
+    env = make_vec_env(SumoEnv)
 
     # Load the trained agent
-    #model = model.load(f"./Simulation/MachineLearning/PPO.zip")
+    # model = A2C.load("./Simulation/MachineLearning/PPO.zip")
+    model = modelType.load(f"./Simulation/MachineLearning/Output/{name}")
 
-    print(f"====================== <{name} Traning Completed> ======================")
+    print(
+        f"====================== <{name} Traning Completed> ======================")
 
     # Test the agent
     obs = env.reset()
@@ -63,11 +43,11 @@ def run(modelType,name,policy):
     episode_starts = np.ones((N_ENVS,), dtype=bool)
     lstm_states = None
 
-
     while not done.all():
         if modelType == RecurrentPPO:
-            action, lstm_states = model.predict(obs, state=lstm_states, episode_start=episode_starts)
-            
+            action, lstm_states = model.predict(
+                obs, state=lstm_states, episode_start=episode_starts)
+
         else:
             action, _ = model.predict(obs)
 
@@ -77,7 +57,7 @@ def run(modelType,name,policy):
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
 
         episode_starts = done
-        
+
         step += 1
 
         if done.all():
@@ -85,10 +65,11 @@ def run(modelType,name,policy):
 
     # Save the data to a CSV file
     TOCSV(data, name, "Combined")
-    
+
     print(f"====================== <{name} Done> ======================")
 
     return data[:-1]
+
 
 if __name__ == "__main__":
     data = run(PPO, "PPO", "MlpPolicy")
@@ -96,5 +77,5 @@ if __name__ == "__main__":
     # data = run(A2C, "A2C", "MlpPolicy")
     # data = run(TRPO, "TRPO", "MlpPolicy")
     # PlotBoth(data)
+    FindAverage1(data)
     PlotAverageWaitTime(data)
-
