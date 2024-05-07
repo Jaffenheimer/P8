@@ -135,11 +135,11 @@ public class AdminController : ControllerBase
     /// <param name="busStopId"></param>
     /// <returns>Ok with confirmation of what bus stop is updated with how many people</returns>
     [HttpPost("people/amount")]
-    public async Task<IActionResult> UpdatePeopleAmount(int amount, Guid busStopId)
+    public async Task<IActionResult> UpdatePeopleAmount([FromBody] UpdatePeopleCountRequest req)
     {
-        await _busStopRepository.UpdatePeopleCount(busStopId, amount);
-        Program._stateController.UpdatePeopleCount(busStopId, amount);
-        return Ok($"Successfully updated people amount on bus stop with id: {busStopId} to {amount}");
+        await _busStopRepository.UpdatePeopleCount(req.Id, req.PeopleCount);
+        Program._stateController.UpdatePeopleCount(req.Id, req.PeopleCount);
+        return Ok($"Successfully updated people amount on bus stop with id: {req.Id} to {req.PeopleCount}");
     }
 
     [HttpPost("Pusher/Test")]

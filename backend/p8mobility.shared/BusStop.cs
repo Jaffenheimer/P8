@@ -9,6 +9,8 @@ public class BusStop
     public decimal Longitude { get; set; }
     public int PeopleCount { get; set; }
 
+    public DateTime UpdatedAt { get; set; }
+
     public BusStop()
     {
     }
