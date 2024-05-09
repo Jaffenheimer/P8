@@ -32,7 +32,7 @@ def run(modelType, name, policy):
     # env = DummyVecEnv([make_env for _ in range(N_ENVS)])
 
     # #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
-    model_params = {"policy": policy, "env": env,
+    model_params = {"env": env,
                     "verbose": 0, "n_steps": UPDATEPOLICY}
     # if modelType != A2C:
     #     model_params["batch_size"] = 80
@@ -41,9 +41,8 @@ def run(modelType, name, policy):
     print(f"====================== <{name} Loading> ======================")
     model = modelType.load(f"./Simulation/MachineLearning/Output/{name}", **model_params)
 
-    #model.set_env(env)
-    print(f"====================== <{name} Training> ======================")
 
+    print(f"====================== <{name} Training> ======================")
     model.learn(total_timesteps=TOTAL_TIMESTEPS, progress_bar=True)
 
 
@@ -52,8 +51,7 @@ def run(modelType, name, policy):
 
 
 if __name__ == "__main__":
-    data = run(PPO, "PPO", "MlpPolicy")
-    # data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
-    # data = run(A2C, "A2C", "MlpPolicy")
-    # data = run(TRPO, "TRPO", "MlpPolicy")
-    # PlotBoth(data, "PPO")
+    data = run(PPO, "PPO")
+    # data = run(RecurrentPPO, "Recurrent PPO")
+    # data = run(A2C, "A2C")
+    # data = run(TRPO, "TRPO")
