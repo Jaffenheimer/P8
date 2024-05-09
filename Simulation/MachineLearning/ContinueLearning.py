@@ -33,7 +33,7 @@ def run(modelType, name, policy):
 
     # #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
     model_params = {"env": env,
-                    "verbose": 0, "n_steps": UPDATEPOLICY}
+                    "verbose": 0}
     # if modelType != A2C:
     #     model_params["batch_size"] = 80
 
