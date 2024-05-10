@@ -19,7 +19,7 @@ class Detector:
         self.cfg.DETECTIONS_PER_IMAGE = 1000
         self.cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml"))
         self.cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")
-        self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
+        self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = self.THRESHOLD
         self.cfg.MODEL.DEVICE = "cpu" # or cpu
         
         self.predictor = DefaultPredictor(self.cfg)
