@@ -12,8 +12,8 @@ import cv2
 import numpy as np
 from datetime import datetime
 
-class Detector:
-    def __init__(self):
+class Detector():
+    def __init__(self, outputDir):
         self.cfg = get_cfg()
         self.THRESHOLD = 0.25
         self.cfg.DETECTIONS_PER_IMAGE = 1000
@@ -21,11 +21,13 @@ class Detector:
         self.cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")
         self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = self.THRESHOLD
         self.cfg.MODEL.DEVICE = "cpu" # or cpu
+        self.outputDir = outputDir
         
         self.predictor = DefaultPredictor(self.cfg)
 
-    def imageDetection(self, imagePath, outputDir):
+    def imageDetection(self, imagePath):
         image = cv2.imread(imagePath)
+        outputDir = self.outputDir
 
         predictions = self.predictor(image)
 
@@ -38,7 +40,7 @@ class Detector:
         
 
         output = viz.draw_instance_predictions(overThreshold.to("cpu"))
-        output.save(f"{outputDir}/{os.path.split(imagePath)[1]}")
+        output.save(f"{outputDir}/post_proc.jpg")
 
         no_of_people = len(overThreshold)
         return no_of_people
@@ -47,7 +49,7 @@ class Detector:
     def CaptureVideo(self, vs):
         stream = cv2.VideoCapture(vs)
         ret, frame = stream.read()
-        path = "images/snapshots/img_1.jpg"
+        path = f"{self.outputDir}/clean_img.jpg"
         if frame is not None:
                 cv2.imwrite(path, frame)
         stream.release()
