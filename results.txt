@@ -1,0 +1,10 @@
+File: images\people_detection_photos\High_21-inf\21.jpg | PeopleCount: 16
+File: images\people_detection_photos\High_21-inf\27.jpg | PeopleCount: 20
+File: images\people_detection_photos\High_21-inf\28.jpg | PeopleCount: 20
+File: images\people_detection_photos\High_21-inf\43.jpg | PeopleCount: 13
+File: images\people_detection_photos\High_21-inf\61.jpg | PeopleCount: 17
+File: images\people_detection_photos\Low_1-20\10.jpg | PeopleCount: 12
+File: images\people_detection_photos\Low_1-20\12.jpg | PeopleCount: 9
+File: images\people_detection_photos\Low_1-20\15.jpg | PeopleCount: 11
+File: images\people_detection_photos\Low_1-20\15_2.jpg | PeopleCount: 15
+File: images\people_detection_photos\Low_1-20\18.jpg | PeopleCount: 15

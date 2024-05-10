@@ -10,6 +10,6 @@ while True:
     img = detector.CaptureVideo(0)
     no_of_people = detector.imageDetection(img)
     body = {"peopleCount": no_of_people, "id": id}
-    res = client.PostPeopleCount(request=body)
-    print(res)
+    #res = client.PostPeopleCount(request=body) #Requires backend to run
+    open
     time.sleep(5)
