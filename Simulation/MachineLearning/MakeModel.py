@@ -39,6 +39,7 @@ def run(modelType, name, policy):
 
     # # Create the agent
     model = modelType(**model_params)
+    model = modelType.load(f"./Simulation/MachineLearning/Output/A2C", env=env)
 
     print(f"====================== <{name} Training> ======================")
 
@@ -50,7 +51,7 @@ def run(modelType, name, policy):
  
 
 if __name__ == "__main__":
-    data = run(PPO, "PPO", "MlpPolicy")
+    # data = run(PPO, "PPO", "MlpPolicy")
     # data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
-    # data = run(A2C, "A2C", "MlpPolicy")
+    data = run(A2C, "A2C_both", "MlpPolicy")
     # data = run(TRPO, "TRPO", "MlpPolicy")

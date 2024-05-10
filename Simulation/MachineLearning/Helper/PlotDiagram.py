@@ -80,7 +80,7 @@ def PlotCombinedAverageWaitTime(Random, greedy_fast, PPO, TRPO, A2C, Schedule):
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
 
 
-def PlotAverageWaitTimeMultiple(name, *data):
+def PlotAverageWaitTimeMultiple(*data):
     plt.figure(figsize=(15, 6))
 
     for index, i in enumerate(data):
@@ -93,11 +93,11 @@ def PlotAverageWaitTimeMultiple(name, *data):
             
             plt.plot(x, pl_data ,label=i[0], color=colors(index % len(data)))
             plt.title(
-                f"Average Waiting Time Over Testing (every {step_factor} steps) [{name}]")
+                f"Average Waiting Time (low) (every {step_factor} steps)")
         else:
             plt.plot(i[1]['AverageWaitTime'], label=i[0], color=colors(index % len(data)))
             plt.title(
-                f"Average Waiting Time Over Testing (every step) [{name}]")
+                f"Average Waiting Time (low) (every step)")
 
 
     plt.xlabel("Steps")
@@ -108,7 +108,7 @@ def PlotAverageWaitTimeMultiple(name, *data):
     if not path.isdir("./Simulation/MachineLearning/Output"):
         mkdir("./Simulation/MachineLearning/Output")
     plt.savefig(
-        f'./Simulation/MachineLearning/Output/CombinedAverageWaitingTime{name}.png', dpi=1200)
+        f'./Simulation/MachineLearning/Output/CombinedAverageWaitingTime.png', dpi=1200)
     #plt.show()
 
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
@@ -131,7 +131,7 @@ def PlotAveragePeopleAtBusstopsMultiple(name, *data):
             plt.plot(i[1]['AveragePeopleAtBusStops'],
                      label=i[0], color=colors(index % len(data)))
             plt.title(
-                f"Average People at Busstops Over Testing (every step) [{name}]")
+                f"Average People at Busstops (every step) [{name}]")
 
     plt.xlabel("Steps")
     plt.ylabel("Average People at Busstops")

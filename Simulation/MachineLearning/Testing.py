@@ -5,6 +5,7 @@ from SumoEnvironment import SumoEnv
 from Helper.TOCSV import TOCSV
 from Constants import N_ENVS, MAX_STEPS
 from Helper.PlotDiagram import PlotAverageWaitTimeMultiple
+from Helper.FindAverage import findAverageWaitTime
 
 import numpy as np
 from tqdm import tqdm
@@ -22,7 +23,7 @@ def Testing(modelType, name, runs):
         
         print(f"====================== <{name} Testing, run: {run}> ======================")
         
-        model = PPO.load(f"./Simulation/MachineLearning/Output/{name}")
+        model = PPO.load(f"./Simulation/MachineLearning/input/{name}")
         
         env = make_vec_env(SumoEnv, n_envs=1)
 
@@ -67,18 +68,20 @@ def Testing(modelType, name, runs):
     data['AveragePeopleAtBusStops'] = data['AveragePeopleAtBusStops']/runs
 
     # Save the data to a CSV file
-    TOCSV(data, name, "BothTesting")
+    TOCSV(data, name)
 
     return data[:-1]
 
 
 if __name__ == "__main__":
-    ppo_data = Testing(PPO, "PPOBoth", 10)
-    recurrentppo_data = Testing(RecurrentPPO, "Recurrent_PPOBoth", 10)
-    trpo_data = Testing(TRPO, "TRPO", 10)
+    ppo_low = Testing(PPO, "PPO_low", 5)
+    ppo_high = Testing(PPO, "PPO_high", 5)
+    ppo_both = Testing(PPO, "PPO_both", 5)
 
 
     PlotAverageWaitTimeMultiple(
-        (ppo_data, "PPOBoth"), (recurrentppo_data, "Recurrent_PPOBoth"), (trpo_data, "TRPO"))
+        ("PPO_low",ppo_low), ("PPO_high",ppo_high), ("PPO_both",ppo_both))
+    
+    findAverageWaitTime(("PPO_low",ppo_low), ("PPO_high",ppo_high), ("PPO_both",ppo_both))
     
 
