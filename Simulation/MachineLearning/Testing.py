@@ -59,15 +59,12 @@ def Testing(modelType, name, runs):
                     pbar.close()
 
                 if done.all():
-                    print(f"Data before {data}")
                     env.close()
 
             del model
 
     data['AverageWaitTime'] = data['AverageWaitTime']/runs
     data['AveragePeopleAtBusStops'] = data['AveragePeopleAtBusStops']/runs
-
-    print(f"Data after deviding by runs {data}")
 
     # Save the data to a CSV file
     TOCSV(data, name, "BothTesting")
