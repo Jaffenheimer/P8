@@ -1,5 +1,6 @@
 import Helper.SeedGenerator as sg
 import multiprocessing
+from random import randint
 
 # TOTAL_TIMESTEPS / (MAX_STEPS * N_ENVS) must be an integer
 TOTAL_TIMESTEPS = 1000000
@@ -16,6 +17,7 @@ SUMO_INIT_STEPS = 200
 
 SEED = sg.SEED
 #SEED = 12345
+SEEDS = [18467,0, 66312,0, 28134,0, 17258,0, 50199,0,0,0]
 
 REWARD_THRESHOLD = 500
 
@@ -26,6 +28,6 @@ TUNING_STEPS = 1000
 TUNING_TOTAL_TIMESTEPS = 4000
 TUNING_TRIALS = 100
 
-INPUTFILE = "medium_person_medium_traffic.sumocfg"
+INPUTFILE = "low_person_low_traffic.sumocfg"
 
 NUM_CORES = multiprocessing.cpu_count()

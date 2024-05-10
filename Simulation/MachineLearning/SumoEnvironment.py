@@ -10,6 +10,7 @@ import random
 
 class SumoEnv(gym.Env):
     def __init__(self):
+        self.seeds = Constants.SEEDS[:]
         try:
             traci.close()
         except:
@@ -18,10 +19,10 @@ class SumoEnv(gym.Env):
             f"../P8-Mobility/Simulation/SUMO/algorithm/{INPUTFILE}")
         self.close()
 
-        print(f"Staring SUMO with seed: {Constants.SEED}")
+        print(f"Staring SUMO with seed: {self.seeds[0]}")
 
         traci.start(
-            ["sumo", "-c", self.path, "--seed", str(Constants.SEED), "--no-warnings"])
+            ["sumo", "-c", self.path, "--seed", str(self.seeds[0]), "--no-warnings"])
         
         ## VARIABLES ##
         self.bus_num = 10
@@ -71,10 +72,10 @@ class SumoEnv(gym.Env):
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
 
-        print(f"Restating SUMO with seed: {Constants.SEED}")
+        print(f"Restating SUMO with seed: {self.seeds[0]}")
 
         traci.start(
-            ["sumo", "-c", self.path, "--seed", str(Constants.SEED), "--no-warnings"])
+            ["sumo", "-c", self.path, "--seed", str(self.seeds.pop(0)), "--no-warnings"])
         return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
 
     def step(self, action):

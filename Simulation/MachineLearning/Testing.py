@@ -19,13 +19,13 @@ def Testing(modelType, name, runs):
     dtype = [('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
     data = np.zeros(MAX_STEPS, dtype=dtype)
     
+    env = make_vec_env(SumoEnv, n_envs=1)
     for run in range(runs): 
         
         print(f"====================== <{name} Testing, run: {run}> ======================")
         
         model = PPO.load(f"./Simulation/MachineLearning/input/{name}")
         
-        env = make_vec_env(SumoEnv, n_envs=1)
 
         # Test the model
         obs = env.reset()
