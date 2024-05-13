@@ -28,6 +28,6 @@ TUNING_STEPS = 1000
 TUNING_TOTAL_TIMESTEPS = 4000
 TUNING_TRIALS = 100
 
-INPUTFILE = "medium_person_medium_traffic.sumocfg"
+INPUTFILE = "low_person_low_traffic.sumocfg"
 
 NUM_CORES = multiprocessing.cpu_count()

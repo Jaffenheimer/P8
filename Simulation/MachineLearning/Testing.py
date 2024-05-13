@@ -24,7 +24,7 @@ def Testing(modelType, name, runs):
         
         print(f"====================== <{name} Testing, run: {run}> ======================")
         
-        model = TRPO.load(f"./Simulation/MachineLearning/input/{name}")
+        model = modelType.load(f"./Simulation/MachineLearning/input/{name}")
         
 
         # Test the model
@@ -74,14 +74,14 @@ def Testing(modelType, name, runs):
 
 
 if __name__ == "__main__":
-    TRPO_low = Testing(TRPO, "TRPO_low", 5)
-    TRPO_high = Testing(TRPO, "TRPO_high", 5)
-    TRPO_both = Testing(TRPO, "TRPO_both", 5)
+    A2C_low = Testing(A2C, "A2C_low", 5)
+    A2C_high = Testing(A2C, "A2C_high", 5)
+    A2C_both = Testing(A2C, "A2C_both", 5)
 
 
     PlotAverageWaitTimeMultiple(
-        ("TRPO_low",TRPO_low), ("TRPO_high",TRPO_high), ("TRPO_both",TRPO_both))
+        ("A2C_low",A2C_low), ("A2C_high",A2C_high), ("A2C_both",A2C_both))
     
-    findAverageWaitTime(("TRPO_low",TRPO_low), ("TRPO_high",TRPO_high), ("TRPO_both",TRPO_both))
+    findAverageWaitTime(("A2C_low",A2C_low), ("A2C_high",A2C_high), ("A2C_both",A2C_both))
     
 
