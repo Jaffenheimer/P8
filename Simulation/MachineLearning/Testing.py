@@ -24,7 +24,7 @@ def Testing(modelType, name, runs):
         
         print(f"====================== <{name} Testing, run: {run}> ======================")
         
-        model = TRPO.load(f"./Simulation/MachineLearning/input/{name}")
+        model = RecurrentPPO.load(f"./Simulation/MachineLearning/input/{name}")
         
 
         # Test the model
@@ -41,7 +41,6 @@ def Testing(modelType, name, runs):
                 if modelType == RecurrentPPO:
                     action, lstm_states = model.predict(
                     obs, state=lstm_states, episode_start=episode_starts)
-
                 else:
                     action, _ = model.predict(obs)
 
@@ -63,6 +62,8 @@ def Testing(modelType, name, runs):
                     env.close()
 
             del model
+            lstm_states = None
+            episode_starts = np.ones((1,), dtype=bool)
 
     data['AverageWaitTime'] = data['AverageWaitTime']/runs
     data['AveragePeopleAtBusStops'] = data['AveragePeopleAtBusStops']/runs
@@ -74,14 +75,15 @@ def Testing(modelType, name, runs):
 
 
 if __name__ == "__main__":
-    TRPO_low = Testing(TRPO, "TRPO_low", 5)
-    TRPO_high = Testing(TRPO, "TRPO_high", 5)
-    TRPO_both = Testing(TRPO, "TRPO_both", 5)
+    RecurrentPPO_low = Testing(RecurrentPPO, "RecurrentPPO_low", 1)
+    RecurrentPPO_high = Testing(RecurrentPPO, "RecurrentPPO_high", 1)
+    RecurrentPPO_both = Testing(RecurrentPPO, "RecurrentPPO_both", 1)
 
 
     PlotAverageWaitTimeMultiple(
-        ("TRPO_low",TRPO_low), ("TRPO_high",TRPO_high), ("TRPO_both",TRPO_both))
+        ("RecurrentPPO_low", RecurrentPPO_low), ("RecurrentPPO_high", RecurrentPPO_high), ("RecurrentPPO_both", RecurrentPPO_both))
     
-    findAverageWaitTime(("TRPO_low",TRPO_low), ("TRPO_high",TRPO_high), ("TRPO_both",TRPO_both))
+    findAverageWaitTime(("RecurrentPPO_low", RecurrentPPO_low),
+                        ("RecurrentPPO_high", RecurrentPPO_high), ("RecurrentPPO_both", RecurrentPPO_both))
     
 
