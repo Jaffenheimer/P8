@@ -25,7 +25,6 @@ def Testing(modelType, name, runs):
         print(f"====================== <{name} Testing, run: {run}> ======================")
         
         model = RecurrentPPO.load(f"./Simulation/MachineLearning/input/{name}")
-        
 
         # Test the model
         obs = env.reset()
@@ -75,9 +74,9 @@ def Testing(modelType, name, runs):
 
 
 if __name__ == "__main__":
-    RecurrentPPO_low = Testing(RecurrentPPO, "RecurrentPPO_low", 1)
-    RecurrentPPO_high = Testing(RecurrentPPO, "RecurrentPPO_high", 1)
-    RecurrentPPO_both = Testing(RecurrentPPO, "RecurrentPPO_both", 1)
+    RecurrentPPO_low = Testing(RecurrentPPO, "RecurrentPPO_low", 5)
+    RecurrentPPO_high = Testing(RecurrentPPO, "RecurrentPPO_high", 5)
+    RecurrentPPO_both = Testing(RecurrentPPO, "RecurrentPPO_both", 5)
 
 
     PlotAverageWaitTimeMultiple(
