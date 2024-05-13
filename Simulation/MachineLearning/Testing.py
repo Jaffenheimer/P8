@@ -41,7 +41,6 @@ def Testing(modelType, name, runs):
                 if modelType == RecurrentPPO:
                     action, lstm_states = model.predict(
                     obs, state=lstm_states, episode_start=episode_starts)
-
                 else:
                     action, _ = model.predict(obs)
 
@@ -63,6 +62,8 @@ def Testing(modelType, name, runs):
                     env.close()
 
             del model
+            lstm_states = None
+            episode_starts = np.ones((1,), dtype=bool)
 
     data['AverageWaitTime'] = data['AverageWaitTime']/runs
     data['AveragePeopleAtBusStops'] = data['AveragePeopleAtBusStops']/runs

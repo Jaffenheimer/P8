@@ -93,7 +93,7 @@ def PlotAverageWaitTimeMultiple(*data):
             
             plt.plot(x, pl_data ,label=i[0], color=colors(index % len(data)))
             plt.title(
-                f"Average Waiting Time (low) (every {step_factor} steps)")
+                f"Average Waiting Time (high) (every {step_factor} steps)")
         else:
             plt.plot(i[1]['AverageWaitTime'], label=i[0], color=colors(index % len(data)))
             plt.title(
