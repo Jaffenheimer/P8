@@ -2,7 +2,8 @@ import numpy as np
 from os import path, mkdir
 
 import pandas as pd
-from Constants import GREEDY_MAX_STEPS
+from tqdm import tqdm
+from Constants import GREEDY_MAX_STEPS, MAX_STEPS
 from SumoEnvironment import SumoEnv
 from stable_baselines3.common.env_util import make_vec_env
 from Helper.PlotDiagram import PlotBoth
@@ -44,7 +45,41 @@ def GreedyFastVersion():
 
     return data[:-1]
 
+def GreedyMultiple(runs): 
+    for run in range(runs):
+        print(f"====================== <GreedyFastVersion Testing, run: {run}> ======================")
+
+        env = make_vec_env(SumoEnv, n_envs=1)
+
+        obs = env.reset()
+        step = 0
+        done = np.array([False], dtype='bool')
+
+        with tqdm(total=MAX_STEPS, desc="Greedy Progress") as pbar:
+            while not done.all():
+                action = np.ones((1, 10), dtype='float32')
+                obs, rewards, done, info = env.step(action)
+                data['AverageWaitTime'][step] += obs.item(0)
+                data['AveragePeopleAtBusStops'][step] += obs.item(1)
+                step += 1
+                pbar.update(1)
+
+                if step==MAX_STEPS-1:
+                    pbar.update(1)
+                    pbar.close()
+                    
+                if done.all():
+                    env.close()
+
+    data['AverageWaitTime'] = data['AverageWaitTime']/runs
+    data['AveragePeopleAtBusStops'] = data['AveragePeopleAtBusStops']/runs
+
+    TOCSV(data, f"GreedyFastMultipleRuns{runs}")
+
+    return data[:-1]
+
 
 if __name__ == "__main__":
     data = GreedyFastVersion()
+    dataMul = GreedyMultiple(5)
     PlotBoth(data)

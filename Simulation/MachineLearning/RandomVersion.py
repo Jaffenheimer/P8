@@ -42,6 +42,38 @@ def RandomVersion():
     return data[:-1]
 
 
+def RandomMultiple(runs):
+    for run in range(runs):
+        print(f"====================== <RandomVersion Testing, run: {run}> ======================")
+
+        env = make_vec_env(SumoEnv, n_envs=1)
+
+        obs = env.reset()
+        step = 0
+        done = np.array([False], dtype='bool')
+
+        while not done.all():
+            action = np.random.uniform(-1, 1, (1, 10)).astype('float32')
+            obs, rewards, done, info = env.step(action)
+
+            data['AverageWaitTime'][step] = obs.item(0)
+            data['AveragePeopleAtBusStops'][step] = obs.item(1)
+
+            step += 1
+
+            if done.all():
+                env.close()
+                break
+
+    data['AverageWaitTime'] = data['AverageWaitTime']/runs
+    data['AveragePeopleAtBusStops'] = data['AveragePeopleAtBusStops']/runs
+
+    TOCSV(data, f"RandomMultipleRuns{runs}")
+
+    return data[:-1]
+
+
 if __name__ == "__main__":
     data = RandomVersion()
+    data
     PlotBoth(data)
