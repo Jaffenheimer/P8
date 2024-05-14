@@ -3,7 +3,7 @@ import numpy as np
 import traci
 import math
 from os import path
-from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, INPUTFILE
+from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, INPUTFILE, SEED
 import Helper.SeedGenerator as sg
 import Constants    
 import random
@@ -11,6 +11,7 @@ import random
 class SumoEnv(gym.Env):
     def __init__(self):
         self.seeds = Constants.SEEDS[:]
+        # self.seeds = [SEED,0]
         try:
             traci.close()
         except:
@@ -19,6 +20,7 @@ class SumoEnv(gym.Env):
             f"../P8-Mobility/Simulation/SUMO/algorithm/{INPUTFILE}")
         self.close()
 
+        
         print(f"Staring SUMO with seed: {self.seeds[0]}")
 
         traci.start(
