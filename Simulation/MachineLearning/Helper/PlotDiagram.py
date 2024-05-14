@@ -171,10 +171,7 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
 def plotFromCSV():
     allData = []
     for filePath in glob.glob(path.abspath("Simulation/MachineLearning/Output/csvFiles/*.csv")):
-        # print(file)
         name = Path(filePath).stem
-        with open(filePath, "r") as file:
-            totalLines = file.readlines()
         dtype = [('AverageWaitTime', float)]
         data = np.zeros(MAX_STEPS, dtype=dtype)
         for i,line in enumerate(open(filePath, "r")):
@@ -182,14 +179,11 @@ def plotFromCSV():
                 continue
             if i == MAX_STEPS:
                 continue
-            #if line contains a comma, then it is a valid line
             if ',' in line:
                 data['AverageWaitTime'][i] = line.split(",")[1]
             else:
                 data['AverageWaitTime'][i] = line
         allData.append( (name,data) )
-        # plotFromCSV()
     print(*allData)
     PlotAverageWaitTimeMultiple(*allData)
-    # print(data[0])
         
