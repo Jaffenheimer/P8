@@ -72,7 +72,10 @@ class SumoEnv(gym.Env):
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
 
+        const.SEED = random.randint(0, 100000)
+
         print(f"Restating SUMO with seed: {const.SEED}")
+
 
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(const.SEED), "--no-warnings"])
