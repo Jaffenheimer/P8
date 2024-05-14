@@ -3,21 +3,27 @@ import numpy as np
 import traci
 import math
 from os import path
-from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD
-import Constants
-
+from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, INPUTFILE
+import Helper.SeedGenerator as sg
+import Constants    
+import random
 
 class SumoEnv(gym.Env):
     def __init__(self):
+        self.seeds = Constants.SEEDS[:]
         try:
             traci.close()
         except:
             pass
         self.path = path.abspath(
-            "../P8-Mobility/Simulation/SUMO/algorithm/high_person_low_traffic.sumocfg")
+            f"../P8-Mobility/Simulation/SUMO/algorithm/{INPUTFILE}")
         self.close()
+
+        print(f"Staring SUMO with seed: {self.seeds[0]}")
+
         traci.start(
-            ["sumo", "-c", self.path, "--seed", str(Constants.SEED), "--no-warnings"])
+            ["sumo", "-c", self.path, "--seed", str(self.seeds[0]), "--no-warnings"])
+        
         ## VARIABLES ##
         self.bus_num = 10
         self.current_step = 0
@@ -53,7 +59,6 @@ class SumoEnv(gym.Env):
             low=low_obs, high=high_obs, shape=(self.info_states + 2*self.bus_num,), dtype=np.float32)
 
         # Run simulation for SUMO_INIT_STEPS to initialize the simulation with stable wait time
-
         for _ in range(SUMO_INIT_STEPS):
             self.sumo_step()
 
@@ -66,8 +71,11 @@ class SumoEnv(gym.Env):
         self.wait_time = 0
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
+
+        print(f"Restating SUMO with seed: {self.seeds[0]}")
+
         traci.start(
-            ["sumo", "-c", self.path, "--seed", str(Constants.SEED), "--no-warnings"])
+            ["sumo", "-c", self.path, "--seed", str(self.seeds.pop(0)), "--no-warnings"])
         return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
 
     def step(self, action):
@@ -118,7 +126,6 @@ class SumoEnv(gym.Env):
                             bus_speed_km_h, action_value))
 
                     traci.vehicle.slowDown(bus_id, new_speed_m_s, 1)
-
                 # store previous speed for keep speed action in next step
                 self.previous_speeds_m_s[i] = new_speed_m_s
 
@@ -132,6 +139,8 @@ class SumoEnv(gym.Env):
             self.current_step += 1
             done = False
             if (self.current_step >= self.max_steps-1):
+                print(f"Max steps reached: {self.current_step}")
+                Constants.SEED = random.randint(0, 100000)
                 done = True
 
             truncated = False
@@ -156,24 +165,15 @@ class SumoEnv(gym.Env):
 
     # SUMO FUNCTIONS
     def sumo_step(self):
-        new_state = [0] * (1 + 1 + 2 * self.bus_num)
+        new_state = [0] * (self.info_states + 2 * self.bus_num)
         personsWaitingTimeList = []
         traci.simulationStep()
 
+        persons = []
         persons = traci.person.getIDList()
 
-        # finds the average waiting time
-        for i in range(0, len(persons)):
-            personWaitingTime = traci.person.getWaitingTime(persons[i])
-            personsWaitingTimeList.append(personWaitingTime)
+        new_state[0] = self.getAverageWaitTime(persons)
 
-        persons_waiting_num = len(personsWaitingTimeList)
-
-        if (persons_waiting_num != 0) and not np.isnan(persons_waiting_num) and not np.isnan(personsWaitingTimeList).any():
-            new_state[0] = round(
-                sum(personsWaitingTimeList) / persons_waiting_num, 3)
-        else:
-            new_state[0] = 0.0
 
         # find average people at bus stops
         new_state[1] = self.get_average_people_at_bus_stops()
@@ -240,6 +240,21 @@ class SumoEnv(gym.Env):
     
     def km_h_to_m_s(self, km_h):
         return km_h/3.6
+    
+    def getAverageWaitTime(self, persons):
+        personsWaitingTimeList = []
+        numOfPersons = len(persons)
+        for j in range(numOfPersons):
+            personWaitingTime = traci.person.getWaitingTime(persons[j])
+            personsWaitingTimeList.append(personWaitingTime)
+
+        # finds average wait time
+        length = len(personsWaitingTimeList)
+        averageWaitTime = sum(personsWaitingTimeList)/length if length != 0 else 0
+
+        
+        return averageWaitTime
+
 
 gym.envs.registration.register(
     id='SumoEnv-v1',

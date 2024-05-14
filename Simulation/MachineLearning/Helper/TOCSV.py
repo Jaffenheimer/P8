@@ -1,5 +1,5 @@
 import csv
-from os import mkdir, path
+from pathlib import Path
 import os
 import numpy as np
 

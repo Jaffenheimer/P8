@@ -3,16 +3,16 @@ import pandas as pd
 import traci
 import numpy as np
 from os import path, mkdir
-from Constants import SCHEDULE_MAX_STEPS, SEED
+from Constants import SCHEDULE_MAX_STEPS, SEED, INPUTFILE, SUMO_INIT_STEPS
 from Helper.PlotDiagram import PlotBoth
 
 
-def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="Schedule.csv"):
+def ScheduleVersion(inputFile=f"../P8-Mobility/Simulation/SUMO/schedule/{INPUTFILE}", outputFileName="Schedule.csv"):
     # initializations
 
     print("====================== <Schedule Init> ======================")
 
-    dtype = [('Step', int), ('AveragePeopleAtBusStops', float),
+    dtype = [('AveragePeopleAtBusStops', float),
              ('AverageWaitTime', float)]
     data = np.zeros(SCHEDULE_MAX_STEPS, dtype=dtype)
     # Connect to SUMO simulation
@@ -24,18 +24,29 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_pers
 
     # simulation loop
     step = 0
-    while step < SCHEDULE_MAX_STEPS:
+
+    personsWaitingTimeList = []
+
+    while step < SCHEDULE_MAX_STEPS+SUMO_INIT_STEPS:
+        while step < SUMO_INIT_STEPS:
+            traci.simulationStep()
+            step += 1
+
+        
         traci.simulationStep()
 
         persons = traci.person.getIDList()
-
+            
         averageWaitTime = getAverageWaitTime(persons)
         averagePeopleAtBusStops = getAveragePeopleAtBusStops()
 
-        data['Step'][step] = step
-        data['AveragePeopleAtBusStops'][step] = averagePeopleAtBusStops
-        data['AverageWaitTime'][step] = averageWaitTime
+        # print(f"Step: {step} - AverageWaitTime: {averageWaitTime}, AveragePeopleAtBusStops: {averagePeopleAtBusStops}, Persons: {len(persons)}")
+        # print(f"-----------------------------------------------------------------------------------------------------")
 
+        data['AveragePeopleAtBusStops'][step-SUMO_INIT_STEPS] = averagePeopleAtBusStops
+        data['AverageWaitTime'][step-SUMO_INIT_STEPS] = averageWaitTime
+
+        personsWaitingTimeList.clear()
         step += 1
     traci.close()
 
@@ -43,7 +54,7 @@ def ScheduleVersion(inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_pers
         os.mkdir("./Simulation/MachineLearning/Output/TestFiles")
 
     np.savetxt(f"./Simulation/MachineLearning/Output/TestFiles/{outputFileName}", data, delimiter=',',
-            fmt='%f', header="Step,AveragePeopleAtBusStops,AverageWaitTime")
+            fmt='%f', header="AveragePeopleAtBusStops,AverageWaitTime")
 
     print("====================== <Schedule Done> ======================")
 
@@ -69,6 +80,7 @@ def getAveragePeopleAtBusStops():
     for busStop in busStops:
         totalPeopleAtBusStops += traci.busstop.getPersonCount(busStop)
     return totalPeopleAtBusStops/len(busStops)
+
 
 # now for multiple runs, where the values are the average of the runs:
 

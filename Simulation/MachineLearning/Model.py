@@ -6,36 +6,50 @@ from stable_baselines3 import A2C, PPO
 from sb3_contrib import TRPO, RecurrentPPO
 from stable_baselines3.common.env_util import make_vec_env
 from SumoEnvironment import SumoEnv
-from Constants import TOTAL_TIMESTEPS, MAX_STEPS, N_ENVS
-from Helper.PlotDiagram import PlotBoth
+from Constants import TOTAL_TIMESTEPS, MAX_STEPS, N_ENVS, UPDATEPOLICY
+from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv
+from Helper.PlotDiagram import PlotBoth, PlotAverageWaitTime
 from Helper.TOCSV import TOCSV
+
+np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
+
+def make_env(): 
+    env = SumoEnv()
+    return env
 
 def run(modelType,name,policy):
     print(f"====================== <{name} Init> ======================")
 
     # Importing the environment
-    env = make_vec_env(SumoEnv, n_envs=N_ENVS)
+    #env = make_vec_env(SumoEnv, n_envs=N_ENVS)
 
-    #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
-    model_params = {"policy": policy, "env": env, "verbose": 0, "n_steps": MAX_STEPS}
-    if modelType != A2C:
-        model_params["batch_size"] = 80
+    # Multi core    
+    env = SubprocVecEnv([make_env for _ in range(N_ENVS)])
+
+    # Single core / Multi Threads 
+    #env = DummyVecEnv([make_env for _ in range(N_ENVS)])
+
+
+    # #alternatively we could add such that you can pass the arguments to this function directly into the run function (as a dictionary) like this
+    model_params = {"policy": policy, "env": env, "verbose": 0, "n_steps": UPDATEPOLICY}
+    # if modelType != A2C:
+    #     model_params["batch_size"] = 80
     
-    # Create the agent
+    # # Create the agent
     model = modelType(**model_params)
 
-    print(f"====================== <{name} Training> ======================")
+    # print(f"====================== <{name} Training> ======================")
 
-    # Train the agent
+    # # Train the agent
     model.learn(total_timesteps=TOTAL_TIMESTEPS, progress_bar=True)
 
-    # Save the agent
-    # model.save(f"{name}")
+    # # Save the agent
+    model.save(f"./Simulation/MachineLearning/Output/{name}")
 
     # del model  # remove to demonstrate saving and loading
 
     # Load the trained agent
-    # model = modelType.load(f"{name}")
+    #model = model.load(f"./Simulation/MachineLearning/PPO.zip")
 
     print(f"====================== <{name} Traning Completed> ======================")
 
@@ -46,20 +60,31 @@ def run(modelType,name,policy):
     step = 0
     done = np.array([False], dtype='bool')
 
+    episode_starts = np.ones((N_ENVS,), dtype=bool)
+    lstm_states = None
+
+
     while not done.all():
-        action, _ = model.predict(obs)
+        if modelType == RecurrentPPO:
+            action, lstm_states = model.predict(obs, state=lstm_states, episode_start=episode_starts)
+            
+        else:
+            action, _ = model.predict(obs)
 
         obs, rewards, done, info = env.step(action)
-        np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
+
         data['AverageWaitTime'][step] = obs.item(0)
         data['AveragePeopleAtBusStops'][step] = obs.item(1)
+
+        episode_starts = done
+        
         step += 1
 
         if done.all():
             env.close()
 
     # Save the data to a CSV file
-    TOCSV(data, name)
+    TOCSV(data, name, "Combined")
     
     print(f"====================== <{name} Done> ======================")
 
@@ -67,7 +92,9 @@ def run(modelType,name,policy):
 
 if __name__ == "__main__":
     data = run(PPO, "PPO", "MlpPolicy")
-    data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
-    data = run(A2C, "A2C", "MlpPolicy")
-    data = run(TRPO, "TRPO", "MlpPolicy")
-    PlotBoth(data)
+    # data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
+    # data = run(A2C, "A2C", "MlpPolicy")
+    # data = run(TRPO, "TRPO", "MlpPolicy")
+    # PlotBoth(data)
+    PlotAverageWaitTime(data)
+
