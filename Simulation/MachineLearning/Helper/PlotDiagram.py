@@ -1,8 +1,8 @@
 
-from os import mkdir, path
+from os import mkdir, path, getcwd
 import matplotlib.pyplot as plt
 import numpy as np
-from Constants import MAX_STEPS
+# from Constants import MAX_STEPS
 
 def PlotAverageWaitTime(data):
     plt.figure(figsize=(10, 6))
@@ -164,3 +164,23 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
         mkdir("./Simulation/MachineLearning/Output")
     plt.savefig(
         './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png')
+
+def plotFromCSV(*csv_files):
+    data = []
+    for csv in csv_files:
+        data.append(np.loadtxt(open(csv, "rb"), delimiter=",", skiprows=1))
+    
+    print(data)
+    # for index, i in enumerate(data):
+    #     plt.figure(figsize=(10, 6))
+    #     plt.plot(data['average_wait_time'], label="Average Waiting Time")
+    #     plt.xlabel("Steps")
+    #     plt.ylabel("Waiting Time (seconds)")
+    #     plt.title("Average Waiting Time Over Testing Steps")
+    #     plt.legend()
+    #     plt.grid(True)
+    #     plt.show()
+        
+if __name__ == "__main__":
+    mypath = path.abspath(getcwd()).replace("\\", "/")
+    plotFromCSV(f"{mypath}/Simulation/MachineLearning/input/RecurrentPPO_high.csv", f"{mypath}/Simulation/MachineLearning/input/RecurrentPPO_low.csv")
