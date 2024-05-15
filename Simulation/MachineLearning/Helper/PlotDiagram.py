@@ -170,7 +170,7 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
 
 def plotFromCSV():
     allData = []
-    for filePath in glob.glob(path.abspath("Simulation/MachineLearning/Output/csvFiles/*.csv")):
+    for filePath in glob.glob(path.abspath("Simulation/MachineLearning/Input/csvFiles/*.csv")):
         name = Path(filePath).stem
         dtype = [('AverageWaitTime', float)]
         data = np.zeros(MAX_STEPS, dtype=dtype)
