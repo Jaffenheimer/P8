@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ public class AdminController : ControllerBase
     private readonly IBusRepository _busRepository;
     private readonly IRouteRelationsRepository _routeRelationsRepository;
     private readonly IPusherService _pusherService;
-
+    
     public AdminController(IBusStopRepository busStopRepository,
         IBusRepository busRepository, IRouteRelationsRepository routeRelationsRepository, IPusherService pusherService)
     {
@@ -43,7 +44,16 @@ public class AdminController : ControllerBase
         if (routeId == Guid.Empty || routeId == null)
             return BadRequest("Could not log in");
 
-        var bus = new Bus(req.Latitude, req.Longitude, Guid.NewGuid(), routeId.Value);
+        if (Program._stateController.BussesInitialized >= 9)
+        {
+            return BadRequest("Maximum amount of busses initialized");
+        }
+        
+        var ids = Program._stateController.DummyBusIds.Values.ToList();
+        
+        var bus = new Bus(req.Latitude, req.Longitude, ids[Program._stateController.BussesInitialized], routeId.Value);
+        Program._stateController.BussesInitialized++;
+        
         var res = await _busRepository.Upsert(bus.Id, routeId.Value, bus.Latitude, bus.Longitude, Action.Default);
         if (!res)
             return BadRequest("Could not log in");
