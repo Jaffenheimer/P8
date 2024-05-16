@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.VisualBasic.FileIO;
@@ -44,35 +45,44 @@ public class HelperFunctions
     // Read a csv file and return the content as an object
     public static SUMOStateSpaceObject ReadCsv()
     {
-        var simulation = new SUMOStateSpaceObject(new List<double>(), new List<double>());
-        int counter = 0;
+        var simulation = new SUMOStateSpaceObject(new List<double>(), new List<double>(), new List<List<DummyBus>>());
+        var busList = new List<DummyBus>();
         using (TextFieldParser parser = new TextFieldParser("../run.csv"))
-            
             while (!parser.EndOfData)
             {
                 //Processing row
+                parser.Delimiters = new[] { "," };
+                //Skip first line
+                parser.ReadLine();
+
                 string[]? fields = parser.ReadFields();
 
-                if (fields != null)
+                if (fields != null && fields.Length != 0)
                 {
-                    simulation.AverageWaitTime.Add(double.Parse(fields[0]));
-                    simulation.AveragePeopleAtBusStops.Add(double.Parse(fields[1]));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[3]), double.Parse(fields[2])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[5]), double.Parse(fields[4])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[7]), double.Parse(fields[6])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[9]), double.Parse(fields[8])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[9]), double.Parse(fields[10])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[11]), double.Parse(fields[12])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[13]), double.Parse(fields[14])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[15]), double.Parse(fields[16])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[17]), double.Parse(fields[18])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[19]), double.Parse(fields[20])));
-                    simulation.Buses[counter].Add(new DummyBus(double.Parse(fields[21]), double.Parse(fields[22])));
-                    counter++;
+                    simulation.AverageWaitTime.Add(ParseDouble(fields[0]));
+                    simulation.AveragePeopleAtBusStops.Add(ParseDouble(fields[1]));
+                    busList.Add(new(ParseDouble(fields[3]), ParseDouble(fields[2])));
+                    busList.Add(new DummyBus(ParseDouble(fields[5]), ParseDouble(fields[4])));
+                    busList.Add(new DummyBus(ParseDouble(fields[7]), ParseDouble(fields[6])));
+                    busList.Add(new DummyBus(ParseDouble(fields[9]), ParseDouble(fields[8])));
+                    busList.Add(new DummyBus(ParseDouble(fields[11]), ParseDouble(fields[10])));
+                    busList.Add(new DummyBus(ParseDouble(fields[13]), ParseDouble(fields[12])));
+                    busList.Add(new DummyBus(ParseDouble(fields[15]), ParseDouble(fields[14])));
+                    busList.Add(new DummyBus(ParseDouble(fields[17]), ParseDouble(fields[16])));
+                    busList.Add(new DummyBus(ParseDouble(fields[19]), ParseDouble(fields[18])));
+                    busList.Add(new DummyBus(ParseDouble(fields[21]), ParseDouble(fields[20])));
+                    simulation.Buses.Add(busList);
+
                 }
             }
 
         return simulation;
+    }
+    
+    
+    private static double ParseDouble(string value)
+    {
+        return double.Parse(value, CultureInfo.InvariantCulture);
     }
     
     public double CalcAvaragePeopleAtBusStops(List<BusStop> busStops)

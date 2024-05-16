@@ -53,6 +53,7 @@ public class StateController
     public void Run(IPusherService pusherService)
     {
         var sumoStateSpaceObject = HelperFunctions.ReadCsv();
+        
         IsRunning = true;
         Console.WriteLine("Running");
         
