@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using p8_restapi.PusherService;
 using p8_shared;
@@ -65,10 +67,25 @@ public class StateController
            
            
             Task.Delay(5000);
+            StringBuilder stb = new StringBuilder();
+            foreach (var bus in dummyState.Busses)
+            {
+                stb.Append(bus.Position);
+                stb.Append(',');
+                stb.Append(bus.Speed);
+                stb.Append(',');
+            }
+            
             
             //Feed dummy state to model
+            var p = new Process();
+            p.StartInfo.FileName = "python3";
+            p.StartInfo.Arguments = $"MiModel/TRPO.py {dummyState.AverageWaitTime},{dummyState.AveragePeopleAtBusStops},{stb}";
+            p.Start();
             //retrieve actions from model
+            
             int[] actions = new int[9];
+            
             
             
             //Only used for real Life Application not for simulation
@@ -79,7 +96,7 @@ public class StateController
             var pusherMessage = new PusherMessage(new Dictionary<Guid, Action>());
 
             var secondCounter = 0;
-            foreach (var bus in dummyState.Busses)
+            /*foreach (var bus in dummyState.Busses)
             {
                 Action act = 0;
                 
@@ -90,9 +107,9 @@ public class StateController
                 if(actions[secondCounter] == -1)
                     act = Action.Decelerate;
                 
-                pusherMessage.Actions.Add(bus.Id, act);
+                //pusherMessage.Actions.Add(bus.Id, act);
                 secondCounter++;
-            }
+            }*/
             //Only used for real Life Application not for simulation
             /*if (SystemState.Buses.Any() && currentState.Buses.Any())
             {
