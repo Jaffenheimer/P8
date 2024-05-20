@@ -2,7 +2,10 @@
 from os import mkdir, path, getcwd
 import matplotlib.pyplot as plt
 import numpy as np
-# from Constants import MAX_STEPS
+from Constants import MAX_STEPS
+import glob
+from pathlib import Path
+from csv import reader
 
 def PlotAverageWaitTime(data):
     plt.figure(figsize=(10, 6))
@@ -109,7 +112,7 @@ def PlotAverageWaitTimeMultiple(*data):
         mkdir("./Simulation/MachineLearning/Output")
     plt.savefig(
         f'./Simulation/MachineLearning/Output/CombinedAverageWaitingTime.png', dpi=1200)
-    #plt.show()
+    # plt.show()
 
 # more dynamic, if you pass in a list of tuples with the first value being the name of the model and the second value being the data
 
@@ -165,22 +168,22 @@ def PlotCombinedAveragePeopleAtBusstops(Random, greedy_fast, PPO, TRPO, A2C, Sch
     plt.savefig(
         './Simulation/MachineLearning/Output/CombinedAveragePeopleAtBusstops.png')
 
-def plotFromCSV(*csv_files):
-    data = []
-    for csv in csv_files:
-        data.append(np.loadtxt(open(csv, "rb"), delimiter=",", skiprows=1))
-    
-    print(data)
-    # for index, i in enumerate(data):
-    #     plt.figure(figsize=(10, 6))
-    #     plt.plot(data['average_wait_time'], label="Average Waiting Time")
-    #     plt.xlabel("Steps")
-    #     plt.ylabel("Waiting Time (seconds)")
-    #     plt.title("Average Waiting Time Over Testing Steps")
-    #     plt.legend()
-    #     plt.grid(True)
-    #     plt.show()
+def plotFromCSV():
+    allData = []
+    for filePath in glob.glob(path.abspath("Simulation/MachineLearning/Input/csvFiles/*.csv")):
+        name = Path(filePath).stem
+        dtype = [('AverageWaitTime', float)]
+        data = np.zeros(MAX_STEPS, dtype=dtype)
+        for i,line in enumerate(open(filePath, "r")):
+            if i == 0:
+                continue
+            if i == MAX_STEPS:
+                continue
+            if ',' in line:
+                data['AverageWaitTime'][i] = line.split(",")[1]
+            else:
+                data['AverageWaitTime'][i] = line
+        allData.append( (name,data) )
+    print(*allData)
+    PlotAverageWaitTimeMultiple(*allData)
         
-if __name__ == "__main__":
-    mypath = path.abspath(getcwd()).replace("\\", "/")
-    plotFromCSV(f"{mypath}/Simulation/MachineLearning/input/RecurrentPPO_high.csv", f"{mypath}/Simulation/MachineLearning/input/RecurrentPPO_low.csv")

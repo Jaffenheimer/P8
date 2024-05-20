@@ -1,9 +1,10 @@
 import os
 import pandas as pd
+from Helper.FindAverage import findAverageWaitTime
 import traci
 import numpy as np
 from os import path, mkdir
-from Constants import SCHEDULE_MAX_STEPS, SEED, INPUTFILE, SUMO_INIT_STEPS
+from Constants import SCHEDULE_MAX_STEPS, SEED, INPUTFILE, SUMO_INIT_STEPS, SEEDS, INPUTFILE
 from Helper.PlotDiagram import PlotBoth
 
 
@@ -85,15 +86,17 @@ def getAveragePeopleAtBusStops():
 # now for multiple runs, where the values are the average of the runs:
 
 
-def ScheduleVersionMultiple(runs=1, inputFile="../P8-Mobility/Simulation/SUMO/schedule/high_person_low_traffic.sumocfg", outputFileName="output.csv"):
-    dtype = [('Step', int), ('PedestrianCount', float),
-             ('AveragePeopleAtBusStops', float), ('AverageWaitTime', float)]
+def ScheduleVersionMultiple(runs=1, outputFileName="output.csv"):
+    dtype = [('AverageWaitTime', float)]
     data = np.zeros(SCHEDULE_MAX_STEPS, dtype=dtype)
+    seeds = SEEDS[:]
+    filePath = path.abspath(f"../P8-Mobility/Simulation/SUMO/algorithm/{INPUTFILE}")
     for run in range(runs):
         # Connect to SUMO simulation
+        print("running with Schedule with seed: ", seeds[0])
         traci.start(
-            ["sumo", "-c", path.abspath(inputFile), "--seed", str(SEED), "--emission-output", "emissions.xml"])
-
+            ["sumo", "-c", path.abspath(filePath), "--seed", str(seeds.pop(0)), "--no-warnings"])
+        seeds.pop(0)
         # simulation loop
         step = 0
         while step < SCHEDULE_MAX_STEPS:
@@ -101,26 +104,19 @@ def ScheduleVersionMultiple(runs=1, inputFile="../P8-Mobility/Simulation/SUMO/sc
 
             persons = traci.person.getIDList()
 
-            pedestrianCount = len(persons)
             averageWaitTime = getAverageWaitTime(persons)
-            averagePeopleAtBusStops = getAveragePeopleAtBusStops()
-
-            if run == 0:
-                data['Step'][step] = step
-            data['AveragePeopleAtBusStops'][step] += averagePeopleAtBusStops
             data['AverageWaitTime'][step] += averageWaitTime
 
             step += 1
         traci.close()
-    data['AveragePeopleAtBusStops'] = data['AveragePeopleAtBusStops']/runs
     data['AverageWaitTime'] = data['AverageWaitTime']/runs
-    if (path.isdir("../Output") == False):
-        mkdir("../Output")
-    np.savetxt(f"../Output/{outputFileName}", data, delimiter=',',
-               fmt='%f', header="Step,AveragePeopleAtBusStops,AverageWaitTime")
+    if (path.isdir("./Simulation/MachineLearning/Output/TestFiles") == False):
+        mkdir("./Simulation/MachineLearning/Output/TestFiles")
+    np.savetxt(f"./Simulation/MachineLearning/Output/TestFiles/{outputFileName}", data, delimiter=',',
+               fmt='%f', header="AverageWaitTime")
     return data
 
 
 if __name__ == "__main__":
-    data = ScheduleVersion()
-    PlotBoth(data)
+    data = ScheduleVersionMultiple(5, "Schedule.csv")  
+    findAverageWaitTime(("Schedule",data))
