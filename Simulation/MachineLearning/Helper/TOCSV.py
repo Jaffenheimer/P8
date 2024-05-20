@@ -32,5 +32,10 @@ def RUNNING_TOCSV(data):
                                 "bus1_speed", "bus1_position", 
                                 "bus2_speed", "bus2_position", 
                                 "bus3_speed", "bus3_position", 
-                                "bus4_speed", "bus4_position"])
+                                "bus4_speed", "bus4_position",
+                                "bus5_speed", "bus5_position", 
+                                "bus6_speed", "bus6_position", 
+                                "bus7_speed", "bus7_position", 
+                                "bus8_speed", "bus8_position", 
+                                "bus9_speed", "bus9_position"])
         writer.writerow(_data)
