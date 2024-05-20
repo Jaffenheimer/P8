@@ -4,7 +4,8 @@ from sb3_contrib import RecurrentPPO, TRPO
 from SumoEnvironment import SumoEnv
 from Helper.TOCSV import RUNNING_TOCSV
 from Constants import N_ENVS, MAX_STEPS
-
+import os
+from Helper.PlotDiagram import plotFromCSV
 import numpy as np
 from tqdm import tqdm
 
@@ -60,3 +61,6 @@ def Running(modelType, name, runs):
 
 if __name__ == "__main__":
     Running(PPO, "PPO_low", 1)
+    # mypath = os.path.abspath(os.getcwd()).replace("\\", "/")
+    # plotFromCSV(f"{mypath}/Simulation/MachineLearning/input/RecurrentPPO_high.csv", f"{mypath}/Simulation/MachineLearning/input/RecurrentPPO_low.csv")
+    

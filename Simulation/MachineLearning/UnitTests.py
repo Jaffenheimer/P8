@@ -55,16 +55,6 @@ class TestSumoEnv(unittest.TestCase):
         self.assertTrue((obs == np.array([0.0]*state_length, dtype=np.float32)).all())
         self.assertEqual(rewards, -1)
         self.assertFalse(done)    
-
-    # change constants before run to lower step sizes
-    def test_run_average_wait_time_increases_per_init_step(self):
-        # data = run(A2C, "A2C", "MlpPolicy")
-        # (avg wait time, avg people at bus stops)
-        data = [(0.000, 0.000), (0.125, 1.000), (0.125, 0.667), (0.375, 1.000),
-        (0.625, 2.000), (0.625, 1.875), (0.875, 2.556), (1.125, 3.100),
-        (1.250, 3.727)]
-        x_values, _ = zip(*data)
-        self.assertTrue(all(x_values[i] >= x_values[i-1] for i in range(1, len(x_values))))
-
+        
 if __name__ == "__main__":
     unittest.main(argv=[''], exit=False)
