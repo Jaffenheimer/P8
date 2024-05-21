@@ -45,7 +45,7 @@ namespace p8_restapi
                             throw new InvalidOperationException(),
                             services.BuildServiceProvider().GetService<IRouteRelationsRepository>() ??
                             throw new InvalidOperationException()).Wait();
-                    new Thread(() => _stateController.Run(services.BuildServiceProvider().GetService<IPusherService>() ?? throw new InvalidOperationException())).Start();
+                    //new Thread(() => _stateController.Run(services.BuildServiceProvider().GetService<IPusherService>() ?? throw new InvalidOperationException())).Start();
                 });
     }
 }

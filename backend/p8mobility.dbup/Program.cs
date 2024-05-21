@@ -7,7 +7,7 @@ namespace p8_dbup
     {
         static int Main(string[] args)
         {
-            var connectionString = "Server=127.0.0.1;Port=3308;Database=p8-mobility;Uid=root;Pwd=password;";
+            var connectionString = "Server=127.0.0.1;Port=3308;Database=p8;Uid=root;Pwd=password;";
 
             var sqlUpgrader =
                 DeployChanges.To

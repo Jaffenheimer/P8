@@ -7,7 +7,8 @@ public class SUMOStateSpaceObject
 {
     public List<double> AverageWaitTime { get; set; }
     public List<double> AveragePeopleAtBusStops { get; set; }
-    public List<List<DummyBus>> Buses { get; set; } 
+    public List<List<DummyBus>> Buses { get; set; }
+    public int StateCount { get; set; }
     
     public SUMOStateSpaceObject(List<double> averageWaitTime, List<double> averagePeopleAtBusStops, List<List<DummyBus>> buses)
     {

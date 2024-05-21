@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using p8_restapi.PusherService;
 using p8_restapi.Requests;
+using p8_restapi.StateController;
 using p8_shared;
 using p8mobility.persistence.BusRepository;
 using p8mobility.persistence.BusStopRepository;
@@ -30,6 +31,17 @@ public class AdminController : ControllerBase
         _busRepository = busRepository;
         _routeRelationsRepository = routeRelationsRepository;
         _pusherService = pusherService;
+    }
+
+
+
+    [HttpPost("startdemo")]
+    public async Task<IActionResult> StartDemo()
+    {
+
+        new Thread(() => Program._stateController.Run(_pusherService ?? throw new InvalidOperationException())).Start();
+
+        return Ok();
     }
 
     /// <summary>

@@ -46,17 +46,16 @@ public class HelperFunctions
     public static SUMOStateSpaceObject ReadCsv()
     {
         var simulation = new SUMOStateSpaceObject(new List<double>(), new List<double>(), new List<List<DummyBus>>());
-        var busList = new List<DummyBus>();
+        var firstLine = true;
         using (TextFieldParser parser = new TextFieldParser("../run.csv"))
             while (!parser.EndOfData)
             {
                 //Processing row
                 parser.Delimiters = new[] { "," };
-                //Skip first line
-                parser.ReadLine();
-
+                simulation.StateCount++;
+                if (firstLine) { parser.ReadLine(); firstLine = false; }
                 string[]? fields = parser.ReadFields();
-
+                var busList = new List<DummyBus>();
                 if (fields != null && fields.Length != 0)
                 {
                     simulation.AverageWaitTime.Add(ParseDouble(fields[0]));
