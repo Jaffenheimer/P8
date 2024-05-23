@@ -1,7 +1,7 @@
 from stable_baselines3 import PPO, A2C
 from stable_baselines3.common.env_util import make_vec_env
 from sb3_contrib import RecurrentPPO, TRPO
-from SumoEnvironment import SumoEnv
+from Simulation.MachineLearning.SumoEnvironmentTesting import SumoEnv
 from Helper.TOCSV import TOCSV
 from Constants import N_ENVS, MAX_STEPS
 from Helper.PlotDiagram import PlotAverageWaitTimeMultiple

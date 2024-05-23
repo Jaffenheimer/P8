@@ -2,10 +2,9 @@ import os
 import numpy as np
 
 
+
+#Finds the average of the data for each model
 def FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO, data_random, data_schedule, data_greedy):
-    """
-    Find the average of the data for each model
-    """
 
     np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
 
@@ -57,22 +56,7 @@ def FindAverage(data_PPO, data_recurrent_PPO, data_A2C, data_TRPO, data_random, 
             f"Greedy,{average_wait_time_greedy:.2f},{average_people_greedy:.2f}\n")
 
 
-
-def FindAverage1(data): 
-    np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
-
-    average_wait_time = np.average(data['AverageWaitTime'])
-
-    directory = "./Simulation/MachineLearning/Output"
-    os.makedirs(directory, exist_ok=True)
-    file_path = os.path.join(directory, "AverageDataDATA.csv")
-
-    with open(file_path, 'w') as f:
-        f.write("Model,Average Wait Time\n")
-        f.write(f"Average waittime,{average_wait_time:.2f}\n")
-
-
-
+#more dynamic version
 def findAverageWaitTime(*allData):
     waitTimes = {}
     for i,data in enumerate(allData):

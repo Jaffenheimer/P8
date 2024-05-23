@@ -3,15 +3,14 @@ import numpy as np
 import traci
 import math
 from os import path
-from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, INPUTFILE, SEED
+from Constants import MAX_STEPS, SUMO_INIT_STEPS, REWARD_THRESHOLD, INPUTFILE
 import Helper.SeedGenerator as sg
-import Constants    
+import Constants as const
 import random
 
 class SumoEnv(gym.Env):
     def __init__(self):
-        self.seeds = Constants.SEEDS[:]
-        # self.seeds = [SEED,0]
+        # self.seeds = Constants.SEEDS[:]
         try:
             traci.close()
         except:
@@ -20,11 +19,10 @@ class SumoEnv(gym.Env):
             f"../P8-Mobility/Simulation/SUMO/algorithm/{INPUTFILE}")
         self.close()
 
-        
-        print(f"Staring SUMO with seed: {self.seeds[0]}")
+        print(f"Starting SUMO with seed: {const.SEED}")
 
         traci.start(
-            ["sumo", "-c", self.path, "--seed", str(self.seeds[0]), "--no-warnings"])
+            ["sumo", "-c", self.path, "--seed", str(const.SEED), "--no-warnings"])
         
         ## VARIABLES ##
         self.bus_num = 10
@@ -74,10 +72,13 @@ class SumoEnv(gym.Env):
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
 
-        print(f"Restating SUMO with seed: {self.seeds[0]}")
+        const.SEED = random.randint(0, 100000)
+
+        print(f"Restarting SUMO with seed: {const.SEED}")
+
 
         traci.start(
-            ["sumo", "-c", self.path, "--seed", str(self.seeds.pop(0)), "--no-warnings"])
+            ["sumo", "-c", self.path, "--seed", str(const.SEED), "--no-warnings"])
         return np.concatenate(([self.wait_time], np.zeros(1+2 * self.bus_num))).astype(np.float32)[:22], {}
 
     def step(self, action):
@@ -142,7 +143,7 @@ class SumoEnv(gym.Env):
             done = False
             if (self.current_step >= self.max_steps-1):
                 print(f"Max steps reached: {self.current_step}")
-                Constants.SEED = random.randint(0, 100000)
+                const.SEED = random.randint(0, 100000)
                 done = True
 
             truncated = False
@@ -258,7 +259,6 @@ class SumoEnv(gym.Env):
         return averageWaitTime
 
 
-# Register the environment
 gym.envs.registration.register(
     id='SumoEnv-v1',
     entry_point=SumoEnv,

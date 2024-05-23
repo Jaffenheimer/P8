@@ -1,12 +1,8 @@
 import numpy as np
-from os import path, mkdir
-
-import pandas as pd
 from tqdm import tqdm
 from Constants import GREEDY_MAX_STEPS, MAX_STEPS
-from SumoEnvironment import SumoEnv
+from Simulation.MachineLearning.SumoEnvironmentTesting import SumoEnv
 from stable_baselines3.common.env_util import make_vec_env
-from Helper.PlotDiagram import PlotBoth
 from Helper.TOCSV import TOCSV
 
 def GreedyFastVersion():
@@ -82,4 +78,3 @@ def GreedyMultiple(runs):
 if __name__ == "__main__":
     data = GreedyFastVersion()
     dataMul = GreedyMultiple(5)
-    PlotBoth(data)

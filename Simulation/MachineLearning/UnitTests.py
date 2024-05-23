@@ -1,11 +1,8 @@
-from os import path
 import unittest
-from SumoEnvironment import SumoEnv
+from Simulation.MachineLearning.SumoEnvironmentTesting import SumoEnv
 import numpy as np
 from stable_baselines3.common.env_util import make_vec_env
 np.set_printoptions(suppress=True, precision=3, floatmode="fixed")
-from Model import run
-from stable_baselines3 import A2C
 
 class TestSumoEnv(unittest.TestCase):
     def setUp(self):  # setup the variables here before every test
