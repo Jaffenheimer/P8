@@ -62,9 +62,9 @@ public class AdminController : ControllerBase
         }
         
         var ids = Program._stateController.DummyBusIds.Values.ToList();
-        
         var bus = new Bus(req.Latitude, req.Longitude, ids[Program._stateController.BussesInitialized], routeId.Value);
-        Program._stateController.BussesInitialized++;
+        Program._stateController.BussesInitialized +=1;
+        
         
         var res = await _busRepository.Upsert(bus.Id, routeId.Value, bus.Latitude, bus.Longitude, Action.Default);
         if (!res)
@@ -165,10 +165,13 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("Pusher/Test")]
-    public async Task<IActionResult> TestPusher(Guid id, Action action)
+    public async Task<IActionResult> TestPusher([FromBody]PusherRequest req)
     {
         var dic = new Dictionary<Guid, Action>();
-        dic.Add(id, action);
+        for (var i = 0; i < req.Ids.Count; i++)
+        {
+            dic.Add(req.Ids[i], req.Actions[i]);
+        }
         var msg = new PusherMessage(dic);
         _pusherService.PublishAction("action", "test_event", msg);
         return Ok("Pusher test sent");

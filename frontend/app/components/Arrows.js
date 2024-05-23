@@ -108,9 +108,10 @@ const Arrows = () => {
             if (typeof data === 'string') {
                 data = JSON.parse(data);
             }
+            let count = 0;
             Object.keys(data.Actions).forEach((key) => {
                 if (JSON.parse(busId) === key) {
-                    const actionValue = Object.values(data.Actions)[0];
+                    const actionValue = Object.values(data.Actions)[count];
                     if (actionValue === 0) {
                         setAction('Default');
                     } else if (actionValue === 1) {
@@ -121,6 +122,7 @@ const Arrows = () => {
                         setAction('Slow Down');
                     }
                 }
+                count++;
             });
         });
     };
