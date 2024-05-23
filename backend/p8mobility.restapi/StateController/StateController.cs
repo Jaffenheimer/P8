@@ -43,7 +43,9 @@ public class StateController
     private static List<BusStop> BusStops { get; set; } = new List<BusStop>();
     private static Dictionary<Guid, Action> actions;
 
-    public async Task Init(IBusStopRepository busStopRepository, IRouteRelationsRepository routeRelationsRepository)
+    IPusherService pusherService { get; set; }
+
+    public async Task Init(IBusStopRepository busStopRepository, IRouteRelationsRepository routeRelationsRepository, IPusherService psv)
     {
         BusStops = await busStopRepository.GetAllBusStops();
         var routeIds = await routeRelationsRepository.GetRouteIds();
@@ -55,11 +57,13 @@ public class StateController
         }
 
         SystemState = new State(new List<Bus>(), Routes);
+        pusherService = psv;
         Console.WriteLine("StateController initialized");
     }
 
-    public async void Run(IPusherService pusherService)
+    public async void Run()
     {
+   
         var sumoStateSpaceObject = HelperFunctions.ReadCsv();
         
         IsRunning = true;
@@ -105,19 +109,22 @@ public class StateController
             {
                 await Console.Out.WriteLineAsync($"Id: {kvp.Key} | Action: {kvp.Value}");
             }
+            var pusherMessage = new PusherMessage(actions);
+            Console.WriteLine(pusherMessage.Actions.Count);
+            var secondCounter = 0;
+
+            await pusherService.PublishAction("action", "update", pusherMessage);
+           
+            actions.Clear();
+            pusherMessage.Actions.Clear();
+            await Task.Delay(5000);
 
         }
-        
-        await Task.Delay(5000);            
+       
             
         //Only used for real Life Application not for simulation
         //var currentState = SystemState;
         //SystemState = UpdateState(currentState);
-
-
-        var pusherMessage = new PusherMessage(actions);
-
-        var secondCounter = 0;
 
         //Only used for real Life Application not for simulation
         /*if (SystemState.Buses.Any() && currentState.Buses.Any())
@@ -135,12 +142,6 @@ public class StateController
             }
         }*/
             
-        if (pusherMessage.Actions.Count > 0)
-        {
-            pusherService.PublishAction("action", "update", pusherMessage);
-        }
-
-        pusherMessage.Actions.Clear();
 
     }
     private void FindActionStrings(out Dictionary<Guid, Action> actions, double[] actionDoubleArray)
@@ -236,8 +237,8 @@ public class StateController
         IRouteRelationsRepository routeRelationsRepository, PusherService.PusherService pusherService)
     {
         Running = true;
-        await Init(busStopRepository, routeRelationsRepository);
-        Run(pusherService);
+        await Init(busStopRepository, routeRelationsRepository,pusherService);
+        Run();
     }
 
     public void Stop()

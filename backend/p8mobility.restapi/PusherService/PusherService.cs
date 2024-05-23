@@ -14,14 +14,15 @@ namespace p8_restapi.PusherService
             _pusherConfiguration = pusherConfiguration;
         }
 
-        public async void PublishAction(string channel, string eventName, PusherMessage data)
+        public async System.Threading.Tasks.Task<bool> PublishAction(string channel, string eventName, PusherMessage data)
         {
             var pusher = new Pusher(_pusherConfiguration.Value.AppId, _pusherConfiguration.Value.AppKey,
                 _pusherConfiguration.Value.AppSecret, new PusherOptions
                 {
                     Cluster = _pusherConfiguration.Value.Cluster
                 });
-            await pusher.TriggerAsync(channel, eventName, JsonSerializer.Serialize(data));
+            var res = await pusher.TriggerAsync(channel, eventName, JsonSerializer.Serialize(data));
+            return true;
         }
     }
 }

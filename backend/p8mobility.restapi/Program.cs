@@ -32,7 +32,7 @@ namespace p8_restapi
                     if(OperatingSystem.IsMacOS())
                         webBuilder.UseUrls("http://" + ip.AddressList[0] + ":5000");
                     if(OperatingSystem.IsWindows())
-                        webBuilder.UseUrls("http://" + ip.AddressList[^1] + ":5000");
+                        webBuilder.UseUrls("http://" + "192.168.1.182" + ":5000");
                     if (OperatingSystem.IsLinux())
                         webBuilder.UseUrls("http://" + ip.AddressList[1] + ":5000");
                 }).ConfigureServices(services =>
@@ -44,7 +44,8 @@ namespace p8_restapi
                             services.BuildServiceProvider().GetService<IBusStopRepository>() ??
                             throw new InvalidOperationException(),
                             services.BuildServiceProvider().GetService<IRouteRelationsRepository>() ??
-                            throw new InvalidOperationException()).Wait();
+                            throw new InvalidOperationException(),
+                            services.BuildServiceProvider().GetService<IPusherService>()).Wait();
                     //new Thread(() => _stateController.Run(services.BuildServiceProvider().GetService<IPusherService>() ?? throw new InvalidOperationException())).Start();
                 });
     }

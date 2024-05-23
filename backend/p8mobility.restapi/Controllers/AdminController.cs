@@ -39,7 +39,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> StartDemo()
     {
 
-        new Thread(() => Program._stateController.Run(_pusherService ?? throw new InvalidOperationException())).Start();
+        Program._stateController.Run();
 
         return Ok();
     }
