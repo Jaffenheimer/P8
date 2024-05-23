@@ -1,18 +1,13 @@
-import {Link, router, Stack} from 'expo-router';
-import React, {useEffect, useState} from 'react';
-import {Theme, YStack} from 'tamagui';
+import { Link, router, Stack } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Theme, YStack } from 'tamagui';
 import * as Location from 'expo-location';
-import {Arrows} from '../components/Arrows.js';
+import { Arrows } from '../components/Arrows.js';
 
-import {
-    Container,
-    ButtonText,
-    LogOutButton,
-    LogOutButtonContainer,
-} from '~/tamagui.config';
+import { Container, ButtonText, LogOutButton, LogOutButtonContainer } from '~/tamagui.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const url = 'http://192.168.1.186:5000';
+const url = 'http://192.168.1.182:5000';
 
 async function getLocation() {
     let currentLocation = await Location.getCurrentPositionAsync();
@@ -92,8 +87,8 @@ const MainPageLogic = () => {
 
     return (
         <Theme name="light">
-            <Container style={{flexDirection: 'column', justifyContent: 'flex-end'}}>
-                <Stack.Screen options={{headerShown: false}}/>
+            <Container style={{ flexDirection: 'column', justifyContent: 'flex-end' }}>
+                <Stack.Screen options={{ headerShown: false }} />
                 <YStack>
                     <LogOutButtonContainer>
                         <LogOutButton onPress={logOut}>
