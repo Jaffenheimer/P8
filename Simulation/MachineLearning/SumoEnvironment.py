@@ -258,6 +258,7 @@ class SumoEnv(gym.Env):
         return averageWaitTime
 
 
+# Register the environment
 gym.envs.registration.register(
     id='SumoEnv-v1',
     entry_point=SumoEnv,
