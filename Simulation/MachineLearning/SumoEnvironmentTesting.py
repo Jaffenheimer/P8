@@ -20,8 +20,6 @@ class SumoEnv(gym.Env):
         self.close()
 
         
-        print(f"Starting SUMO with seed: {self.seeds[0]}")
-
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(self.seeds[0]), "--no-warnings"])
         
@@ -72,8 +70,6 @@ class SumoEnv(gym.Env):
         self.wait_time = 0
         self.current_step = 0
         self.previous_speeds_m_s = [0]*self.bus_num
-
-        print(f"Restarting SUMO with seed: {self.seeds[0]}")
 
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(self.seeds.pop(0)), "--no-warnings"])
@@ -140,7 +136,6 @@ class SumoEnv(gym.Env):
             self.current_step += 1
             done = False
             if (self.current_step >= self.max_steps-1):
-                print(f"Max steps reached: {self.current_step}")
                 Constants.SEED = random.randint(0, 100000)
                 done = True
 

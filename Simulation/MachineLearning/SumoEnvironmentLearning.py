@@ -19,8 +19,6 @@ class SumoEnv(gym.Env):
             f"../P8-Mobility/Simulation/SUMO/algorithm/{INPUTFILE}")
         self.close()
 
-        print(f"Starting SUMO with seed: {const.SEED}")
-
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(const.SEED), "--no-warnings"])
         
@@ -73,9 +71,6 @@ class SumoEnv(gym.Env):
         self.previous_speeds_m_s = [0]*self.bus_num
 
         const.SEED = random.randint(0, 100000)
-
-        print(f"Restarting SUMO with seed: {const.SEED}")
-
 
         traci.start(
             ["sumo", "-c", self.path, "--seed", str(const.SEED), "--no-warnings"])
@@ -142,7 +137,6 @@ class SumoEnv(gym.Env):
             self.current_step += 1
             done = False
             if (self.current_step >= self.max_steps-1):
-                print(f"Max steps reached: {self.current_step}")
                 const.SEED = random.randint(0, 100000)
                 done = True
 

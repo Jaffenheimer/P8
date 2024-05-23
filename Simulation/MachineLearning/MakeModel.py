@@ -38,7 +38,7 @@ def run(modelType, name, policy):
  
 
 if __name__ == "__main__":
+    data = run(A2C, "A2C_both", "MlpPolicy")
     # data = run(PPO, "PPO", "MlpPolicy")
     # data = run(RecurrentPPO, "Recurrent PPO", "MlpLstmPolicy")
-    data = run(A2C, "A2C_both", "MlpPolicy")
     # data = run(TRPO, "TRPO", "MlpPolicy")
