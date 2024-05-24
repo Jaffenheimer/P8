@@ -1,0 +1,19 @@
+import Helper.SeedGenerator as sg
+
+# TOTAL_TIMESTEPS / (MAX_STEPS * N_ENVS) must be an integer
+TOTAL_TIMESTEPS = 400
+MAX_STEPS = 100
+N_ENVS = 4 # MAX (amout of core - 1)
+
+SCHEDULE_MAX_STEPS = MAX_STEPS
+GREEDY_MAX_STEPS = MAX_STEPS
+
+
+SUMO_INIT_STEPS = 200
+
+SEED = sg.SEED
+SEEDS = [18467,0, 66312,0, 28134,0, 17258,0, 50199,0]
+
+REWARD_THRESHOLD = 500
+
+INPUTFILE = "low_traffic.sumocfg"

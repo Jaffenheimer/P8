@@ -1,0 +1,31 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="minibus" length="7.00" maxSpeed="13.90" desiredMaxSpeed="13.90" vClass="bus" personCapacity="24" />
+    
+    
+    <!-- add until for all bus stops if we want something like a schedule - that is that they wait until X steps-->
+    <!-- so for example: -->
+        <!-- <stop busStop="bs_road_-overlap" duration="5.00" until="100"/> -->
+    
+    <route id="r_0" edges="-overlap -R2 -R1 -R0" color="yellow" cycleTime="300.00" repeat="10000">
+        <stop busStop="bs_road_-overlap" duration="5.00" until="100"   />
+        <stop busStop="bs_road_-R2" duration="5.00" until="200"   />
+        <stop busStop="bs_road_-R1" duration="5.00" until="300"   />
+        <stop busStop="bs_road_-R0" duration="5.00" until="400"   />
+    </route>
+    <route id="r_1" edges="-overlap -L3 -L2 -L1 -L0" color="blue" cycleTime="300.00" repeat="10000">
+        <stop busStop="bs_road_-overlap" duration="5.00" until="100"   />
+        <stop busStop="bs_road_-L3" duration="5.00" until="200"   />
+        <stop busStop="bs_road_-L2" duration="5.00" until="300"   />
+        <stop busStop="bs_road_-L1" duration="5.00" until="400"   />
+        <stop busStop="bs_road_-L0" duration="5.00" until="500"   />
+    </route>
+    
+    <!-- Bus routes -->
+    <flow id="busR" route="r_0" type="minibus" begin="0" end="800" color="yellow" period="200" >
+    </flow>
+    
+    <flow id="busL" route="r_1" type="minibus" begin="50" end="850" color="green" period="200">
+    </flow>
+
+
+</routes>
