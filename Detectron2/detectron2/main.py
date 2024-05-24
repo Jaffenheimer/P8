@@ -5,7 +5,7 @@ import time
 id = "267671e2-a80f-4f1f-9956-2ea56cfe4707"
 now = datetime.now()
 outputDir = f"images/snapshots/main/{now.strftime('%A_%d%b_%H_%M')}"
-os.mkdir(outputDir)
+os.makedirs(outputDir)
 out = open(f"{outputDir}/results.txt", "a")
 out.truncate(0)
 
