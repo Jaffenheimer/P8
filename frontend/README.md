@@ -25,7 +25,7 @@ You may have install tunnel first
 
 ### Others way than Expo Go App
 1. run `npx expo start`
-2. Follow the guide when staring project
+2. Follow the guide when starting project
 
 
 #### If you are offline 

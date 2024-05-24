@@ -426,3 +426,11 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+
+# Logging files when testing 
+.Simulation/Python/logs
+./Simulation/Python/logs
+/Simulation/Python/logs
+
+/Simulation/Output/*
+/Simulation/MachineLearning/Output/*
