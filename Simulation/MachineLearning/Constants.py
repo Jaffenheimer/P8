@@ -1,8 +1,8 @@
 import Helper.SeedGenerator as sg
 
 # TOTAL_TIMESTEPS / (MAX_STEPS * N_ENVS) must be an integer
-TOTAL_TIMESTEPS = 400
-MAX_STEPS = 100
+TOTAL_TIMESTEPS = 40000
+MAX_STEPS = 10000
 N_ENVS = 4 # MAX (amout of core - 1)
 
 SCHEDULE_MAX_STEPS = MAX_STEPS

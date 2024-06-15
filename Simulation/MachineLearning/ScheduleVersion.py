@@ -1,11 +1,9 @@
 import os
-import pandas as pd
 from Helper.FindAverage import findAverageWaitTime
 import traci
 import numpy as np
 from os import path, mkdir
 from Constants import SCHEDULE_MAX_STEPS, SEED, INPUTFILE, SUMO_INIT_STEPS, SEEDS, INPUTFILE
-from Helper.PlotDiagram import PlotBoth
 
 
 def ScheduleVersion(inputFile=f"../P8-Mobility/Simulation/SUMO/schedule/{INPUTFILE}", outputFileName="Schedule.csv"):
